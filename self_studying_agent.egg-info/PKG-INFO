@@ -1,3 +1,12 @@
+Metadata-Version: 2.4
+Name: self-studying-agent
+Version: 0.1.0
+Summary: Scaffold for a parent-facing self-studying agent.
+Requires-Python: >=3.12
+Description-Content-Type: text/markdown
+Requires-Dist: fastapi==0.139.0
+Requires-Dist: uvicorn==0.51.0
+
 # Self-Studying Agent
 
 一个面向家长的 AI 家教助手 Agent，核心不是给孩子直接抄答案，而是帮助家长更懂孩子、更会辅导孩子。
