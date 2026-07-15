@@ -226,8 +226,8 @@
 
 ### 数据与服务层
 
-- **后端**：FastAPI + PostgreSQL + Redis
-- **前端**：微信小程序（家长端）
+- **后端**: FastAPI + PostgreSQL + Redis
+- **前端**: 微信小程序（家长端）
 
 ## 分阶段实施路径
 
