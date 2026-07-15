@@ -321,3 +321,305 @@ MVP 画像只保留两个维度：
 - 孩子是否更快理解薄弱知识点
 - 讲解是否更贴合个体差异
 - 用户画像是否随着使用越来越准确
+
+## 当前已落地的工程骨架
+
+```text
+self-studying-agent/
+├─ docs/
+│  └─ architecture.md
+├─ backend/
+│  ├─ app/
+│  │  ├─ api/v1/routes.py
+│  │  ├─ orchestration/tutor_orchestrator.py
+│  │  ├─ services/
+│  │  │  ├─ problem_parser.py
+│  │  │  ├─ grading_service.py
+│  │  │  ├─ style_adapter.py
+│  │  │  ├─ explanation_generator.py
+│  │  │  └─ practice_generator.py
+│  │  ├─ profile/bkt.py
+│  │  ├─ repositories/profile_repository.py
+│  │  ├─ schemas/
+│  │  │  ├─ diagnosis.py
+│  │  │  └─ profile.py
+│  │  └─ main.py
+│  ├─ tests/test_api.py
+│  ├─ requirements.txt
+│  └─ .env.example
+├─ frontend/
+│  └─ README.md
+└─ evaluation/
+   └─ README.md
+```
+
+### 已打通 MVP 请求链路
+
+1. `POST /api/v1/diagnose`
+2. 解析题目与知识点
+3. 判断正误并给出错误类型
+4. 基于画像与反馈选择讲解风格
+5. 使用轻量 BKT 更新知识点掌握度
+6. 返回给家长的讲解卡片、关键提问和跟进练习建议
+
+## 本地启动
+
+在 `backend/` 目录执行：
+
+```bash
+python -m venv .venv
+.venv\Scripts\activate
+pip install -r requirements.txt
+uvicorn app.main:app --reload
+```
+
+启动后可访问：
+
+- `GET /api/v1/health`
+- `POST /api/v1/diagnose`
+
+## 建议版后端接口契约
+
+下面这版不是当前代码中已经全部实现的最终接口，而是基于“家长输入 → 诊断 → 辅导卡片 → 反馈回流”施工图纸反推出来的建议版契约。
+
+设计目标：
+
+- 让一次请求同时承载输入归一化结果、诊断上下文和家长期望
+- 让响应结果不仅返回文本，还返回可渲染、可评估、可回流的结构化卡片
+- 让反馈成为画像更新和风格切换的正式输入，而不是松散备注
+
+### 接口定义
+
+- `POST /api/v1/diagnose`
+- 请求体：`DiagnoseRequest`
+- 响应体：`DiagnoseResponse`
+
+### DiagnoseRequest
+
+| 字段 | 类型 | 必填 | 说明 |
+| ---- | ---- | ---- | ---- |
+| `request_id` | `str` | 否 | 请求唯一标识，便于日志追踪与幂等控制 |
+| `session_id` | `str` | 否 | 当前辅导会话 ID，用于串联多轮上下文 |
+| `parent_id` | `str` | 否 | 家长 ID，用于关联家长侧反馈和权限 |
+| `student_id` | `str` | 是 | 学生唯一标识 |
+| `subject` | `str` | 是 | 学科，如 `math`、`chinese` |
+| `grade` | `str` | 否 | 年级，如 `grade-4` |
+| `textbook_version` | `str` | 否 | 教材版本，用于控制讲解不超纲 |
+| `input_mode` | `str` | 是 | 输入方式，如 `text`、`photo`、`voice`、`mixed` |
+| `problem_text` | `str` | 是 | 归一化后的题干文本 |
+| `student_answer` | `str \| None` | 否 | 学生当前作答内容，没有时允许为空 |
+| `expected_answer` | `str \| None` | 否 | 标准答案或家长提供的参考答案 |
+| `knowledge_points` | `list[str]` | 否 | 家长或系统已知的知识点标签 |
+| `parent_goal` | `str` | 否 | 家长本轮目标，如“判断错因”“告诉我怎么讲” |
+| `parent_note` | `str \| None` | 否 | 家长补充描述，如“孩子总是在通分这步卡住” |
+| `attachments` | `list[str]` | 否 | 图片或音频资源引用，可先存文件 ID 或 URL |
+| `feedback_context` | `FeedbackSchema \| None` | 否 | 上一轮辅导后的反馈，用作风格切换和画像更新输入 |
+
+建议约束：
+
+- `problem_text` 必须存在，否则不进入诊断主链路
+- `student_answer` 与 `expected_answer` 至少提供一个，若都缺失则降级为澄清或纯讲解模式
+- `parent_goal` 为空时，默认按 `diagnose-and-coach` 处理
+
+### DiagnoseResponse
+
+| 字段 | 类型 | 必填 | 说明 |
+| ---- | ---- | ---- | ---- |
+| `request_id` | `str` | 是 | 回传请求 ID，便于链路追踪 |
+| `session_id` | `str \| None` | 否 | 当前辅导会话 ID |
+| `student_id` | `str` | 是 | 学生唯一标识 |
+| `intent` | `str` | 是 | 系统判定的处理意图，如 `diagnose-and-coach` |
+| `status` | `str` | 是 | 处理结果，如 `completed`、`need_clarification`、`degraded` |
+| `confidence` | `str` | 是 | 结果置信度分档，如 `high`、`medium`、`low` |
+| `diagnosis` | `str` | 是 | 面向家长的简要诊断结论 |
+| `error_type` | `str \| None` | 否 | 错因类型，如 `concept`、`process`、`calculation` |
+| `knowledge_points` | `list[str]` | 是 | 本次诊断关联到的知识点 |
+| `card` | `CardSchema` | 是 | 结构化辅导卡片 |
+| `practice_suggestion` | `str` | 否 | 跟进练习建议的简要摘要 |
+| `suggested_questions` | `list[str]` | 是 | 从卡片中提取给前端快速展示的关键追问 |
+| `updated_mastery` | `dict[str, float]` | 否 | 更新后的知识点掌握度 |
+| `next_action` | `str \| None` | 否 | 建议前端下一步动作，如 `ask_clarifying_question` |
+| `clarifying_question` | `str \| None` | 否 | 当信息不足时，返回给家长的单个澄清问题 |
+
+### CardSchema
+
+| 字段 | 类型 | 必填 | 说明 |
+| ---- | ---- | ---- | ---- |
+| `card_title` | `str` | 是 | 卡片标题，如“先补通分，再回到异分母相加” |
+| `diagnosis_summary` | `str` | 是 | 对本题问题的浓缩判断 |
+| `likely_cause` | `str` | 是 | 更可能的原因，避免直接给孩子贴负面标签 |
+| `coaching_steps` | `list[str]` | 是 | 家长可执行的讲解步骤，建议 2 到 4 步 |
+| `suggested_questions` | `list[str]` | 是 | 建议家长先问孩子的问题 |
+| `materials_needed` | `list[str]` | 否 | 推荐使用的道具或图示 |
+| `do_not_say` | `list[str]` | 否 | 不建议家长直接说的话或做法 |
+| `red_flags` | `list[str]` | 否 | 需要警惕的信号，如连续两次同类错误 |
+| `fallback_plan` | `str` | 否 | 如果孩子仍不懂，下一步如何退回前置知识点 |
+| `tone` | `str` | 否 | 建议语气，如 `encouraging`、`calm` |
+| `style` | `str` | 否 | 讲解风格，如 `visual`、`hands-on`、`story` |
+
+说明：
+
+- `CardSchema` 是家长端真正要渲染的核心对象
+- `suggested_questions` 在 `CardSchema` 与 `DiagnoseResponse` 中可重复保留，便于前端快速读取
+- `fallback_plan` 是施工图纸里非常关键的保守回退节点，用于避免“一讲不懂就重复原话”
+
+### FeedbackSchema
+
+| 字段 | 类型 | 必填 | 说明 |
+| ---- | ---- | ---- | ---- |
+| `useful` | `bool` | 是 | 家长主观判断这轮建议是否有用 |
+| `child_understood` | `bool \| None` | 否 | 孩子是否真正听懂 |
+| `follow_up_needed` | `bool` | 否 | 是否需要继续追问或再生成一版卡片 |
+| `selected_style` | `str \| None` | 否 | 本轮实际采用的讲解风格 |
+| `most_useful_step` | `str \| None` | 否 | 哪一步最有效，用于后续风格强化 |
+| `still_confusing_point` | `str \| None` | 否 | 孩子仍卡住的点 |
+| `parent_note` | `str \| None` | 否 | 家长自由备注 |
+
+说明：
+
+- `FeedbackSchema` 既可作为下一轮 `DiagnoseRequest.feedback_context` 的输入，也可单独沉淀到反馈表
+- `useful=false` 时，不应只改措辞，应该驱动风格切换或粒度调整
+
+### 建议版 Pydantic 定义
+
+```python
+from pydantic import BaseModel, Field
+
+
+class FeedbackSchema(BaseModel):
+    useful: bool
+    child_understood: bool | None = None
+    follow_up_needed: bool = False
+    selected_style: str | None = None
+    most_useful_step: str | None = None
+    still_confusing_point: str | None = None
+    parent_note: str | None = None
+
+
+class CardSchema(BaseModel):
+    card_title: str
+    diagnosis_summary: str
+    likely_cause: str
+    coaching_steps: list[str]
+    suggested_questions: list[str]
+    materials_needed: list[str] = Field(default_factory=list)
+    do_not_say: list[str] = Field(default_factory=list)
+    red_flags: list[str] = Field(default_factory=list)
+    fallback_plan: str | None = None
+    tone: str | None = None
+    style: str | None = None
+
+
+class DiagnoseRequest(BaseModel):
+    request_id: str | None = None
+    session_id: str | None = None
+    parent_id: str | None = None
+    student_id: str
+    subject: str
+    grade: str | None = None
+    textbook_version: str | None = None
+    input_mode: str
+    problem_text: str
+    student_answer: str | None = None
+    expected_answer: str | None = None
+    knowledge_points: list[str] = Field(default_factory=list)
+    parent_goal: str = "diagnose-and-coach"
+    parent_note: str | None = None
+    attachments: list[str] = Field(default_factory=list)
+    feedback_context: FeedbackSchema | None = None
+
+
+class DiagnoseResponse(BaseModel):
+    request_id: str
+    session_id: str | None = None
+    student_id: str
+    intent: str
+    status: str
+    confidence: str
+    diagnosis: str
+    error_type: str | None = None
+    knowledge_points: list[str]
+    card: CardSchema
+    practice_suggestion: str | None = None
+    suggested_questions: list[str] = Field(default_factory=list)
+    updated_mastery: dict[str, float] = Field(default_factory=dict)
+    next_action: str | None = None
+    clarifying_question: str | None = None
+```
+
+### 诊断接口示例请求
+
+```json
+{
+  "request_id": "req-001",
+  "session_id": "sess-001",
+  "parent_id": "par-001",
+  "student_id": "stu-001",
+  "subject": "math",
+  "grade": "grade-4",
+  "textbook_version": "pep",
+  "input_mode": "photo",
+  "problem_text": "1/2 + 1/3 = ?",
+  "student_answer": "2/5",
+  "expected_answer": "5/6",
+  "knowledge_points": ["fraction-addition-unlike-denominator"],
+  "parent_goal": "判断错因并告诉我怎么讲",
+  "parent_note": "孩子做分数题时经常跳过通分",
+  "attachments": ["image-upload-001"],
+  "feedback_context": {
+    "useful": false,
+    "child_understood": false,
+    "follow_up_needed": true,
+    "selected_style": "visual",
+    "still_confusing_point": "通分为什么要做",
+    "parent_note": "上一轮画图还是没听懂"
+  }
+}
+```
+
+### 诊断接口示例响应
+
+```json
+{
+  "request_id": "req-001",
+  "session_id": "sess-001",
+  "student_id": "stu-001",
+  "intent": "diagnose-and-coach",
+  "status": "completed",
+  "confidence": "medium",
+  "diagnosis": "更可能是异分母分数相加中的通分步骤不稳定，而不是单纯计算失误。",
+  "error_type": "process",
+  "knowledge_points": ["fraction-addition-unlike-denominator", "common-denominator"],
+  "card": {
+    "card_title": "先补通分，再回到异分母相加",
+    "diagnosis_summary": "孩子可能知道要把分数相加，但还不稳定地理解为什么必须先通分。",
+    "likely_cause": "更像是步骤理解不稳，而不是粗心。",
+    "coaching_steps": [
+      "先画两个同样大小的长条，一个分成 2 份，一个分成 3 份。",
+      "引导孩子观察两种分法下每一份大小不同，所以不能直接相加。",
+      "再把两个长条都改成 6 份，说明这时每一份的单位一致。"
+    ],
+    "suggested_questions": [
+      "为什么二分之一和三分之一不能直接相加？",
+      "如果都变成六分之一，原来每一份发生了什么变化？"
+    ],
+    "materials_needed": ["纸条", "彩笔"],
+    "do_not_say": ["你怎么又算错了", "直接背公式就行"],
+    "red_flags": ["同类题连续两次卡在通分步骤"],
+    "fallback_plan": "如果还是不懂，先退回到同分母分数相加做一题，再回到当前题。",
+    "tone": "encouraging",
+    "style": "hands-on"
+  },
+  "practice_suggestion": "先做 1 题带提示的通分练习，再做 1 题独立完成的异分母分数相加。",
+  "suggested_questions": [
+    "为什么二分之一和三分之一不能直接相加？",
+    "如果都变成六分之一，原来每一份发生了什么变化？"
+  ],
+  "updated_mastery": {
+    "fraction-addition-unlike-denominator": 0.42,
+    "common-denominator": 0.39
+  },
+  "next_action": "show_card_and_collect_feedback",
+  "clarifying_question": null
+}
+```
