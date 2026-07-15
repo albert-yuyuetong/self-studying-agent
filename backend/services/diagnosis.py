@@ -27,9 +27,9 @@ class DiagnosisService:
             return ["分数运算"]
         if "应用题" in text or "路程" in text:
             return ["应用题建模"]
-        if subject == "math":
+        if subject in {"math", "数学"}:
             return ["基础数学运算"]
-        if subject == "chinese":
+        if subject in {"chinese", "语文"}:
             return ["阅读理解"]
         return [request.subject]
 
