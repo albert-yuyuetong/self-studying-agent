@@ -40,9 +40,12 @@ class DiagnosisService:
         if "审题" in feedback or "读题" in feedback:
             return "reading_issue"
 
-        if request.expected_answer and request.student_answer:
-            if request.expected_answer.strip() != request.student_answer.strip():
-                return "calculation_mistake"
+        if (
+            request.expected_answer
+            and request.student_answer
+            and request.expected_answer.strip() != request.student_answer.strip()
+        ):
+            return "calculation_mistake"
 
         if "概念" in feedback or "为什么" in goal:
             return "concept_gap"
