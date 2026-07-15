@@ -313,6 +313,30 @@ MVP 画像只保留两个维度：
 - `frontend/`：家长端小程序或 Web 端
 - `evaluation/`：讲解效果与画像更新效果评估
 
+## 当前已落地的首版工程骨架
+
+当前仓库已先落地一个最小可运行骨架，方便后续逐层迭代：
+
+- `backend/main.py`：FastAPI 应用入口
+- `backend/api/routes.py`：对外接口与框架概览接口
+- `backend/services/`：画像、诊断、家长讲解卡片生成的最小编排链路
+- `backend/models.py`：请求/响应模型
+- `backend/tests/`：骨架级最小测试
+- `docs/`、`frontend/`、`evaluation/`：后续模块占位目录
+
+本地启动方式：
+
+```bash
+pip install -e .
+uvicorn backend.main:app --reload
+```
+
+验证方式：
+
+```bash
+python -m unittest discover -s backend/tests
+```
+
 ## 成功标准
 
 该 Agent 的成功不应只看“答对率”，还应关注：
