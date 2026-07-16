@@ -25,6 +25,15 @@ class CardSchema(BaseModel):
     style: str | None = None
 
 
+class AnswerAnalysisSchema(BaseModel):
+    normalized_problem: str | None = None
+    reference_answer: str | None = None
+    solution_outline: list[str] = Field(default_factory=list)
+    evaluation_focus: list[str] = Field(default_factory=list)
+    summary: str
+    confidence: float | None = None
+
+
 class DiagnoseRequest(BaseModel):
     request_id: str | None = None
     session_id: str | None = None
@@ -34,9 +43,8 @@ class DiagnoseRequest(BaseModel):
     grade: str | None = None
     textbook_version: str | None = None
     input_mode: str = "text"
-    problem_text: str
+    problem_text: str = ""
     student_answer: str | None = None
-    expected_answer: str | None = None
     knowledge_points: list[str] = Field(default_factory=list)
     parent_goal: str = "diagnose-and-coach"
     parent_note: str | None = None
@@ -52,6 +60,9 @@ class DiagnoseResponse(BaseModel):
     status: str
     confidence: str
     diagnosis: str
+    question_type: str
+    answer_analysis: AnswerAnalysisSchema | None = None
+    reference_answer_source: str | None = None
     error_type: str | None = None
     knowledge_points: list[str]
     card: CardSchema

@@ -408,7 +408,6 @@ uvicorn app.main:app --reload
 | `input_mode` | `str` | 是 | 输入方式，如 `text`、`photo`、`voice`、`mixed` |
 | `problem_text` | `str` | 是 | 归一化后的题干文本 |
 | `student_answer` | `str \| None` | 否 | 学生当前作答内容，没有时允许为空 |
-| `expected_answer` | `str \| None` | 否 | 标准答案或家长提供的参考答案 |
 | `knowledge_points` | `list[str]` | 否 | 家长或系统已知的知识点标签 |
 | `parent_goal` | `str` | 否 | 家长本轮目标，如“判断错因”“告诉我怎么讲” |
 | `parent_note` | `str \| None` | 否 | 家长补充描述，如“孩子总是在通分这步卡住” |
@@ -418,7 +417,8 @@ uvicorn app.main:app --reload
 建议约束：
 
 - `problem_text` 必须存在，否则不进入诊断主链路
-- `student_answer` 与 `expected_answer` 至少提供一个，若都缺失则降级为澄清或纯讲解模式
+- `student_answer` 对标准答案题是错因分析的必要输入；开放题可以没有学生答案，先生成引导型辅导卡片
+- 标准答案题的 `reference_answer` 不由家长传入，而是由 LLM 在前置分析阶段生成
 - `parent_goal` 为空时，默认按 `diagnose-and-coach` 处理
 
 ### DiagnoseResponse
@@ -432,6 +432,9 @@ uvicorn app.main:app --reload
 | `status` | `str` | 是 | 处理结果，如 `completed`、`need_clarification`、`degraded` |
 | `confidence` | `str` | 是 | 结果置信度分档，如 `high`、`medium`、`low` |
 | `diagnosis` | `str` | 是 | 面向家长的简要诊断结论 |
+| `question_type` | `str` | 是 | 题目类型，只分 `standard-answer` 和 `open-ended` |
+| `answer_analysis` | `AnswerAnalysisSchema \| None` | 否 | LLM 产出的题目前置分析，包括参考答案、解题概要或评分关注点 |
+| `reference_answer_source` | `str \| None` | 否 | 参考答案来源，当前标准答案题固定为 `llm-derived` 或为空 |
 | `error_type` | `str \| None` | 否 | 错因类型，如 `concept`、`process`、`calculation` |
 | `knowledge_points` | `list[str]` | 是 | 本次诊断关联到的知识点 |
 | `card` | `CardSchema` | 是 | 结构化辅导卡片 |
@@ -510,6 +513,15 @@ class CardSchema(BaseModel):
     style: str | None = None
 
 
+  class AnswerAnalysisSchema(BaseModel):
+    normalized_problem: str | None = None
+    reference_answer: str | None = None
+    solution_outline: list[str] = Field(default_factory=list)
+    evaluation_focus: list[str] = Field(default_factory=list)
+    summary: str
+    confidence: float | None = None
+
+
 class DiagnoseRequest(BaseModel):
     request_id: str | None = None
     session_id: str | None = None
@@ -521,7 +533,6 @@ class DiagnoseRequest(BaseModel):
     input_mode: str
     problem_text: str
     student_answer: str | None = None
-    expected_answer: str | None = None
     knowledge_points: list[str] = Field(default_factory=list)
     parent_goal: str = "diagnose-and-coach"
     parent_note: str | None = None
@@ -537,6 +548,9 @@ class DiagnoseResponse(BaseModel):
     status: str
     confidence: str
     diagnosis: str
+    question_type: str
+    answer_analysis: AnswerAnalysisSchema | None = None
+    reference_answer_source: str | None = None
     error_type: str | None = None
     knowledge_points: list[str]
     card: CardSchema
@@ -561,7 +575,6 @@ class DiagnoseResponse(BaseModel):
   "input_mode": "photo",
   "problem_text": "1/2 + 1/3 = ?",
   "student_answer": "2/5",
-  "expected_answer": "5/6",
   "knowledge_points": ["fraction-addition-unlike-denominator"],
   "parent_goal": "判断错因并告诉我怎么讲",
   "parent_note": "孩子做分数题时经常跳过通分",
@@ -588,6 +601,22 @@ class DiagnoseResponse(BaseModel):
   "status": "completed",
   "confidence": "medium",
   "diagnosis": "更可能是异分母分数相加中的通分步骤不稳定，而不是单纯计算失误。",
+  "question_type": "standard-answer",
+  "answer_analysis": {
+    "normalized_problem": "1/2 + 1/3 = ?",
+    "reference_answer": "5/6",
+    "solution_outline": [
+      "先把二分之一和三分之一通分成六分之三和六分之二。",
+      "再把同单位的分数相加，得到六分之五。"
+    ],
+    "evaluation_focus": [
+      "答案是否正确",
+      "是否先通分"
+    ],
+    "summary": "这题属于有标准答案的分数计算题，可以先用通分得到参考答案，再判断孩子是否在关键步骤上出错。",
+    "confidence": 0.91
+  },
+  "reference_answer_source": "llm-derived",
   "error_type": "process",
   "knowledge_points": ["fraction-addition-unlike-denominator", "common-denominator"],
   "card": {
@@ -623,3 +652,40 @@ class DiagnoseResponse(BaseModel):
   "clarifying_question": null
 }
 ```
+
+### 内容能力现状
+
+当前后端已经补上三块核心能力：
+
+- 题目理解：对常见四则运算、分数加减和简单应用题做规则解析，自动补齐部分知识点标签
+- 错因诊断：区分答对、步骤错误、计算错误、审题偏差、未作答等高频情况
+- 讲解生成：默认输出中文家长辅导卡片，包含讲解步骤、关键追问和道具建议
+
+当前标准答案题的参考答案来源也已经固定：
+
+- 家长不需要提供标准答案
+- 系统先通过 LLM 做题目前置分析
+- 如果 LLM 产出 `reference_answer`，再进入错因分析
+- 如果 LLM 没产出可靠参考答案，系统降级为保守辅导，不硬判对错
+
+### 可选 LLM 增强
+
+系统默认不依赖外部模型 API，未配置时会直接使用本地规则生成内容。
+
+如果你希望在现有规则上增加更自然的辅导表达，可以在 [backend/.env.example](backend/.env.example) 对应的环境变量中配置：
+
+- `LLM_ENABLED=true`
+- `LLM_API_KEY=你的密钥`
+- `LLM_BASE_URL=兼容 OpenAI chat completions 的接口地址`
+- `LLM_MODEL=要调用的模型名`
+- `LLM_TIMEOUT_SECONDS=超时时间`
+
+当前接入方式是“可选增强”而不是“强依赖替换”：
+
+- 调用成功时，用模型补强家长卡片文本、追问和讲解步骤
+- 未配置或调用失败时，自动回退到本地规则，不影响接口可用性
+
+但对于 `standard-answer` 题，模型还有一个额外职责：
+
+- 在前置分析阶段尽量产出 `reference_answer`
+- 只有拿到 `reference_answer` 后，系统才进入错因分析和画像驱动讲解

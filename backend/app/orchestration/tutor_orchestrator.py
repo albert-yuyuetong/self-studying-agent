@@ -2,10 +2,11 @@ from uuid import uuid4
 
 from app.profile.bkt import update_mastery
 from app.repositories.profile_repository import InMemoryProfileRepository
-from app.schemas.diagnosis import CardSchema, DiagnoseRequest, DiagnoseResponse
+from app.schemas.diagnosis import AnswerAnalysisSchema, CardSchema, DiagnoseRequest, DiagnoseResponse
 from app.services.explanation_generator import ExplanationGenerator
 from app.services.grading_service import GradingService
 from app.services.practice_generator import PracticeGenerator
+from app.services.problem_analysis_service import ProblemAnalysisService
 from app.services.problem_parser import ProblemParser
 from app.services.style_adapter import StyleAdapter
 
@@ -13,6 +14,7 @@ from app.services.style_adapter import StyleAdapter
 class TutorOrchestrator:
     def __init__(self, repo: InMemoryProfileRepository) -> None:
         self.repo = repo
+        self.analyzer = ProblemAnalysisService()
         self.parser = ProblemParser()
         self.grader = GradingService()
         self.style_adapter = StyleAdapter()
@@ -22,7 +24,18 @@ class TutorOrchestrator:
     def diagnose(self, req: DiagnoseRequest) -> DiagnoseResponse:
         request_id = req.request_id or f"req-{uuid4().hex[:12]}"
 
-        problem_text = req.problem_text.strip()
+        analysis_result = self.analyzer.analyze(
+            subject=req.subject,
+            grade=req.grade,
+            problem_text=req.problem_text,
+            attachments=req.attachments,
+            parent_note=req.parent_note,
+        )
+        answer_analysis = AnswerAnalysisSchema(**analysis_result["answer_analysis"])
+        question_type = str(analysis_result["question_type"])
+        reference_answer_source = analysis_result.get("reference_answer_source")
+
+        problem_text = (req.problem_text.strip() or answer_analysis.normalized_problem or "").strip()
         if not problem_text:
             return DiagnoseResponse(
                 request_id=request_id,
@@ -32,6 +45,9 @@ class TutorOrchestrator:
                 status="need_clarification",
                 confidence="low",
                 diagnosis="信息不足，暂时无法判断具体错因。",
+                question_type=question_type,
+                answer_analysis=answer_analysis,
+                reference_answer_source=reference_answer_source,
                 error_type=None,
                 knowledge_points=[],
                 card=self._build_clarification_card(),
@@ -49,15 +65,21 @@ class TutorOrchestrator:
             profile.textbook = req.textbook_version
 
         parsed = self.parser.parse(problem_text, req.knowledge_points)
+        selected_style = self._select_style(profile.preferred_style, req.feedback_context)
+        profile.preferred_style = selected_style
 
-        if req.student_answer is None or req.expected_answer is None:
-            diagnosis = "题目已收到，但缺少学生答案或参考答案，先进入保守辅导模式。"
-            selected_style = self._select_style(profile.preferred_style, req.feedback_context)
-            profile.preferred_style = selected_style
+        if question_type == "open-ended":
+            diagnosis = answer_analysis.summary
             parent_guidance = self.explainer.generate_parent_card(
                 style=selected_style,
                 diagnosis=diagnosis,
                 knowledge_points=list(parsed["knowledge_points"]),
+                problem_text=problem_text,
+                error_type=None,
+                is_correct=None,
+                question_type=question_type,
+                answer_analysis=answer_analysis.summary,
+                parent_note=req.parent_note,
             )
             card = self._build_card(
                 parent_guidance=parent_guidance,
@@ -65,6 +87,60 @@ class TutorOrchestrator:
                 selected_style=selected_style,
                 is_correct=None,
                 error_type=None,
+                question_type=question_type,
+            )
+            self.repo.save(profile)
+            return DiagnoseResponse(
+                request_id=request_id,
+                session_id=req.session_id,
+                student_id=req.student_id,
+                intent=req.parent_goal,
+                status="completed",
+                confidence=self._confidence_bucket(answer_analysis.confidence or 0.6),
+                diagnosis=diagnosis,
+                question_type=question_type,
+                answer_analysis=answer_analysis,
+                reference_answer_source=reference_answer_source,
+                error_type=None,
+                knowledge_points=list(parsed["knowledge_points"]),
+                card=card,
+                practice_suggestion=self.practice.generate(
+                    knowledge_points=list(parsed["knowledge_points"]),
+                    is_correct=None,
+                    question_type=question_type,
+                ),
+                suggested_questions=card.suggested_questions,
+                updated_mastery=profile.mastery,
+                next_action="show_card_and_collect_feedback",
+                clarifying_question=None,
+            )
+
+        reference_answer = (answer_analysis.reference_answer or "").strip() or None
+
+        if req.student_answer is None or reference_answer is None:
+            diagnosis = (
+                "题目已收到，但还缺少进入错因分析所需的信息。"
+                if req.student_answer is None
+                else "题目已收到，但还没有可靠参考答案，先进入保守辅导模式。"
+            )
+            parent_guidance = self.explainer.generate_parent_card(
+                style=selected_style,
+                diagnosis=diagnosis,
+                knowledge_points=list(parsed["knowledge_points"]),
+                problem_text=problem_text,
+                error_type=None,
+                is_correct=None,
+                question_type=question_type,
+                answer_analysis=answer_analysis.summary,
+                parent_note=req.parent_note,
+            )
+            card = self._build_card(
+                parent_guidance=parent_guidance,
+                diagnosis=diagnosis,
+                selected_style=selected_style,
+                is_correct=None,
+                error_type=None,
+                question_type=question_type,
             )
             self.repo.save(profile)
             return DiagnoseResponse(
@@ -75,6 +151,9 @@ class TutorOrchestrator:
                 status="degraded",
                 confidence="low",
                 diagnosis=diagnosis,
+                question_type=question_type,
+                answer_analysis=answer_analysis,
+                reference_answer_source=reference_answer_source,
                 error_type=None,
                 knowledge_points=list(parsed["knowledge_points"]),
                 card=card,
@@ -82,14 +161,20 @@ class TutorOrchestrator:
                 suggested_questions=card.suggested_questions,
                 updated_mastery=profile.mastery,
                 next_action="ask_clarifying_question",
-                clarifying_question="如果你方便，请补充孩子的答案或参考答案，我可以更准确判断错因。",
+                clarifying_question=(
+                    "如果你方便，请补充孩子的答案，我可以继续做错因分析。"
+                    if req.student_answer is None
+                    else "这题目前还没有可靠参考答案。需要先由模型生成参考答案，才能继续做错因分析。"
+                ),
             )
 
-        grade_result = self.grader.grade(req.student_answer, req.expected_answer)
+        grade_result = self.grader.grade(
+            problem_text=problem_text,
+            student_answer=req.student_answer,
+            expected_answer=reference_answer,
+            knowledge_points=list(parsed["knowledge_points"]),
+        )
         is_correct = bool(grade_result["is_correct"])
-
-        selected_style = self._select_style(profile.preferred_style, req.feedback_context)
-        profile.preferred_style = selected_style
 
         for kp in parsed["knowledge_points"]:
             prior = profile.mastery.get(kp, 0.6)
@@ -107,11 +192,18 @@ class TutorOrchestrator:
             style=selected_style,
             diagnosis=str(grade_result["diagnosis"]),
             knowledge_points=list(parsed["knowledge_points"]),
+            problem_text=problem_text,
+            error_type=None if is_correct else str(grade_result["error_type"]),
+            is_correct=is_correct,
+            question_type=question_type,
+            answer_analysis=answer_analysis.summary,
+            parent_note=req.parent_note,
         )
 
         practice_suggestion = self.practice.generate(
             knowledge_points=list(parsed["knowledge_points"]),
             is_correct=is_correct,
+            question_type=question_type,
         )
 
         card = self._build_card(
@@ -120,9 +212,10 @@ class TutorOrchestrator:
             selected_style=selected_style,
             is_correct=is_correct,
             error_type=str(grade_result["error_type"]),
+            question_type=question_type,
         )
 
-        confidence = "high" if is_correct else "medium"
+        confidence = self._confidence_bucket(float(grade_result.get("confidence", 0.7)))
         next_action = "show_card_and_collect_feedback"
 
         return DiagnoseResponse(
@@ -133,6 +226,9 @@ class TutorOrchestrator:
             status="completed",
             confidence=confidence,
             diagnosis=str(grade_result["diagnosis"]),
+            question_type=question_type,
+            answer_analysis=answer_analysis,
+            reference_answer_source=reference_answer_source,
             error_type=str(grade_result["error_type"]),
             knowledge_points=list(parsed["knowledge_points"]),
             card=card,
@@ -154,8 +250,14 @@ class TutorOrchestrator:
         selected_style: str,
         is_correct: bool | None,
         error_type: str | None,
+        question_type: str,
     ) -> CardSchema:
-        if is_correct is True:
+        if question_type == "open-ended":
+            likely_cause = "这类题没有唯一标准答案，更适合围绕评分点、证据和表达完整度来辅导。"
+            do_not_say = ["这题只有一个标准答案", "你就照着范文背"]
+            red_flags = ["不要把开放题直接压缩成对错判断。"]
+            fallback_plan = "如果孩子说不完整，先拆成“观点、依据、表达”三步，再让孩子重说或重写。"
+        elif is_correct is True:
             likely_cause = "这题目前已经答对，接下来更适合做迁移和巩固。"
             do_not_say = ["这题会了就不用再想了"]
             red_flags: list[str] = []
@@ -171,13 +273,16 @@ class TutorOrchestrator:
             red_flags = ["缺少学生答案或参考答案时，不要过早下结论。"]
             fallback_plan = "先补充孩子答案或口头思路，再决定是否需要改换讲法。"
 
+        coaching_steps = parent_guidance.get("coaching_steps")
+        materials_needed = parent_guidance.get("materials_needed")
+
         return CardSchema(
             card_title=self._build_card_title(is_correct, selected_style),
             diagnosis_summary=diagnosis,
             likely_cause=likely_cause,
-            coaching_steps=self._build_coaching_steps(str(parent_guidance["parent_card"])),
+            coaching_steps=list(coaching_steps) if isinstance(coaching_steps, list) else self._build_coaching_steps(str(parent_guidance["parent_card"])),
             suggested_questions=list(parent_guidance["suggested_questions"]),
-            materials_needed=self._materials_for_style(selected_style),
+            materials_needed=list(materials_needed) if isinstance(materials_needed, list) else self._materials_for_style(selected_style),
             do_not_say=do_not_say,
             red_flags=red_flags,
             fallback_plan=fallback_plan,
@@ -228,8 +333,19 @@ class TutorOrchestrator:
         return []
 
     def _likely_cause_from_error_type(self, error_type: str | None) -> str:
+        if error_type == "reading":
+            return "更像是题意没有抓准，先别急着重算，先确认孩子理解了在问什么。"
+        if error_type == "process":
+            return "更像是关键步骤没有站稳，尤其需要先讲清楚为什么要这样做。"
         if error_type == "calculation":
             return "更像是计算执行不稳定，而不是概念完全不懂。"
         if error_type == "none":
             return "这题已经答对，可以转向迁移应用。"
         return "更像是概念或步骤理解还不稳定，不建议简单归因为粗心。"
+
+    def _confidence_bucket(self, confidence: float) -> str:
+        if confidence >= 0.85:
+            return "high"
+        if confidence >= 0.65:
+            return "medium"
+        return "low"
