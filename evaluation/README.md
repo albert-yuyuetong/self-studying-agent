@@ -1,12 +1,35 @@
-# Evaluation Placeholder
+# 验证与真实模型评测
 
-This folder is reserved for evaluation assets:
+单元和集成测试验证软件状态与数据链路，不证明模型学科答案正确。
 
-- explanation quality rubric
-- profile update consistency checks
-- A/B experiment scripts
+## 自动化回归
 
-Suggested initial metrics:
-- parent usefulness feedback rate
-- repeat-error drop on targeted knowledge points
-- style adaptation effectiveness
+在 backend 目录运行：
+
+```powershell
+..\.venv\Scripts\python.exe -B -m pytest -q -p no:cacheprovider
+```
+
+覆盖跨学科输入传递、完整作答、画像与反馈上下文、空答案、不完整题目、结构修复、模型错误、证据复核门槛、重复作答、并发写入、会话归属和持久化。
+
+## 接入真实模型后的验收
+
+每组至少使用两种不同画像，保存题目、原始作答、模型名、配置、返回内容及人工检查结果。不要只检查“HTTP 200”或“JSON 字段齐全”。
+
+| 场景 | 必须检查 |
+| --- | --- |
+| 非预设任务：证明、实验设计、代码排错、材料比较、跨学科方案 | 不退化为口算/作文模板，讲解针对真实约束 |
+| 单位、百分比、方程、多解、完整演算过程 | 评估完整语义，不截取首个数字 |
+| 开放回答：优质/缺证据/偏题 | 同一题的不同作答产生有依据的差异 |
+| 缺文章、缺图、缺实验数据 | 主动澄清，不补造材料 |
+| 图文共同给条件 | 两种材料均被使用，不能忽略图或备注 |
+| 学习节奏慢、兴趣不同、已有具体薄弱观察 | 步骤、例子和追问随画像改变，并说明依据 |
+| 不懂反馈、多轮纠正 | 实际改变解释，保留题目上下文 |
+| 迁移练习 | 题干自足、可解、有检查标准且不超出当前目标 |
+| 新答案/相同答案重新讲解 | 新证据可入库，同一次作答不重复计数 |
+| 错误参考解、模型故障、无效 JSON | 降级可见，不展示未经验证讲解或写入错误画像 |
+
+人工记录四项：学科正确性、作答评估依据、画像使用是否合理、下一步是否可执行。涉及复杂学科材料时由熟悉该内容的人复核。
+
+模型复核会发生相关错误。即使配置第二个模型，也不能把“复核通过”当成外部权威证明。
+

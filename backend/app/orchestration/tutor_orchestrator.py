@@ -1,351 +1,165 @@
+"""Evidence-aware orchestration for arbitrary learning tasks.
+
+Teaching is a model responsibility; identities, state, validation and evidence
+admission are application responsibilities. No subject-specific routing lives here.
+"""
+
+import hashlib
+import json
 from uuid import uuid4
 
-from app.profile.bkt import update_mastery
-from app.repositories.profile_repository import InMemoryProfileRepository
-from app.schemas.diagnosis import AnswerAnalysisSchema, CardSchema, DiagnoseRequest, DiagnoseResponse
-from app.services.explanation_generator import ExplanationGenerator
-from app.services.grading_service import GradingService
-from app.services.practice_generator import PracticeGenerator
-from app.services.problem_analysis_service import ProblemAnalysisService
-from app.services.problem_parser import ProblemParser
-from app.services.style_adapter import StyleAdapter
+from app.repositories.profile_repository import SQLiteTutorRepository
+from app.schemas.diagnosis import (
+    Assessment, SkillEvidence, TaskAnalysis, TutorRequest, TutorResponse, Verification,
+)
+from app.services.tutor_engine import ModelOutputError, ModelUnavailable, TutorEngine
+
+
+def payload_fingerprint(req: TutorRequest) -> str:
+    data = req.model_dump(exclude={"request_id"})
+    return hashlib.sha256(json.dumps(data, sort_keys=True, ensure_ascii=False).encode()).hexdigest()
 
 
 class TutorOrchestrator:
-    def __init__(self, repo: InMemoryProfileRepository) -> None:
+    def __init__(self, repo: SQLiteTutorRepository, engine: TutorEngine | None = None) -> None:
         self.repo = repo
-        self.analyzer = ProblemAnalysisService()
-        self.parser = ProblemParser()
-        self.grader = GradingService()
-        self.style_adapter = StyleAdapter()
-        self.explainer = ExplanationGenerator()
-        self.practice = PracticeGenerator()
+        self.engine = engine or TutorEngine()
 
-    def diagnose(self, req: DiagnoseRequest) -> DiagnoseResponse:
-        request_id = req.request_id or f"req-{uuid4().hex[:12]}"
+    def diagnose(self, req: TutorRequest) -> TutorResponse:
+        return self.tutor(req)
 
-        analysis_result = self.analyzer.analyze(
-            subject=req.subject,
-            grade=req.grade,
-            problem_text=req.problem_text,
-            attachments=req.attachments,
-            parent_note=req.parent_note,
-        )
-        answer_analysis = AnswerAnalysisSchema(**analysis_result["answer_analysis"])
-        question_type = str(analysis_result["question_type"])
-        reference_answer_source = analysis_result.get("reference_answer_source")
+    def tutor(self, req: TutorRequest) -> TutorResponse:
+        fingerprint = payload_fingerprint(req)
+        request_id = req.request_id or f"req-{uuid4().hex}"
+        cached = self.repo.get_cached(req.student_id, request_id, fingerprint)
+        if cached is not None:
+            return cached
 
-        problem_text = (req.problem_text.strip() or answer_analysis.normalized_problem or "").strip()
-        if not problem_text:
-            return DiagnoseResponse(
-                request_id=request_id,
-                session_id=req.session_id,
-                student_id=req.student_id,
-                intent=req.parent_goal,
-                status="need_clarification",
-                confidence="low",
-                diagnosis="信息不足，暂时无法判断具体错因。",
-                question_type=question_type,
-                answer_analysis=answer_analysis,
-                reference_answer_source=reference_answer_source,
-                error_type=None,
-                knowledge_points=[],
-                card=self._build_clarification_card(),
-                practice_suggestion=None,
-                suggested_questions=["请先补充题目内容或上传更清晰的题目图片。"],
-                updated_mastery={},
-                next_action="ask_clarifying_question",
-                clarifying_question="请先补充完整题目，或上传一张更清晰的题目图片。",
-            )
-
+        session_id = req.session_id or f"session-{uuid4().hex}"
+        self.repo.ensure_session(req.student_id, session_id)
         profile = self.repo.get_or_create(req.student_id)
-        if req.grade:
-            profile.grade = req.grade
-        if req.textbook_version:
-            profile.textbook = req.textbook_version
-
-        parsed = self.parser.parse(problem_text, req.knowledge_points)
-        selected_style = self._select_style(profile.preferred_style, req.feedback_context)
-        profile.preferred_style = selected_style
-
-        if question_type == "open-ended":
-            diagnosis = answer_analysis.summary
-            parent_guidance = self.explainer.generate_parent_card(
-                style=selected_style,
-                diagnosis=diagnosis,
-                knowledge_points=list(parsed["knowledge_points"]),
-                problem_text=problem_text,
-                error_type=None,
-                is_correct=None,
-                question_type=question_type,
-                answer_analysis=answer_analysis.summary,
-                parent_note=req.parent_note,
-            )
-            card = self._build_card(
-                parent_guidance=parent_guidance,
-                diagnosis=diagnosis,
-                selected_style=selected_style,
-                is_correct=None,
-                error_type=None,
-                question_type=question_type,
-            )
-            self.repo.save(profile)
-            return DiagnoseResponse(
-                request_id=request_id,
-                session_id=req.session_id,
-                student_id=req.student_id,
-                intent=req.parent_goal,
-                status="completed",
-                confidence=self._confidence_bucket(answer_analysis.confidence or 0.6),
-                diagnosis=diagnosis,
-                question_type=question_type,
-                answer_analysis=answer_analysis,
-                reference_answer_source=reference_answer_source,
-                error_type=None,
-                knowledge_points=list(parsed["knowledge_points"]),
-                card=card,
-                practice_suggestion=self.practice.generate(
-                    knowledge_points=list(parsed["knowledge_points"]),
-                    is_correct=None,
-                    question_type=question_type,
-                ),
-                suggested_questions=card.suggested_questions,
-                updated_mastery=profile.mastery,
-                next_action="show_card_and_collect_feedback",
-                clarifying_question=None,
-            )
-
-        reference_answer = (answer_analysis.reference_answer or "").strip() or None
-
-        if req.student_answer is None or reference_answer is None:
-            diagnosis = (
-                "题目已收到，但还缺少进入错因分析所需的信息。"
-                if req.student_answer is None
-                else "题目已收到，但还没有可靠参考答案，先进入保守辅导模式。"
-            )
-            parent_guidance = self.explainer.generate_parent_card(
-                style=selected_style,
-                diagnosis=diagnosis,
-                knowledge_points=list(parsed["knowledge_points"]),
-                problem_text=problem_text,
-                error_type=None,
-                is_correct=None,
-                question_type=question_type,
-                answer_analysis=answer_analysis.summary,
-                parent_note=req.parent_note,
-            )
-            card = self._build_card(
-                parent_guidance=parent_guidance,
-                diagnosis=diagnosis,
-                selected_style=selected_style,
-                is_correct=None,
-                error_type=None,
-                question_type=question_type,
-            )
-            self.repo.save(profile)
-            return DiagnoseResponse(
-                request_id=request_id,
-                session_id=req.session_id,
-                student_id=req.student_id,
-                intent=req.parent_goal,
-                status="degraded",
-                confidence="low",
-                diagnosis=diagnosis,
-                question_type=question_type,
-                answer_analysis=answer_analysis,
-                reference_answer_source=reference_answer_source,
-                error_type=None,
-                knowledge_points=list(parsed["knowledge_points"]),
-                card=card,
-                practice_suggestion=None,
-                suggested_questions=card.suggested_questions,
-                updated_mastery=profile.mastery,
-                next_action="ask_clarifying_question",
-                clarifying_question=(
-                    "如果你方便，请补充孩子的答案，我可以继续做错因分析。"
-                    if req.student_answer is None
-                    else "这题目前还没有可靠参考答案。需要先由模型生成参考答案，才能继续做错因分析。"
-                ),
-            )
-
-        grade_result = self.grader.grade(
-            problem_text=problem_text,
-            student_answer=req.student_answer,
-            expected_answer=reference_answer,
-            knowledge_points=list(parsed["knowledge_points"]),
-        )
-        is_correct = bool(grade_result["is_correct"])
-
-        for kp in parsed["knowledge_points"]:
-            prior = profile.mastery.get(kp, 0.6)
-            posterior = update_mastery(prior=prior, correct=is_correct)
-            profile.mastery[kp] = posterior
-
-            if not is_correct:
-                profile.error_tags[grade_result["error_type"]] = profile.error_tags.get(
-                    grade_result["error_type"], 0
-                ) + 1
-
-        self.repo.save(profile)
-
-        parent_guidance = self.explainer.generate_parent_card(
-            style=selected_style,
-            diagnosis=str(grade_result["diagnosis"]),
-            knowledge_points=list(parsed["knowledge_points"]),
-            problem_text=problem_text,
-            error_type=None if is_correct else str(grade_result["error_type"]),
-            is_correct=is_correct,
-            question_type=question_type,
-            answer_analysis=answer_analysis.summary,
-            parent_note=req.parent_note,
-        )
-
-        practice_suggestion = self.practice.generate(
-            knowledge_points=list(parsed["knowledge_points"]),
-            is_correct=is_correct,
-            question_type=question_type,
-        )
-
-        card = self._build_card(
-            parent_guidance=parent_guidance,
-            diagnosis=str(grade_result["diagnosis"]),
-            selected_style=selected_style,
-            is_correct=is_correct,
-            error_type=str(grade_result["error_type"]),
-            question_type=question_type,
-        )
-
-        confidence = self._confidence_bucket(float(grade_result.get("confidence", 0.7)))
-        next_action = "show_card_and_collect_feedback"
-
-        return DiagnoseResponse(
+        history = self.repo.history(req.student_id, session_id)
+        resolved = req.model_copy(update={"request_id": request_id, "session_id": session_id})
+        response = TutorResponse(
             request_id=request_id,
-            session_id=req.session_id,
+            turn_id=f"turn-{uuid4().hex}",
+            session_id=session_id,
             student_id=req.student_id,
-            intent=req.parent_goal,
-            status="completed",
-            confidence=confidence,
-            diagnosis=str(grade_result["diagnosis"]),
-            question_type=question_type,
-            answer_analysis=answer_analysis,
-            reference_answer_source=reference_answer_source,
-            error_type=str(grade_result["error_type"]),
-            knowledge_points=list(parsed["knowledge_points"]),
-            card=card,
-            practice_suggestion=practice_suggestion,
-            suggested_questions=card.suggested_questions,
-            updated_mastery=profile.mastery,
-            next_action=next_action,
-            clarifying_question=None,
+            status="need_clarification",
+            guidance_mode="post-answer" if req.student_answer else "pre-answer",
+            profile=profile,
         )
 
-    def _select_style(self, preferred_style: str, feedback_context: object | None) -> str:
-        feedback_useful = getattr(feedback_context, "useful", None)
-        return self.style_adapter.choose_style(preferred_style, feedback_useful)
-
-    def _build_card(
-        self,
-        parent_guidance: dict[str, list[str] | str],
-        diagnosis: str,
-        selected_style: str,
-        is_correct: bool | None,
-        error_type: str | None,
-        question_type: str,
-    ) -> CardSchema:
-        if question_type == "open-ended":
-            likely_cause = "这类题没有唯一标准答案，更适合围绕评分点、证据和表达完整度来辅导。"
-            do_not_say = ["这题只有一个标准答案", "你就照着范文背"]
-            red_flags = ["不要把开放题直接压缩成对错判断。"]
-            fallback_plan = "如果孩子说不完整，先拆成“观点、依据、表达”三步，再让孩子重说或重写。"
-        elif is_correct is True:
-            likely_cause = "这题目前已经答对，接下来更适合做迁移和巩固。"
-            do_not_say = ["这题会了就不用再想了"]
-            red_flags: list[str] = []
-            fallback_plan = "让孩子换一个相近情境再做一题，确认不是只记住了答案。"
-        elif is_correct is False:
-            likely_cause = self._likely_cause_from_error_type(error_type)
-            do_not_say = ["你怎么又错了", "直接记住答案就行"]
-            red_flags = ["如果同类题连续出错，先退回前置知识点。"]
-            fallback_plan = "如果孩子仍不懂，先退回到更基础的一步做一题，再回到当前题。"
-        else:
-            likely_cause = "目前信息不足，更适合先确认孩子卡在哪一步。"
-            do_not_say = ["你先把答案背下来"]
-            red_flags = ["缺少学生答案或参考答案时，不要过早下结论。"]
-            fallback_plan = "先补充孩子答案或口头思路，再决定是否需要改换讲法。"
-
-        coaching_steps = parent_guidance.get("coaching_steps")
-        materials_needed = parent_guidance.get("materials_needed")
-
-        return CardSchema(
-            card_title=self._build_card_title(is_correct, selected_style),
-            diagnosis_summary=diagnosis,
-            likely_cause=likely_cause,
-            coaching_steps=list(coaching_steps) if isinstance(coaching_steps, list) else self._build_coaching_steps(str(parent_guidance["parent_card"])),
-            suggested_questions=list(parent_guidance["suggested_questions"]),
-            materials_needed=list(materials_needed) if isinstance(materials_needed, list) else self._materials_for_style(selected_style),
-            do_not_say=do_not_say,
-            red_flags=red_flags,
-            fallback_plan=fallback_plan,
-            tone="encouraging",
-            style=selected_style,
+        original_images_missing = history and not resolved.attachments and any(
+            turn.get("request", {}).get("attachments")
+            or turn.get("response", {}).get("warnings") == ["本题仍需原始图片材料。"]
+            for turn in history
         )
+        if original_images_missing:
+            response.warnings = ["本题仍需原始图片材料。"]
+            response.clarifying_questions = ["这道题之前包含图片，请在本轮保留原图；若已完整转写为文字，请作为新题开始。"]
+            return self.repo.commit_turn(resolved, response, fingerprint, None, [])
 
-    def _build_clarification_card(self) -> CardSchema:
-        return CardSchema(
-            card_title="先补充题目信息",
-            diagnosis_summary="题目内容不足，暂时无法进入准确诊断。",
-            likely_cause="当前更像是输入信息不完整，而不是孩子能力问题。",
-            coaching_steps=[
-                "先补充完整题干或上传更清晰的图片。",
-                "如果方便，再补充孩子的答案或解题过程。",
-            ],
-            suggested_questions=["能补一张更清晰的题目图片吗？"],
-            materials_needed=[],
-            do_not_say=["先别急着直接告诉孩子答案。"],
-            red_flags=["信息不完整时不要强行判断错因。"],
-            fallback_plan="拿到完整题目和孩子答案后，再进入诊断和讲解。",
-            tone="calm",
-            style="direct",
-        )
+        if not resolved.problem_text and not resolved.attachments and (resolved.follow_up or resolved.student_answer):
+            # An empty clarification turn must not hide the most recent actual task.
+            for turn in reversed(history):
+                previous_text = turn.get("request", {}).get("problem_text", "")
+                if previous_text:
+                    resolved = resolved.model_copy(update={"problem_text": previous_text})
+                    break
 
-    def _build_card_title(self, is_correct: bool | None, selected_style: str) -> str:
-        if is_correct is True:
-            return "这题会了，下一步做迁移巩固"
-        if is_correct is False:
-            return f"先稳住关键步骤，再用{selected_style}方式讲一遍"
-        return "先确认卡点，再决定怎么讲"
+        if not resolved.problem_text and not resolved.attachments:
+            response.clarifying_questions = ["请提供完整题目、材料或图片；续问图片题时请保留原图。"]
+            return self.repo.commit_turn(resolved, response, fingerprint, None, [])
 
-    def _build_coaching_steps(self, parent_card_text: str) -> list[str]:
-        focus_text = parent_card_text.strip()
-        return [
-            "先让孩子复述题目和当前思路。",
-            focus_text,
-            "最后让孩子自己用一句话总结这题最关键的一步。",
-        ]
+        try:
+            analysis = self.engine.analyze(resolved, profile, history)
+            # Empty answers are never negative evidence, even if the provider misbehaves.
+            if not resolved.student_answer:
+                analysis.assessment = Assessment(
+                    verdict="not-submitted", summary="本轮尚未提交作答，先提供理解与思路引导。",
+                    evidence=[], confidence=1,
+                )
+                analysis.skill_evidence = []
+            response.analysis = analysis
+            if analysis.missing_information:
+                analysis.skill_evidence = []
+                analysis.reference_solution = []
+                analysis.assessment = Assessment(
+                    verdict="uncertain" if resolved.student_answer else "not-submitted",
+                    summary="题目材料不足，补充后再评估当前作答。",
+                    evidence=[], confidence=0,
+                )
+                response.clarifying_questions = analysis.missing_information
+                return self.repo.commit_turn(resolved, response, fingerprint, None, [])
 
-    def _materials_for_style(self, selected_style: str) -> list[str]:
-        if selected_style == "visual":
-            return ["草稿纸", "彩笔"]
-        if selected_style == "hands-on":
-            return ["纸条", "小物块"]
-        if selected_style == "story":
-            return ["口头情境示例"]
-        return []
+            response.strategy = self.engine.plan(resolved, profile, analysis, history)
+            lesson = self.engine.teach(resolved, profile, analysis, response.strategy, history)
+            review = self.engine.verify(resolved, profile, analysis, lesson, history)
+            response.verification = review
 
-    def _likely_cause_from_error_type(self, error_type: str | None) -> str:
-        if error_type == "reading":
-            return "更像是题意没有抓准，先别急着重算，先确认孩子理解了在问什么。"
-        if error_type == "process":
-            return "更像是关键步骤没有站稳，尤其需要先讲清楚为什么要这样做。"
-        if error_type == "calculation":
-            return "更像是计算执行不稳定，而不是概念完全不懂。"
-        if error_type == "none":
-            return "这题已经答对，可以转向迁移应用。"
-        return "更像是概念或步骤理解还不稳定，不建议简单归因为粗心。"
+            # Fail closed: do not display a lesson the second pass could not verify.
+            if not review.reliable or review.issues or analysis.confidence < 0.6:
+                response.status = "degraded"
+                response.warnings = review.issues or ["当前内容尚未通过可靠性检查，请补充题目条件或重新尝试。"]
+                analysis.skill_evidence = []
+                analysis.assessment = Assessment(
+                    verdict="uncertain" if resolved.student_answer else "not-submitted",
+                    summary="当前分析尚未可靠验证，暂不判断作答或更新学习记录。",
+                    evidence=[], confidence=0,
+                )
+                # Unverified reference answers should not masquerade as trustworthy help.
+                analysis.reference_solution = []
+                return response
 
-    def _confidence_bucket(self, confidence: float) -> str:
-        if confidence >= 0.85:
-            return "high"
-        if confidence >= 0.65:
-            return "medium"
-        return "low"
+            response.lesson = lesson
+            response.status = "completed"
+            evidence = self._admit_evidence(resolved, analysis, review)
+            analysis.skill_evidence = evidence
+            response.verification.approved_evidence = evidence
+            if resolved.student_answer and not evidence:
+                response.warnings.append("本轮没有足够可靠且具体的知识点证据，学习观察未更新。")
+            response.warnings.append("讲解与复核由模型完成；复核通过不等于外部权威认证。")
+            attempt_key = self._attempt_key(resolved) if evidence else None
+            return self.repo.commit_turn(resolved, response, fingerprint, attempt_key, evidence)
+        except (ModelUnavailable, ModelOutputError) as exc:
+            response.status = "degraded"
+            response.lesson = None
+            response.analysis = None
+            response.verification = Verification(reliable=False, issues=[str(exc)])
+            response.warnings = [str(exc), "本次未生成可验证讲解，也未更新学习观察。"]
+            # Transient failures are not cached, so retrying the same request can recover.
+            return response
+
+    @staticmethod
+    def _attempt_key(req: TutorRequest) -> str:
+        # Identical submissions in one session are one observation, even after a
+        # regenerated lesson or a client-created new attempt id.
+        source = {
+            "session": req.session_id, "student": req.student_id,
+            "problem": req.problem_text,
+            "images": req.attachments, "answer": req.student_answer, "answer_to": req.answer_to,
+        }
+        return hashlib.sha256(json.dumps(source, sort_keys=True, ensure_ascii=False).encode()).hexdigest()
+
+    @staticmethod
+    def _admit_evidence(req: TutorRequest, analysis: TaskAnalysis, review: Verification) -> list[SkillEvidence]:
+        if (
+            not req.student_answer or not review.reliable or review.issues
+            or analysis.confidence < 0.8 or analysis.assessment.confidence < 0.8
+            or analysis.assessment.verdict in {"uncertain", "not-submitted"}
+        ):
+            return []
+        skills = {(item.subject.casefold(), item.name.casefold()) for item in analysis.skills}
+        proposed = {
+            (item.subject.casefold(), item.name.casefold(), item.outcome, item.evidence): item
+            for item in analysis.skill_evidence if item.confidence >= 0.8
+        }
+        accepted = []
+        for item in review.approved_evidence:
+            key = (item.subject.casefold(), item.name.casefold(), item.outcome, item.evidence)
+            original = proposed.get(key)
+            if original and key[:2] in skills and item.confidence >= 0.8:
+                accepted.append(item.model_copy(update={"confidence": min(item.confidence, original.confidence)}))
+        return accepted
+

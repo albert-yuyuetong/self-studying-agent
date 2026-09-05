@@ -1,45 +1,64 @@
-# Architecture Scaffold
+# 通用家教架构
 
-This document maps the conceptual design in the root README to the current code scaffold.
+## 边界
 
-## Layers
+模型负责理解开放任务和生成教学内容；应用负责输入契约、上下文传递、用户控制、状态、输出校验、证据准入和持久化。不再根据题干符号或固定词表选择题型服务。
 
-1. Parent Interaction Layer
-- Current status: placeholder in frontend folder.
-- Future: mini-program/web app for photo upload, voice, and feedback.
+`TutorRequest.subject` 与 `TaskAnalysis.task_type` 是自由文本。固定枚举只表达运行状态、作答评估状态和证据方向，不限制学科或题型。
 
-2. Agent Orchestration Layer
-- Implemented at app/orchestration/tutor_orchestrator.py.
-- Responsibility: intent routing, LLM-based question typing, reference-answer gating, service composition, and profile-aware output strategy.
+## 模块
 
-3. Domain Service Layer
-- app/services/problem_analysis_service.py
-- app/services/problem_parser.py
-- app/services/grading_service.py
-- app/services/style_adapter.py
-- app/services/explanation_generator.py
-- app/services/practice_generator.py
-- app/services/llm_client.py
+| 模块 | 责任 |
+| --- | --- |
+| `schemas/diagnosis.py` | 输入、动态任务分析、讲解步骤、练习、复核与反馈的类型约束 |
+| `schemas/profile.py` | 家长可编辑画像与派生的学习观察分离 |
+| `services/llm_client.py` | HTTP、图片输入、JSON Schema 提示、严格校验、最多一次结构修复 |
+| `services/tutor_engine.py` | analyze → plan → teach → verify，完整输入与画像进入模型上下文 |
+| `orchestration/tutor_orchestrator.py` | 澄清/降级状态、复核拦截、证据准入、请求与作答幂等 |
+| `repositories/profile_repository.py` | SQLite 事务、会话归属、学习观察、反馈和请求收据 |
+| `api/v1/routes.py` | 辅导、画像、反馈、会话 API |
+| `frontend/src/App.jsx` | 画像编辑、自由输入、讲解、追问、反馈和练习回流 |
 
-4. Data and Profile Layer
-- app/repositories/profile_repository.py provides in-memory profile persistence.
-- app/profile/bkt.py provides lightweight BKT probability update.
+## 请求生命周期
 
-## MVP Flow Implemented
+1. 请求规范化：空白答案归一为 null，限制文本/图片大小，拒绝不支持的附件类型。
+2. 计算原请求指纹；同学生同 request_id 返回已保存结果，不同内容冲突返回 409。
+3. 建立或检查会话归属，读取画像和最近六轮上下文。
+4. 题目信息为空则要求补充。纯文字续问可继承上轮题干；图片需重传原始材料。
+5. 动态任务分析。缺少必要文章、图示、实验数据等则返回 need_clarification，不进行作答归因。
+6. 根据画像与明确要求制定策略，生成具体讲解及可独立作答的练习。
+7. 发起独立复核。未通过、有未解决问题或分析置信度低于 0.6 时，返回 degraded，不展示讲解或参考解。
+8. 只有通过复核的讲解返回 completed，再由应用独立筛选可入库的作答证据。
+9. 在事务内重查去重状态、读取最新画像、合并观察并保存响应，避免并发覆盖。
 
-1. POST /api/v1/diagnose receives one problem request.
-2. LLM-first problem analysis classifies the question as standard-answer or open-ended.
-3. For standard-answer questions, the system tries to obtain an LLM-derived reference answer before grading.
-4. Parse problem and infer target knowledge points.
-5. Standard-answer questions with a reference answer go through grading and error classification; open-ended questions skip grading.
-6. Select explanation style based on profile and feedback.
-7. Update mastery using BKT only when a standard-answer question has been graded.
-8. Return parent coaching card, guiding questions, and practice suggestion.
+模型或格式异常不会保存为成功请求，因此同一请求可重试恢复。需要澄清的结果会保存；补充材料属于新请求。
 
-## Next Build Targets
+## 证据准入
 
-1. OCR and multimodal ingestion.
-2. Knowledge graph backed concept taxonomy.
-3. PostgreSQL + Redis integration.
-4. LLM strategy layer for richer parent coaching scripts.
-5. Stronger reference-answer generation for standard-answer questions.
+- 本轮必须存在非空学生作答。
+- 分析与作答评估置信度均至少 0.8。
+- 评估不是 uncertain 或 not-submitted。
+- 技能证据必须属于分析识别的技能，并且被复核以相同证据与方向确认。
+- 原证据及复核证据置信度均至少 0.8。
+- 同一作答中的同一技能只记录一次，互相矛盾的方向不计。
+- 同会话、同题目/图片、同答案的再次请求不增加观察次数，包括改换讲法或客户端另造 attempt_id。
+- 降级、未作答、资料不足、低置信度和“讲解有用”均不能直接更新知识观察。
+
+这些置信度是模型自报的准入信号，不是经过标定的正确率。记录展示的是观察次数与原始证据，不是“掌握概率”。
+
+## 反馈与个性化
+
+显式画像由 PUT 保存。讲解反馈关联具体 turn_id、session_id、student_id；同一轮最多一条反馈，重复发送不重复计数。
+
+useful 累计对应讲法的正/负反馈。child_understood 和 comment 保存在会话上下文，用来组织后续讲解，但不直接当成答对证据。系统提供讲法选择依据，用户可以在本轮 requested_strategy 覆盖建议。
+
+技能以学科与名称规范化后的组合标识。模型会被要求复用已有相同技能名；同义词的跨轮语义合并仍需要后续建设，不能把不同标签自然当作同一个技能。
+
+## 持久化与部署边界
+
+SQLite 表：profiles、sessions、turns、attempts、turn_feedback、feedback_receipts。请求和画像更新采用事务，唯一约束保护去重；本地文件数据库使用 WAL 和 busy timeout。
+
+只保存文本与图片指纹，不保存图片 base64。恢复图片题时需要客户端重传原图。会话读取检查归属，但 student_id 仍由本地客户端提供，不能替代身份认证。
+
+本阶段提供本地单机运行。没有自动工具执行、教材 RAG、外部事实验证或公网账号体系。任何扩展应在通用任务/证据契约后接入，避免重新增加按题型硬编码的分支。
+
