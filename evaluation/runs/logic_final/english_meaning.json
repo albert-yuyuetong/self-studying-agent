@@ -1,0 +1,639 @@
+{
+  "case": "english_meaning",
+  "rubric": [
+    "not all不是all也不是none",
+    "suggests a link不是proves causation",
+    "可接受多种保留量词和不确定性的自然表达"
+  ],
+  "request": {
+    "subject": "英语",
+    "problem_text": "判断改写是否保留原句的量词、否定和证据强度，并给出保留原意的自然改写。原句：Not all students who studied longer improved; the survey suggests a link, but does not prove causation.",
+    "student_answer": "All students improved because they studied longer."
+  },
+  "profile": {
+    "grade": "高中二年级",
+    "language": "中文，英语例句保留英文",
+    "preferred_explanation_modes": [
+      "对照句子中的逻辑范围"
+    ]
+  },
+  "http_status": 200,
+  "response": {
+    "request_id": "english_meaning",
+    "turn_id": "turn-e1e46418e3414f1984e33e35bc8547ed",
+    "session_id": "session-ed7eb91685cf481388f6c440c82d9ad4",
+    "student_id": "live-test",
+    "status": "degraded",
+    "guidance_mode": "post-answer",
+    "analysis": {
+      "subject": "英语",
+      "task_summary": "判断学生的英语改写是否保留原句的量词范围、否定意义和证据强度，并给出保留原意的自然改写。原句为：Not all students who studied longer improved; the survey suggests a link, but does not prove causation. 学生提交的改写为：All students improved because they studied longer.",
+      "task_type": "英语语义等值判断与改写（量词、否定、证据强度）",
+      "missing_information": [],
+      "learning_objectives": [
+        "识别“Not all”与“all”在量词范围和否定意义上的差别，理解“not all”不等于“none”，也不等于“all”。",
+        "区分“suggests a link”与“proves causation”，在改写中保留相关关系与因果断言之间的证据强度差异。",
+        "在保留原句逻辑范围、否定和证据强度的前提下，写出自然、等值的英语改写。"
+      ],
+      "skills": [
+        {
+          "name": "英语量词与否定范围辨析",
+          "subject": "英语"
+        },
+        {
+          "name": "英语证据强度（相关/因果）辨析",
+          "subject": "英语"
+        },
+        {
+          "name": "英语语义等值改写",
+          "subject": "英语"
+        }
+      ],
+      "reference_solution": [],
+      "assessment": {
+        "verdict": "uncertain",
+        "summary": "当前分析尚未可靠验证，暂不判断作答或更新学习记录。",
+        "evidence": [],
+        "confidence": 0.0
+      },
+      "skill_evidence": [],
+      "confidence": 0.98
+    },
+    "strategy": {
+      "approach": "对照句子中的逻辑范围",
+      "rationale": [
+        "从已设置的讲解偏好中选择有帮助反馈较多的方式，同分时保留偏好顺序。",
+        "采用均衡节奏，在关键步骤安排理解检查。",
+        "依据年级调整术语和必要的前置说明，不据此断言学生已经掌握。",
+        "围绕本轮家长或学生设定的辅导目标组织内容。"
+      ],
+      "profile_used": [
+        "preferred_explanation_modes",
+        "pace",
+        "grade",
+        "language"
+      ],
+      "pace": "balanced"
+    },
+    "lesson": null,
+    "verification": {
+      "reliable": false,
+      "issues": [
+        "第2步的检查点“保留至少一个例外，而不是 none”容易把“Not all”与“none”说成互斥；实际上“没有学生通过”也可以满足“并非全部通过”，只是不是必然。应明确：B 必然成立，C 只是相容，不能把 C 判为与 Not all 不相容。",
+        "第4步设问“如果保留 because”与检查点“把 because 改成 suggests...”相互矛盾，且只改后半句仍缺原句“who studied longer”的范围限制；应改为先问“只改 All 为什么仍不等值”，再要求补回范围并删除或改写 because。"
+      ],
+      "approved_evidence": []
+    },
+    "clarifying_questions": [],
+    "warnings": [
+      "第2步的检查点“保留至少一个例外，而不是 none”容易把“Not all”与“none”说成互斥；实际上“没有学生通过”也可以满足“并非全部通过”，只是不是必然。应明确：B 必然成立，C 只是相容，不能把 C 判为与 Not all 不相容。",
+      "第4步设问“如果保留 because”与检查点“把 because 改成 suggests...”相互矛盾，且只改后半句仍缺原句“who studied longer”的范围限制；应改为先问“只改 All 为什么仍不等值”，再要求补回范围并删除或改写 because。"
+    ],
+    "profile": {
+      "display_name": "",
+      "grade": "高中二年级",
+      "textbook": "",
+      "learning_goal": "",
+      "language": "中文，英语例句保留英文",
+      "preferred_explanation_modes": [
+        "对照句子中的逻辑范围"
+      ],
+      "interests": [],
+      "pace": "balanced",
+      "notes": "",
+      "student_id": "live-test",
+      "skills": {},
+      "format_feedback": {}
+    },
+    "profile_updates": []
+  },
+  "stages": [
+    {
+      "stage": "analyze",
+      "context": {
+        "request": {
+          "request_id": "english_meaning",
+          "session_id": "session-ed7eb91685cf481388f6c440c82d9ad4",
+          "student_id": "live-test",
+          "subject": "英语",
+          "problem_text": "判断改写是否保留原句的量词、否定和证据强度，并给出保留原意的自然改写。原句：Not all students who studied longer improved; the survey suggests a link, but does not prove causation.",
+          "student_answer": "All students improved because they studied longer.",
+          "answer_to": null,
+          "parent_goal": "准确解释当前作答的问题，帮助学习者理解并独立完成。",
+          "parent_note": null,
+          "follow_up": null,
+          "requested_strategy": null,
+          "attempt_id": null,
+          "grade": null,
+          "textbook_version": null,
+          "input_mode": "text",
+          "image_count": 0
+        },
+        "profile": {
+          "display_name": "",
+          "grade": "高中二年级",
+          "textbook": "",
+          "learning_goal": "",
+          "language": "中文，英语例句保留英文",
+          "preferred_explanation_modes": [
+            "对照句子中的逻辑范围"
+          ],
+          "interests": [],
+          "pace": "balanced",
+          "notes": "",
+          "student_id": "live-test",
+          "skills": {},
+          "format_feedback": {}
+        },
+        "history": [],
+        "history_notice": "历史仅为服务提供的最近轮次，并非完整会话。本次收到 0 轮，按 24000 字符预算完整保留最近 0 轮；其中超出预算的 0 轮已省略；更早轮次未计入本次窗口。未截断任何保留的题干或作答。历史画像副本、技能证据回执和其他重复派生字段已省略，当前完整画像单独提供。若追问依赖不可见的历史材料，请明确请求用户重传具体材料，不得推测补全。"
+      },
+      "output": {
+        "subject": "英语",
+        "task_summary": "判断学生的英语改写是否保留原句的量词范围、否定意义和证据强度，并给出保留原意的自然改写。原句为：Not all students who studied longer improved; the survey suggests a link, but does not prove causation. 学生提交的改写为：All students improved because they studied longer.",
+        "task_type": "英语语义等值判断与改写（量词、否定、证据强度）",
+        "missing_information": [],
+        "learning_objectives": [
+          "识别“Not all”与“all”在量词范围和否定意义上的差别，理解“not all”不等于“none”，也不等于“all”。",
+          "区分“suggests a link”与“proves causation”，在改写中保留相关关系与因果断言之间的证据强度差异。",
+          "在保留原句逻辑范围、否定和证据强度的前提下，写出自然、等值的英语改写。"
+        ],
+        "skills": [
+          {
+            "name": "英语量词与否定范围辨析",
+            "subject": "英语"
+          },
+          {
+            "name": "英语证据强度（相关/因果）辨析",
+            "subject": "英语"
+          },
+          {
+            "name": "英语语义等值改写",
+            "subject": "英语"
+          }
+        ],
+        "reference_solution": [
+          "判定：学生改写不保留原意。",
+          "原句逻辑：“Not all students who studied longer improved”意为“并非所有学习更久的学生都进步了”，即至少有一名学习更久的学生没有进步；不能改写成“All students improved”。",
+          "原句证据强度：“the survey suggests a link, but does not prove causation”意为“调查提示存在关联，但不能证明因果关系”；不能改写成“because they studied longer”这样的确定因果断言。",
+          "学生答案的问题：All 将“并非全部”改成“全部”；because 将“提示关联、未证明因果”改成确定因果；同时省略了“does not prove causation”。",
+          "可接受的自然改写示例：Not every student who studied longer improved; the survey suggests a link, but it does not prove causation.",
+          "另一可接受示例：Studying longer did not lead every student to improve; the survey points to a possible link, but it does not establish causation."
+        ],
+        "assessment": {
+          "verdict": "needs-revision",
+          "summary": "学生的改写没有保留原意：它把“并非所有学习更久的学生都进步了”改成“所有学生都进步了”，取消了否定和部分量词；又把“调查提示存在关联但不能证明因果”改成“because”引出的确定因果关系，并省略了“不证明因果”的限制。学生也没有明确回答“是否保留原意”。",
+          "evidence": [
+            "原句中的“Not all students who studied longer improved”表示“并非所有学习更久的学生都进步了”，学生写成“All students improved”，把“并非全部”改成“全部”，改变了真值条件。",
+            "原句中的“the survey suggests a link, but does not prove causation”只支持“提示存在关联”，并明确“不证明因果关系”；学生用“because they studied longer”写成确定因果，证据强度被明显提高。",
+            "学生答案没有明确给出“是否保留原意”的判断，且给出的改写同时违反量词、否定和证据强度三项约束。"
+          ],
+          "confidence": 0.98
+        },
+        "skill_evidence": [
+          {
+            "name": "英语量词与否定范围辨析",
+            "subject": "英语",
+            "outcome": "needs-support",
+            "evidence": "学生将“Not all students who studied longer improved”改写为“All students improved”，把“并非全部”变成“全部”，丢失了否定和部分量词，直接改变原句真值条件。",
+            "confidence": 0.99
+          },
+          {
+            "name": "英语证据强度（相关/因果）辨析",
+            "subject": "英语",
+            "outcome": "needs-support",
+            "evidence": "学生用“because they studied longer”表达确定因果，而原句只说“suggests a link”且明确“does not prove causation”，证据强度被提高。",
+            "confidence": 0.98
+          },
+          {
+            "name": "英语语义等值改写",
+            "subject": "英语",
+            "outcome": "needs-support",
+            "evidence": "学生给出的“All students improved because they studied longer”不是等值改写，既改变量词与否定，也改变相关/因果的证据强度。",
+            "confidence": 0.97
+          }
+        ],
+        "confidence": 0.98
+      },
+      "seconds": 17.17,
+      "completions": [
+        {
+          "model": "deepseek-v4-flash-vision-exp",
+          "seconds": 17.17,
+          "content": "{\"subject\":\"英语\",\"task_summary\":\"判断学生的英语改写是否保留原句的量词范围、否定意义和证据强度，并给出保留原意的自然改写。原句为：Not all students who studied longer improved; the survey suggests a link, but does not prove causation. 学生提交的改写为：All students improved because they studied longer.\",\"task_type\":\"英语语义等值判断与改写（量词、否定、证据强度）\",\"assessment\":{\"verdict\":\"needs-revision\",\"summary\":\"学生的改写没有保留原意：它把“并非所有学习更久的学生都进步了”改成“所有学生都进步了”，取消了否定和部分量词；又把“调查提示存在关联但不能证明因果”改成“because”引出的确定因果关系，并省略了“不证明因果”的限制。学生也没有明确回答“是否保留原意”。\",\"evidence\":[\"原句中的“Not all students who studied longer improved”表示“并非所有学习更久的学生都进步了”，学生写成“All students improved”，把“并非全部”改成“全部”，改变了真值条件。\",\"原句中的“the survey suggests a link, but does not prove causation”只支持“提示存在关联”，并明确“不证明因果关系”；学生用“because they studied longer”写成确定因果，证据强度被明显提高。\",\"学生答案没有明确给出“是否保留原意”的判断，且给出的改写同时违反量词、否定和证据强度三项约束。\"],\"confidence\":0.98},\"confidence\":0.98,\"learning_objectives\":[\"识别“Not all”与“all”在量词范围和否定意义上的差别，理解“not all”不等于“none”，也不等于“all”。\",\"区分“suggests a link”与“proves causation”，在改写中保留相关关系与因果断言之间的证据强度差异。\",\"在保留原句逻辑范围、否定和证据强度的前提下，写出自然、等值的英语改写。\"],\"skills\":[{\"subject\":\"英语\",\"name\":\"英语量词与否定范围辨析\"},{\"subject\":\"英语\",\"name\":\"英语证据强度（相关/因果）辨析\"},{\"subject\":\"英语\",\"name\":\"英语语义等值改写\"}],\"reference_solution\":[\"判定：学生改写不保留原意。\",\"原句逻辑：“Not all students who studied longer improved”意为“并非所有学习更久的学生都进步了”，即至少有一名学习更久的学生没有进步；不能改写成“All students improved”。\",\"原句证据强度：“the survey suggests a link, but does not prove causation”意为“调查提示存在关联，但不能证明因果关系”；不能改写成“because they studied longer”这样的确定因果断言。\",\"学生答案的问题：All 将“并非全部”改成“全部”；because 将“提示关联、未证明因果”改成确定因果；同时省略了“does not prove causation”。\",\"可接受的自然改写示例：Not every student who studied longer improved; the survey suggests a link, but it does not prove causation.\",\"另一可接受示例：Studying longer did not lead every student to improve; the survey points to a possible link, but it does not establish causation.\"],\"skill_evidence\":[{\"subject\":\"英语\",\"name\":\"英语量词与否定范围辨析\",\"outcome\":\"needs-support\",\"evidence\":\"学生将“Not all students who studied longer improved”改写为“All students improved”，把“并非全部”变成“全部”，丢失了否定和部分量词，直接改变原句真值条件。\",\"confidence\":0.99},{\"subject\":\"英语\",\"name\":\"英语证据强度（相关/因果）辨析\",\"outcome\":\"needs-support\",\"evidence\":\"学生用“because they studied longer”表达确定因果，而原句只说“suggests a link”且明确“does not prove causation”，证据强度被提高。\",\"confidence\":0.98},{\"subject\":\"英语\",\"name\":\"英语语义等值改写\",\"outcome\":\"needs-support\",\"evidence\":\"学生给出的“All students improved because they studied longer”不是等值改写，既改变量词与否定，也改变相关/因果的证据强度。\",\"confidence\":0.97}],\"missing_information\":[]}"
+        }
+      ]
+    },
+    {
+      "stage": "teach",
+      "context": {
+        "request": {
+          "request_id": "english_meaning",
+          "session_id": "session-ed7eb91685cf481388f6c440c82d9ad4",
+          "student_id": "live-test",
+          "subject": "英语",
+          "problem_text": "判断改写是否保留原句的量词、否定和证据强度，并给出保留原意的自然改写。原句：Not all students who studied longer improved; the survey suggests a link, but does not prove causation.",
+          "student_answer": "All students improved because they studied longer.",
+          "answer_to": null,
+          "parent_goal": "准确解释当前作答的问题，帮助学习者理解并独立完成。",
+          "parent_note": null,
+          "follow_up": null,
+          "requested_strategy": null,
+          "attempt_id": null,
+          "grade": null,
+          "textbook_version": null,
+          "input_mode": "text",
+          "image_count": 0
+        },
+        "profile": {
+          "display_name": "",
+          "grade": "高中二年级",
+          "textbook": "",
+          "learning_goal": "",
+          "language": "中文，英语例句保留英文",
+          "preferred_explanation_modes": [
+            "对照句子中的逻辑范围"
+          ],
+          "interests": [],
+          "pace": "balanced",
+          "notes": "",
+          "student_id": "live-test",
+          "skills": {},
+          "format_feedback": {}
+        },
+        "history": [],
+        "history_notice": "历史仅为服务提供的最近轮次，并非完整会话。本次收到 0 轮，按 24000 字符预算完整保留最近 0 轮；其中超出预算的 0 轮已省略；更早轮次未计入本次窗口。未截断任何保留的题干或作答。历史画像副本、技能证据回执和其他重复派生字段已省略，当前完整画像单独提供。若追问依赖不可见的历史材料，请明确请求用户重传具体材料，不得推测补全。",
+        "analysis": {
+          "subject": "英语",
+          "task_summary": "判断学生的英语改写是否保留原句的量词范围、否定意义和证据强度，并给出保留原意的自然改写。原句为：Not all students who studied longer improved; the survey suggests a link, but does not prove causation. 学生提交的改写为：All students improved because they studied longer.",
+          "task_type": "英语语义等值判断与改写（量词、否定、证据强度）",
+          "missing_information": [],
+          "learning_objectives": [
+            "识别“Not all”与“all”在量词范围和否定意义上的差别，理解“not all”不等于“none”，也不等于“all”。",
+            "区分“suggests a link”与“proves causation”，在改写中保留相关关系与因果断言之间的证据强度差异。",
+            "在保留原句逻辑范围、否定和证据强度的前提下，写出自然、等值的英语改写。"
+          ],
+          "skills": [
+            {
+              "name": "英语量词与否定范围辨析",
+              "subject": "英语"
+            },
+            {
+              "name": "英语证据强度（相关/因果）辨析",
+              "subject": "英语"
+            },
+            {
+              "name": "英语语义等值改写",
+              "subject": "英语"
+            }
+          ],
+          "reference_solution": [
+            "判定：学生改写不保留原意。",
+            "原句逻辑：“Not all students who studied longer improved”意为“并非所有学习更久的学生都进步了”，即至少有一名学习更久的学生没有进步；不能改写成“All students improved”。",
+            "原句证据强度：“the survey suggests a link, but does not prove causation”意为“调查提示存在关联，但不能证明因果关系”；不能改写成“because they studied longer”这样的确定因果断言。",
+            "学生答案的问题：All 将“并非全部”改成“全部”；because 将“提示关联、未证明因果”改成确定因果；同时省略了“does not prove causation”。",
+            "可接受的自然改写示例：Not every student who studied longer improved; the survey suggests a link, but it does not prove causation.",
+            "另一可接受示例：Studying longer did not lead every student to improve; the survey points to a possible link, but it does not establish causation."
+          ],
+          "assessment": {
+            "verdict": "needs-revision",
+            "summary": "学生的改写没有保留原意：它把“并非所有学习更久的学生都进步了”改成“所有学生都进步了”，取消了否定和部分量词；又把“调查提示存在关联但不能证明因果”改成“because”引出的确定因果关系，并省略了“不证明因果”的限制。学生也没有明确回答“是否保留原意”。",
+            "evidence": [
+              "原句中的“Not all students who studied longer improved”表示“并非所有学习更久的学生都进步了”，学生写成“All students improved”，把“并非全部”改成“全部”，改变了真值条件。",
+              "原句中的“the survey suggests a link, but does not prove causation”只支持“提示存在关联”，并明确“不证明因果关系”；学生用“because they studied longer”写成确定因果，证据强度被明显提高。",
+              "学生答案没有明确给出“是否保留原意”的判断，且给出的改写同时违反量词、否定和证据强度三项约束。"
+            ],
+            "confidence": 0.98
+          },
+          "skill_evidence": [
+            {
+              "name": "英语量词与否定范围辨析",
+              "subject": "英语",
+              "outcome": "needs-support",
+              "evidence": "学生将“Not all students who studied longer improved”改写为“All students improved”，把“并非全部”变成“全部”，丢失了否定和部分量词，直接改变原句真值条件。",
+              "confidence": 0.99
+            },
+            {
+              "name": "英语证据强度（相关/因果）辨析",
+              "subject": "英语",
+              "outcome": "needs-support",
+              "evidence": "学生用“because they studied longer”表达确定因果，而原句只说“suggests a link”且明确“does not prove causation”，证据强度被提高。",
+              "confidence": 0.98
+            },
+            {
+              "name": "英语语义等值改写",
+              "subject": "英语",
+              "outcome": "needs-support",
+              "evidence": "学生给出的“All students improved because they studied longer”不是等值改写，既改变量词与否定，也改变相关/因果的证据强度。",
+              "confidence": 0.97
+            }
+          ],
+          "confidence": 0.98
+        },
+        "strategy": {
+          "approach": "对照句子中的逻辑范围",
+          "rationale": [
+            "从已设置的讲解偏好中选择有帮助反馈较多的方式，同分时保留偏好顺序。",
+            "采用均衡节奏，在关键步骤安排理解检查。",
+            "依据年级调整术语和必要的前置说明，不据此断言学生已经掌握。",
+            "围绕本轮家长或学生设定的辅导目标组织内容。"
+          ],
+          "profile_used": [
+            "preferred_explanation_modes",
+            "pace",
+            "grade",
+            "language"
+          ],
+          "pace": "balanced"
+        }
+      },
+      "output": {
+        "title": "把“并非全部”和“只提示关联”写回去",
+        "goal": "判断这份改写为什么没有保留原意，并按“量词与否定范围”和“相关与因果的证据强度”两项约束，写出自然的英语等值改写。",
+        "steps": [
+          {
+            "title": "先定位两道逻辑关卡",
+            "explanation": "这份回答抓住了“学习更久”和“进步”这两个话题词，但没有保留原句的两道逻辑限制。先别急着重写：原句前半句管“学生范围”，即 Not all；后半句管“调查能证明到什么程度”，即 suggests a link, but does not prove causation。改写的每一步都要检查这两处有没有被加强。",
+            "question": "请在原句中找出两个关键词组：一个决定“学生范围”，一个决定“调查结论的证据强度”。把它们抄下来。",
+            "checkpoint": "能指出 Not all students who studied longer improved 中的 Not all，以及 suggests a link, but does not prove causation。"
+          },
+          {
+            "title": "Not all 不等于 all，也不等于 none",
+            "explanation": "Not all students who studied longer improved 的意思是“并非所有学习更久的学生都进步了”，也就是至少有一名学习更久的学生没有进步。它不是“所有学生都进步”，也不是“没有学生进步”。学生写成 All students improved，把“并非全部”改成了“全部”，否定的范围消失了。",
+            "question": "如果句子是 Not all students passed the exam，下面哪种情况一定符合？A. 所有学生都通过了；B. 至少有一名学生没有通过；C. 没有学生通过。请说明理由。",
+            "checkpoint": "选 B；理由是 Not all 表示“并非全部”，保留至少一个例外，而不是 none。"
+          },
+          {
+            "title": "suggests a link 不能升级成 because",
+            "explanation": "the survey suggests a link 表示调查“提示可能存在关联”；but does not prove causation 明确说“不能证明因果关系”。学生用 because they studied longer，把“可能有关联”写成了“学习更久导致进步”的确定因果，证据强度被提高了。",
+            "question": "如果把 suggests a link 换成 proves causation，句子的证据强度是变强还是变弱？请用“关联”和“因果”两个词说明。",
+            "checkpoint": "应变强：从“提示存在关联”升级为“证明因果关系”。"
+          },
+          {
+            "title": "诊断学生答案：两处都被改强了",
+            "explanation": "学生的改写是 All students improved because they studied longer。这里 All 取消了“并非全部”的限制；because 把“调查提示关联、但不证明因果”改成了确定因果。即使只把 All 改成 Not all，后面的 because 仍然把证据强度提高了，所以还不等值。",
+            "question": "如果保留 because，只把 All 改成 Not all，写成 Not all students improved because they studied longer，后半句还需要怎样改，才能保留“只提示关联、不证明因果”？",
+            "checkpoint": "需要把 because 改成 suggests a link, but does not prove causation 一类表达，保留“关联”和“不证明因果”两层。"
+          },
+          {
+            "title": "写出等值改写",
+            "explanation": "等值改写要同时保留两件事：前半句用 Not all 或 Not every 表示“并非全部”；后半句保留 suggests a link 和 does not prove causation。可以用 and/but 连接，但不能用 because 或 proves 把关联升级成因果。",
+            "question": "请写出你的自然英语改写，并用括号标出你保留“并非全部”和“不证明因果”的词组。",
+            "checkpoint": "可接受示例：Not every student who studied longer improved; the survey suggests a link, but it does not prove causation. 改写中不得出现 All students improved 或 because they studied longer 这类确定因果表达。"
+          }
+        ],
+        "parent_tips": [
+          "让孩子在原句里圈出 Not all 和 suggests a link, but does not prove causation，再在学生改写里圈出 All 和 because，对照说“哪里被改强了”。",
+          "如果孩子说“意思差不多”，追问两个具体问题：原句允许“有些学习更久的学生没有进步”吗？改写允许吗？原句能证明“因为学习更久而进步”吗？",
+          "检查改写时只抓两条：有没有把 Not all 写成 All；有没有把 suggests 写成 because 或 proves。先让孩子自己说，不要直接替他写完整句子。"
+        ],
+        "understanding_checks": [
+          "原句 Not all students who studied longer improved 是否等于 No students who studied longer improved？是否等于 All students who studied longer improved？请用“至少一个例外”说明。",
+          "把 the survey suggests a link, but does not prove causation 压缩成中文时，哪两层信息必须都在？请各用半句话写出。",
+          "下面哪一句仍然把“提示关联”说成了“证明因果”？请指出并说明理由。A. Not every student who studied longer improved; the survey suggests a link, but it does not prove causation. B. Not every student who studied longer improved; the survey shows that studying longer caused improvement."
+        ],
+        "practice": [
+          {
+            "id": "logic-check-1",
+            "prompt": "原句：Not every volunteer who attended the training finished the task; the report suggests a possible link between training and speed, but it does not prove causation. 判断下面两个改写是否保留原意，并分别说明理由。A. All volunteers who attended the training finished the task because the training made them faster. B. Not every volunteer who attended the training finished the task; the report suggests a possible link between training and speed, but it does not prove causation.",
+            "purpose": "练习分别检查量词与否定范围、相关与因果的证据强度，而不是只比较话题词是否相同。",
+            "hints": [
+              "先看 Not every 是否被改成了 all。",
+              "再看 suggests a possible link, but it does not prove causation 是否被 because 或 made 取代。"
+            ],
+            "success_criteria": [
+              "判断 A 不保留原意：all 取消了“并非全部”，because/made 把关联提示升级成确定因果。",
+              "判断 B 保留原意：not every 保留了“并非全部”，suggests...does not prove 保留了证据强度。",
+              "理由分别对应“量词与否定”和“相关与因果”，不能只说“意思不同”。"
+            ]
+          },
+          {
+            "id": "rewrite-1",
+            "prompt": "请把下面句子改写成自然英语，保留原句的“并非全部”和“只提示关联、不证明因果”：Not all students who joined the club improved their grades; the school survey suggests a link between club attendance and grades, but does not prove causation.",
+            "purpose": "在保留两项逻辑约束的前提下，独立产出自然的英语等值改写。",
+            "hints": [
+              "前半句可以用 Not every... 或 ...did not all...，但不能写成 All...。",
+              "后半句要保留 suggests a link 和 does not prove causation；不要用 because 把关联说成因果。"
+            ],
+            "success_criteria": [
+              "前半句保留部分否定：至少有一名参加社团的学生没有进步；不能写成所有参加者都进步。",
+              "后半句同时保留“提示关联”和“不证明因果”两层，不能出现 because/proves 等确定因果表达。",
+              "英语自然、语法正确；例如 Not every student who joined the club improved their grades; the school survey suggests a link between club attendance and grades, but it does not prove causation. 以及其他等值表达均可。"
+            ]
+          }
+        ],
+        "recap": "先看量词和否定：Not all = 并非所有，保留至少一个例外，不等于 all，也不等于 none。再看证据强度：suggests a link 只是提示关联，does not prove causation 表示不能证明因果；because 会把关联升级成因果。一个自然等值改写是：Not every student who studied longer improved; the survey suggests a link, but it does not prove causation."
+      },
+      "seconds": 42.45,
+      "completions": [
+        {
+          "model": "deepseek-v4-flash-vision-exp",
+          "seconds": 42.45,
+          "content": "{\n  \"title\": \"把“并非全部”和“只提示关联”写回去\",\n  \"goal\": \"判断这份改写为什么没有保留原意，并按“量词与否定范围”和“相关与因果的证据强度”两项约束，写出自然的英语等值改写。\",\n  \"steps\": [\n    {\n      \"title\": \"先定位两道逻辑关卡\",\n      \"explanation\": \"这份回答抓住了“学习更久”和“进步”这两个话题词，但没有保留原句的两道逻辑限制。先别急着重写：原句前半句管“学生范围”，即 Not all；后半句管“调查能证明到什么程度”，即 suggests a link, but does not prove causation。改写的每一步都要检查这两处有没有被加强。\",\n      \"question\": \"请在原句中找出两个关键词组：一个决定“学生范围”，一个决定“调查结论的证据强度”。把它们抄下来。\",\n      \"checkpoint\": \"能指出 Not all students who studied longer improved 中的 Not all，以及 suggests a link, but does not prove causation。\"\n    },\n    {\n      \"title\": \"Not all 不等于 all，也不等于 none\",\n      \"explanation\": \"Not all students who studied longer improved 的意思是“并非所有学习更久的学生都进步了”，也就是至少有一名学习更久的学生没有进步。它不是“所有学生都进步”，也不是“没有学生进步”。学生写成 All students improved，把“并非全部”改成了“全部”，否定的范围消失了。\",\n      \"question\": \"如果句子是 Not all students passed the exam，下面哪种情况一定符合？A. 所有学生都通过了；B. 至少有一名学生没有通过；C. 没有学生通过。请说明理由。\",\n      \"checkpoint\": \"选 B；理由是 Not all 表示“并非全部”，保留至少一个例外，而不是 none。\"\n    },\n    {\n      \"title\": \"suggests a link 不能升级成 because\",\n      \"explanation\": \"the survey suggests a link 表示调查“提示可能存在关联”；but does not prove causation 明确说“不能证明因果关系”。学生用 because they studied longer，把“可能有关联”写成了“学习更久导致进步”的确定因果，证据强度被提高了。\",\n      \"question\": \"如果把 suggests a link 换成 proves causation，句子的证据强度是变强还是变弱？请用“关联”和“因果”两个词说明。\",\n      \"checkpoint\": \"应变强：从“提示存在关联”升级为“证明因果关系”。\"\n    },\n    {\n      \"title\": \"诊断学生答案：两处都被改强了\",\n      \"explanation\": \"学生的改写是 All students improved because they studied longer。这里 All 取消了“并非全部”的限制；because 把“调查提示关联、但不证明因果”改成了确定因果。即使只把 All 改成 Not all，后面的 because 仍然把证据强度提高了，所以还不等值。\",\n      \"question\": \"如果保留 because，只把 All 改成 Not all，写成 Not all students improved because they studied longer，后半句还需要怎样改，才能保留“只提示关联、不证明因果”？\",\n      \"checkpoint\": \"需要把 because 改成 suggests a link, but does not prove causation 一类表达，保留“关联”和“不证明因果”两层。\"\n    },\n    {\n      \"title\": \"写出等值改写\",\n      \"explanation\": \"等值改写要同时保留两件事：前半句用 Not all 或 Not every 表示“并非全部”；后半句保留 suggests a link 和 does not prove causation。可以用 and/but 连接，但不能用 because 或 proves 把关联升级成因果。\",\n      \"question\": \"请写出你的自然英语改写，并用括号标出你保留“并非全部”和“不证明因果”的词组。\",\n      \"checkpoint\": \"可接受示例：Not every student who studied longer improved; the survey suggests a link, but it does not prove causation. 改写中不得出现 All students improved 或 because they studied longer 这类确定因果表达。\"\n    }\n  ],\n  \"parent_tips\": [\n    \"让孩子在原句里圈出 Not all 和 suggests a link, but does not prove causation，再在学生改写里圈出 All 和 because，对照说“哪里被改强了”。\",\n    \"如果孩子说“意思差不多”，追问两个具体问题：原句允许“有些学习更久的学生没有进步”吗？改写允许吗？原句能证明“因为学习更久而进步”吗？\",\n    \"检查改写时只抓两条：有没有把 Not all 写成 All；有没有把 suggests 写成 because 或 proves。先让孩子自己说，不要直接替他写完整句子。\"\n  ],\n  \"understanding_checks\": [\n    \"原句 Not all students who studied longer improved 是否等于 No students who studied longer improved？是否等于 All students who studied longer improved？请用“至少一个例外”说明。\",\n    \"把 the survey suggests a link, but does not prove causation 压缩成中文时，哪两层信息必须都在？请各用半句话写出。\",\n    \"下面哪一句仍然把“提示关联”说成了“证明因果”？请指出并说明理由。A. Not every student who studied longer improved; the survey suggests a link, but it does not prove causation. B. Not every student who studied longer improved; the survey shows that studying longer caused improvement.\"\n  ],\n  \"practice\": [\n    {\n      \"id\": \"logic-check-1\",\n      \"prompt\": \"原句：Not every volunteer who attended the training finished the task; the report suggests a possible link between training and speed, but it does not prove causation. 判断下面两个改写是否保留原意，并分别说明理由。A. All volunteers who attended the training finished the task because the training made them faster. B. Not every volunteer who attended the training finished the task; the report suggests a possible link between training and speed, but it does not prove causation.\",\n      \"purpose\": \"练习分别检查量词与否定范围、相关与因果的证据强度，而不是只比较话题词是否相同。\",\n      \"hints\": [\n        \"先看 Not every 是否被改成了 all。\",\n        \"再看 suggests a possible link, but it does not prove causation 是否被 because 或 made 取代。\"\n      ],\n      \"success_criteria\": [\n        \"判断 A 不保留原意：all 取消了“并非全部”，because/made 把关联提示升级成确定因果。\",\n        \"判断 B 保留原意：not every 保留了“并非全部”，suggests...does not prove 保留了证据强度。\",\n        \"理由分别对应“量词与否定”和“相关与因果”，不能只说“意思不同”。\"\n      ]\n    },\n    {\n      \"id\": \"rewrite-1\",\n      \"prompt\": \"请把下面句子改写成自然英语，保留原句的“并非全部”和“只提示关联、不证明因果”：Not all students who joined the club improved their grades; the school survey suggests a link between club attendance and grades, but does not prove causation.\",\n      \"purpose\": \"在保留两项逻辑约束的前提下，独立产出自然的英语等值改写。\",\n      \"hints\": [\n        \"前半句可以用 Not every... 或 ...did not all...，但不能写成 All...。\",\n        \"后半句要保留 suggests a link 和 does not prove causation；不要用 because 把关联说成因果。\"\n      ],\n      \"success_criteria\": [\n        \"前半句保留部分否定：至少有一名参加社团的学生没有进步；不能写成所有参加者都进步。\",\n        \"后半句同时保留“提示关联”和“不证明因果”两层，不能出现 because/proves 等确定因果表达。\",\n        \"英语自然、语法正确；例如 Not every student who joined the club improved their grades; the school survey suggests a link between club attendance and grades, but it does not prove causation. 以及其他等值表达均可。\"\n      ]\n    }\n  ],\n  \"recap\": \"先看量词和否定：Not all = 并非所有，保留至少一个例外，不等于 all，也不等于 none。再看证据强度：suggests a link 只是提示关联，does not prove causation 表示不能证明因果；because 会把关联升级成因果。一个自然等值改写是：Not every student who studied longer improved; the survey suggests a link, but it does not prove causation.\"\n}"
+        }
+      ]
+    },
+    {
+      "stage": "verify",
+      "context": {
+        "request": {
+          "request_id": "english_meaning",
+          "session_id": "session-ed7eb91685cf481388f6c440c82d9ad4",
+          "student_id": "live-test",
+          "subject": "英语",
+          "problem_text": "判断改写是否保留原句的量词、否定和证据强度，并给出保留原意的自然改写。原句：Not all students who studied longer improved; the survey suggests a link, but does not prove causation.",
+          "student_answer": "All students improved because they studied longer.",
+          "answer_to": null,
+          "parent_goal": "准确解释当前作答的问题，帮助学习者理解并独立完成。",
+          "parent_note": null,
+          "follow_up": null,
+          "requested_strategy": null,
+          "attempt_id": null,
+          "grade": null,
+          "textbook_version": null,
+          "input_mode": "text",
+          "image_count": 0
+        },
+        "profile": {
+          "display_name": "",
+          "grade": "高中二年级",
+          "textbook": "",
+          "learning_goal": "",
+          "language": "中文，英语例句保留英文",
+          "preferred_explanation_modes": [
+            "对照句子中的逻辑范围"
+          ],
+          "interests": [],
+          "pace": "balanced",
+          "notes": "",
+          "student_id": "live-test",
+          "skills": {},
+          "format_feedback": {}
+        },
+        "history": [],
+        "history_notice": "历史仅为服务提供的最近轮次，并非完整会话。本次收到 0 轮，按 24000 字符预算完整保留最近 0 轮；其中超出预算的 0 轮已省略；更早轮次未计入本次窗口。未截断任何保留的题干或作答。历史画像副本、技能证据回执和其他重复派生字段已省略，当前完整画像单独提供。若追问依赖不可见的历史材料，请明确请求用户重传具体材料，不得推测补全。",
+        "analysis": {
+          "subject": "英语",
+          "task_summary": "判断学生的英语改写是否保留原句的量词范围、否定意义和证据强度，并给出保留原意的自然改写。原句为：Not all students who studied longer improved; the survey suggests a link, but does not prove causation. 学生提交的改写为：All students improved because they studied longer.",
+          "task_type": "英语语义等值判断与改写（量词、否定、证据强度）",
+          "missing_information": [],
+          "learning_objectives": [
+            "识别“Not all”与“all”在量词范围和否定意义上的差别，理解“not all”不等于“none”，也不等于“all”。",
+            "区分“suggests a link”与“proves causation”，在改写中保留相关关系与因果断言之间的证据强度差异。",
+            "在保留原句逻辑范围、否定和证据强度的前提下，写出自然、等值的英语改写。"
+          ],
+          "skills": [
+            {
+              "name": "英语量词与否定范围辨析",
+              "subject": "英语"
+            },
+            {
+              "name": "英语证据强度（相关/因果）辨析",
+              "subject": "英语"
+            },
+            {
+              "name": "英语语义等值改写",
+              "subject": "英语"
+            }
+          ],
+          "reference_solution": [
+            "判定：学生改写不保留原意。",
+            "原句逻辑：“Not all students who studied longer improved”意为“并非所有学习更久的学生都进步了”，即至少有一名学习更久的学生没有进步；不能改写成“All students improved”。",
+            "原句证据强度：“the survey suggests a link, but does not prove causation”意为“调查提示存在关联，但不能证明因果关系”；不能改写成“because they studied longer”这样的确定因果断言。",
+            "学生答案的问题：All 将“并非全部”改成“全部”；because 将“提示关联、未证明因果”改成确定因果；同时省略了“does not prove causation”。",
+            "可接受的自然改写示例：Not every student who studied longer improved; the survey suggests a link, but it does not prove causation.",
+            "另一可接受示例：Studying longer did not lead every student to improve; the survey points to a possible link, but it does not establish causation."
+          ],
+          "assessment": {
+            "verdict": "needs-revision",
+            "summary": "学生的改写没有保留原意：它把“并非所有学习更久的学生都进步了”改成“所有学生都进步了”，取消了否定和部分量词；又把“调查提示存在关联但不能证明因果”改成“because”引出的确定因果关系，并省略了“不证明因果”的限制。学生也没有明确回答“是否保留原意”。",
+            "evidence": [
+              "原句中的“Not all students who studied longer improved”表示“并非所有学习更久的学生都进步了”，学生写成“All students improved”，把“并非全部”改成“全部”，改变了真值条件。",
+              "原句中的“the survey suggests a link, but does not prove causation”只支持“提示存在关联”，并明确“不证明因果关系”；学生用“because they studied longer”写成确定因果，证据强度被明显提高。",
+              "学生答案没有明确给出“是否保留原意”的判断，且给出的改写同时违反量词、否定和证据强度三项约束。"
+            ],
+            "confidence": 0.98
+          },
+          "skill_evidence": [
+            {
+              "name": "英语量词与否定范围辨析",
+              "subject": "英语",
+              "outcome": "needs-support",
+              "evidence": "学生将“Not all students who studied longer improved”改写为“All students improved”，把“并非全部”变成“全部”，丢失了否定和部分量词，直接改变原句真值条件。",
+              "confidence": 0.99
+            },
+            {
+              "name": "英语证据强度（相关/因果）辨析",
+              "subject": "英语",
+              "outcome": "needs-support",
+              "evidence": "学生用“because they studied longer”表达确定因果，而原句只说“suggests a link”且明确“does not prove causation”，证据强度被提高。",
+              "confidence": 0.98
+            },
+            {
+              "name": "英语语义等值改写",
+              "subject": "英语",
+              "outcome": "needs-support",
+              "evidence": "学生给出的“All students improved because they studied longer”不是等值改写，既改变量词与否定，也改变相关/因果的证据强度。",
+              "confidence": 0.97
+            }
+          ],
+          "confidence": 0.98
+        },
+        "lesson": {
+          "title": "把“并非全部”和“只提示关联”写回去",
+          "goal": "判断这份改写为什么没有保留原意，并按“量词与否定范围”和“相关与因果的证据强度”两项约束，写出自然的英语等值改写。",
+          "steps": [
+            {
+              "title": "先定位两道逻辑关卡",
+              "explanation": "这份回答抓住了“学习更久”和“进步”这两个话题词，但没有保留原句的两道逻辑限制。先别急着重写：原句前半句管“学生范围”，即 Not all；后半句管“调查能证明到什么程度”，即 suggests a link, but does not prove causation。改写的每一步都要检查这两处有没有被加强。",
+              "question": "请在原句中找出两个关键词组：一个决定“学生范围”，一个决定“调查结论的证据强度”。把它们抄下来。",
+              "checkpoint": "能指出 Not all students who studied longer improved 中的 Not all，以及 suggests a link, but does not prove causation。"
+            },
+            {
+              "title": "Not all 不等于 all，也不等于 none",
+              "explanation": "Not all students who studied longer improved 的意思是“并非所有学习更久的学生都进步了”，也就是至少有一名学习更久的学生没有进步。它不是“所有学生都进步”，也不是“没有学生进步”。学生写成 All students improved，把“并非全部”改成了“全部”，否定的范围消失了。",
+              "question": "如果句子是 Not all students passed the exam，下面哪种情况一定符合？A. 所有学生都通过了；B. 至少有一名学生没有通过；C. 没有学生通过。请说明理由。",
+              "checkpoint": "选 B；理由是 Not all 表示“并非全部”，保留至少一个例外，而不是 none。"
+            },
+            {
+              "title": "suggests a link 不能升级成 because",
+              "explanation": "the survey suggests a link 表示调查“提示可能存在关联”；but does not prove causation 明确说“不能证明因果关系”。学生用 because they studied longer，把“可能有关联”写成了“学习更久导致进步”的确定因果，证据强度被提高了。",
+              "question": "如果把 suggests a link 换成 proves causation，句子的证据强度是变强还是变弱？请用“关联”和“因果”两个词说明。",
+              "checkpoint": "应变强：从“提示存在关联”升级为“证明因果关系”。"
+            },
+            {
+              "title": "诊断学生答案：两处都被改强了",
+              "explanation": "学生的改写是 All students improved because they studied longer。这里 All 取消了“并非全部”的限制；because 把“调查提示关联、但不证明因果”改成了确定因果。即使只把 All 改成 Not all，后面的 because 仍然把证据强度提高了，所以还不等值。",
+              "question": "如果保留 because，只把 All 改成 Not all，写成 Not all students improved because they studied longer，后半句还需要怎样改，才能保留“只提示关联、不证明因果”？",
+              "checkpoint": "需要把 because 改成 suggests a link, but does not prove causation 一类表达，保留“关联”和“不证明因果”两层。"
+            },
+            {
+              "title": "写出等值改写",
+              "explanation": "等值改写要同时保留两件事：前半句用 Not all 或 Not every 表示“并非全部”；后半句保留 suggests a link 和 does not prove causation。可以用 and/but 连接，但不能用 because 或 proves 把关联升级成因果。",
+              "question": "请写出你的自然英语改写，并用括号标出你保留“并非全部”和“不证明因果”的词组。",
+              "checkpoint": "可接受示例：Not every student who studied longer improved; the survey suggests a link, but it does not prove causation. 改写中不得出现 All students improved 或 because they studied longer 这类确定因果表达。"
+            }
+          ],
+          "parent_tips": [
+            "让孩子在原句里圈出 Not all 和 suggests a link, but does not prove causation，再在学生改写里圈出 All 和 because，对照说“哪里被改强了”。",
+            "如果孩子说“意思差不多”，追问两个具体问题：原句允许“有些学习更久的学生没有进步”吗？改写允许吗？原句能证明“因为学习更久而进步”吗？",
+            "检查改写时只抓两条：有没有把 Not all 写成 All；有没有把 suggests 写成 because 或 proves。先让孩子自己说，不要直接替他写完整句子。"
+          ],
+          "understanding_checks": [
+            "原句 Not all students who studied longer improved 是否等于 No students who studied longer improved？是否等于 All students who studied longer improved？请用“至少一个例外”说明。",
+            "把 the survey suggests a link, but does not prove causation 压缩成中文时，哪两层信息必须都在？请各用半句话写出。",
+            "下面哪一句仍然把“提示关联”说成了“证明因果”？请指出并说明理由。A. Not every student who studied longer improved; the survey suggests a link, but it does not prove causation. B. Not every student who studied longer improved; the survey shows that studying longer caused improvement."
+          ],
+          "practice": [
+            {
+              "id": "logic-check-1",
+              "prompt": "原句：Not every volunteer who attended the training finished the task; the report suggests a possible link between training and speed, but it does not prove causation. 判断下面两个改写是否保留原意，并分别说明理由。A. All volunteers who attended the training finished the task because the training made them faster. B. Not every volunteer who attended the training finished the task; the report suggests a possible link between training and speed, but it does not prove causation.",
+              "purpose": "练习分别检查量词与否定范围、相关与因果的证据强度，而不是只比较话题词是否相同。",
+              "hints": [
+                "先看 Not every 是否被改成了 all。",
+                "再看 suggests a possible link, but it does not prove causation 是否被 because 或 made 取代。"
+              ],
+              "success_criteria": [
+                "判断 A 不保留原意：all 取消了“并非全部”，because/made 把关联提示升级成确定因果。",
+                "判断 B 保留原意：not every 保留了“并非全部”，suggests...does not prove 保留了证据强度。",
+                "理由分别对应“量词与否定”和“相关与因果”，不能只说“意思不同”。"
+              ]
+            },
+            {
+              "id": "rewrite-1",
+              "prompt": "请把下面句子改写成自然英语，保留原句的“并非全部”和“只提示关联、不证明因果”：Not all students who joined the club improved their grades; the school survey suggests a link between club attendance and grades, but does not prove causation.",
+              "purpose": "在保留两项逻辑约束的前提下，独立产出自然的英语等值改写。",
+              "hints": [
+                "前半句可以用 Not every... 或 ...did not all...，但不能写成 All...。",
+                "后半句要保留 suggests a link 和 does not prove causation；不要用 because 把关联说成因果。"
+              ],
+              "success_criteria": [
+                "前半句保留部分否定：至少有一名参加社团的学生没有进步；不能写成所有参加者都进步。",
+                "后半句同时保留“提示关联”和“不证明因果”两层，不能出现 because/proves 等确定因果表达。",
+                "英语自然、语法正确；例如 Not every student who joined the club improved their grades; the school survey suggests a link between club attendance and grades, but it does not prove causation. 以及其他等值表达均可。"
+              ]
+            }
+          ],
+          "recap": "先看量词和否定：Not all = 并非所有，保留至少一个例外，不等于 all，也不等于 none。再看证据强度：suggests a link 只是提示关联，does not prove causation 表示不能证明因果；because 会把关联升级成因果。一个自然等值改写是：Not every student who studied longer improved; the survey suggests a link, but it does not prove causation."
+        }
+      },
+      "output": {
+        "reliable": false,
+        "issues": [
+          "第2步的检查点“保留至少一个例外，而不是 none”容易把“Not all”与“none”说成互斥；实际上“没有学生通过”也可以满足“并非全部通过”，只是不是必然。应明确：B 必然成立，C 只是相容，不能把 C 判为与 Not all 不相容。",
+          "第4步设问“如果保留 because”与检查点“把 because 改成 suggests...”相互矛盾，且只改后半句仍缺原句“who studied longer”的范围限制；应改为先问“只改 All 为什么仍不等值”，再要求补回范围并删除或改写 because。"
+        ],
+        "approved_evidence": []
+      },
+      "seconds": 73.95,
+      "completions": [
+        {
+          "model": "deepseek-v4-flash-vision-exp",
+          "seconds": 73.95,
+          "content": "{\"reliable\":false,\"issues\":[\"第2步的检查点“保留至少一个例外，而不是 none”容易把“Not all”与“none”说成互斥；实际上“没有学生通过”也可以满足“并非全部通过”，只是不是必然。应明确：B 必然成立，C 只是相容，不能把 C 判为与 Not all 不相容。\",\"第4步设问“如果保留 because”与检查点“把 because 改成 suggests...”相互矛盾，且只改后半句仍缺原句“who studied longer”的范围限制；应改为先问“只改 All 为什么仍不等值”，再要求补回范围并删除或改写 because。\"],\"approved_evidence\":[]}"
+        }
+      ]
+    }
+  ],
+  "elapsed_seconds": 133.62
+}

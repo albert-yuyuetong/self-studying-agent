@@ -9,10 +9,10 @@ from fastapi.testclient import TestClient
 from app.main import create_app
 from app.repositories.profile_repository import SQLiteTutorRepository
 from app.schemas.diagnosis import (
-    Assessment, Lesson, LessonStep, PracticeTask, SkillDescriptor,
+    Assessment, Lesson, LessonRevision, LessonStep, PracticeTask, SkillDescriptor,
     SkillEvidence, TaskAnalysis, TeachingStrategy, Verification,
 )
-from app.services.tutor_engine import ModelUnavailable
+from app.services.tutor_engine import ModelOutputError, ModelUnavailable
 
 
 class ScriptedEngine:
@@ -73,6 +73,10 @@ class ScriptedEngine:
                                           outcome="demonstrated", evidence="无来源", confidence=1))
         return Verification(reliable=self.reliable, approved_evidence=approved,
                             issues=[] if self.reliable else ["参考步骤有矛盾"])
+
+    def revise(self, req, profile, analysis, lesson, strategy, review, history):
+        self.calls.append(("revise", req, profile, history))
+        return LessonRevision(analysis=analysis.model_copy(deep=True), lesson=lesson.model_copy(deep=True))
 
 
 @pytest.fixture
@@ -301,4 +305,156 @@ def test_understanding_check_answers_are_scoped_and_counted_once(setup):
     assert client.post("/api/v1/tutor", json=payload(
         answer_to="检查问题", student_answer=None,
     )).status_code == 422
+
+
+class RevisionEngine(ScriptedEngine):
+    """Script content decisions while exercising real orchestration/persistence."""
+
+    def __init__(self, reviews):
+        super().__init__()
+        self.reviews = list(reviews)
+        self.revision_error = None
+        self.revision_missing = False
+        self.fabricate_unsubmitted = False
+        self.before_revision = None
+
+    def analyze(self, req, profile, history):
+        result = super().analyze(req, profile, history)
+        extra = result.skill_evidence[0].model_copy(update={"name": "修订中移除的观察"})
+        result.skills.append(SkillDescriptor(subject=extra.subject, name=extra.name))
+        result.skill_evidence.append(extra)
+        return result
+
+    def verify(self, req, profile, analysis, lesson, history):
+        self.calls.append(("verify", req, profile, history))
+        verdict = self.reviews.pop(0)
+        if isinstance(verdict, Exception):
+            raise verdict
+        return Verification(reliable=verdict[0], issues=verdict[1],
+                            approved_evidence=analysis.skill_evidence)
+
+    def revise(self, req, profile, analysis, lesson, strategy, review, history):
+        self.calls.append(("revise", req, profile, history))
+        if self.before_revision:
+            self.before_revision()
+        if self.revision_error:
+            raise self.revision_error
+        revised = analysis.model_copy(deep=True)
+        if self.revision_missing:
+            revised.missing_information = ["需要原始数据表，无法验证趋势。"]
+            revised.skill_evidence = []
+            return LessonRevision(analysis=revised, lesson=None)
+        revised.reference_solution = ["已修订的参考依据"]
+        revised.skill_evidence = revised.skill_evidence[:1]
+        if self.fabricate_unsubmitted:
+            evidence = SkillEvidence(subject=req.subject, name="条件与证据",
+                                     outcome="demonstrated", evidence=req.student_answer or "伪造的作答",
+                                     confidence=0.95)
+            revised.skills = [SkillDescriptor(subject=evidence.subject, name=evidence.name)]
+            revised.skill_evidence = [evidence]
+            revised.assessment = Assessment(verdict="supported", summary="修订后的作答评价",
+                                            evidence=[evidence.evidence], confidence=0.95)
+        revised_lesson = lesson.model_copy(update={"title": "已修订讲解"}, deep=True)
+        return LessonRevision(analysis=revised, lesson=revised_lesson)
+
+
+def revision_setup(tmp_path, reviews):
+    repo = SQLiteTutorRepository(str(tmp_path / "revision.sqlite3"))
+    engine = RevisionEngine(reviews)
+    return TestClient(create_app(repo, engine)), repo, engine
+
+
+def test_semantic_revision_commits_only_final_verified_result_once(tmp_path):
+    client, repo, engine = revision_setup(tmp_path, [(False, ["原检查题有多解"]), (True, [])])
+
+    def assert_not_committed():
+        assert repo.history("learner", "s1") == []
+        assert repo.get_or_create("learner").skills == {}
+
+    engine.before_revision = assert_not_committed
+    result = client.post("/api/v1/tutor", json=payload()).json()
+    assert result["status"] == "completed"
+    assert result["lesson"]["title"] == "已修订讲解"
+    assert result["analysis"]["reference_solution"] == ["已修订的参考依据"]
+    assert [c[0] for c in engine.calls] == ["analyze", "plan", "teach", "verify", "revise", "verify"]
+    assert {s["name"] for s in result["profile"]["skills"].values()} == {"条件与证据"}
+    assert next(iter(result["profile"]["skills"].values()))["demonstrated_count"] == 1
+    assert len(repo.history("learner", "s1")) == 1
+    call_count = len(engine.calls)
+    assert client.post("/api/v1/tutor", json=payload()).json() == result
+    assert len(engine.calls) == call_count
+
+
+@pytest.mark.parametrize("last_review", [(False, ["仍存在语义错误"]), (True, ["仍有评分歧义"])])
+def test_semantic_revision_is_bounded_and_failed_candidate_is_not_cached(tmp_path, last_review):
+    client, repo, engine = revision_setup(tmp_path, [(False, ["原检查题有多解"]), last_review])
+    result = client.post("/api/v1/tutor", json=payload()).json()
+    assert result["status"] == "degraded"
+    assert result["lesson"] is None
+    assert result["analysis"]["reference_solution"] == []
+    assert result["analysis"]["skill_evidence"] == []
+    assert result["verification"]["approved_evidence"] == []
+    assert result["profile"]["skills"] == {}
+    assert repo.history("learner", "s1") == []
+    assert [c[0] for c in engine.calls].count("revise") == 1
+    engine.reviews = [(True, [])]
+    recovered = client.post("/api/v1/tutor", json=payload()).json()
+    assert recovered["status"] == "completed"
+    assert len(repo.history("learner", "s1")) == 1
+
+
+@pytest.mark.parametrize("failure", [ModelUnavailable("修订服务不可用"), ModelOutputError("修订内容无效")])
+def test_semantic_revision_error_does_not_commit_partial_result(tmp_path, failure):
+    client, repo, engine = revision_setup(tmp_path, [(False, ["参考依据错误"])])
+    engine.revision_error = failure
+    result = client.post("/api/v1/tutor", json=payload()).json()
+    assert result["status"] == "degraded"
+    assert result["analysis"] is None and result["lesson"] is None
+    assert result["profile"]["skills"] == {}
+    assert repo.history("learner", "s1") == []
+    assert [c[0] for c in engine.calls].count("verify") == 1
+
+
+def test_second_verification_outage_does_not_publish_revised_candidate(tmp_path):
+    client, repo, engine = revision_setup(tmp_path, [(False, ["检查题有多解"]), ModelUnavailable("复核暂不可用")])
+    result = client.post("/api/v1/tutor", json=payload()).json()
+    assert result["status"] == "degraded"
+    assert result["lesson"] is None and result["analysis"] is None
+    assert repo.get_or_create("learner").skills == {}
+    assert repo.history("learner", "s1") == []
+
+
+def test_revision_can_discover_missing_material_without_publishing_or_rechecking(tmp_path):
+    client, repo, engine = revision_setup(tmp_path, [(False, ["依据缺少原始数据"]), (True, [])])
+    engine.revision_missing = True
+    result = client.post("/api/v1/tutor", json=payload()).json()
+    assert result["status"] == "need_clarification"
+    assert result["lesson"] is None
+    assert result["clarifying_questions"] == ["需要原始数据表，无法验证趋势。"]
+    assert result["analysis"]["reference_solution"] == []
+    assert result["analysis"]["assessment"]["verdict"] == "uncertain"
+    assert result["profile"]["skills"] == {}
+    assert [c[0] for c in engine.calls].count("verify") == 1
+    assert repo.history("learner", "s1") == []
+
+
+def test_revision_cannot_turn_followup_into_new_answer_evidence(tmp_path):
+    client, repo, engine = revision_setup(tmp_path, [(False, ["说明仍有矛盾"]), (True, [])])
+    engine.fabricate_unsubmitted = True
+    result = client.post("/api/v1/tutor", json=payload(student_answer=None, follow_up="请展开依据")).json()
+    assert result["status"] == "completed"
+    assert result["analysis"]["assessment"]["verdict"] == "not-submitted"
+    assert result["analysis"]["skill_evidence"] == []
+    assert result["verification"]["approved_evidence"] == []
+    assert repo.get_or_create("learner").skills == {}
+
+
+@pytest.mark.parametrize("review,confidence", [((False, []), 0.95), ((False, ["   "]), 0.95), ((True, []), 0.5)])
+def test_no_semantic_retry_without_actionable_review_issues(tmp_path, review, confidence):
+    client, repo, engine = revision_setup(tmp_path, [review])
+    engine.confidence = confidence
+    result = client.post("/api/v1/tutor", json=payload()).json()
+    assert result["status"] == "degraded"
+    assert "revise" not in [c[0] for c in engine.calls]
+    assert repo.history("learner", "s1") == []
 

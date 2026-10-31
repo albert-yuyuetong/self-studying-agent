@@ -1,6 +1,6 @@
 """Open task descriptions; fixed enums describe workflow states, never school question types."""
 
-from typing import Literal
+from typing import Annotated, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
@@ -106,14 +106,14 @@ class TeachingStrategy(Contract):
 class LessonStep(Contract):
     title: str = Field(min_length=1)
     explanation: str = Field(min_length=1)
-    question: str = Field(min_length=1)
+    question: str = Field(min_length=1, max_length=4000)
     checkpoint: str = Field(min_length=1)
 
 
 class PracticeTask(Contract):
     id: str = Field(min_length=1, max_length=100)
-    prompt: str = Field(min_length=1)
-    purpose: str = Field(min_length=1)
+    prompt: str = Field(min_length=1, max_length=24000)
+    purpose: str = Field(min_length=1, max_length=2000)
     hints: list[str] = Field(default_factory=list)
     success_criteria: list[str] = Field(min_length=1)
 
@@ -123,9 +123,32 @@ class Lesson(Contract):
     goal: str = Field(min_length=1)
     steps: list[LessonStep] = Field(min_length=1, max_length=8)
     parent_tips: list[str] = Field(default_factory=list)
-    understanding_checks: list[str] = Field(min_length=1)
+    understanding_checks: list[Annotated[str, Field(min_length=1, max_length=4000)]] = Field(min_length=1)
     practice: list[PracticeTask] = Field(default_factory=list, max_length=3)
     recap: str = Field(min_length=1)
+
+
+class CompactLesson(Lesson):
+    """A delivery budget for fast-paced learners, independent of subject or task."""
+    steps: list[LessonStep] = Field(min_length=1, max_length=3)
+
+
+class LessonRevision(Contract):
+    """One replacement candidate; missing source material stops teaching."""
+    analysis: TaskAnalysis
+    lesson: Lesson | None
+
+    @model_validator(mode="after")
+    def require_lesson_or_missing_material(self):
+        if self.analysis.missing_information and self.lesson is not None:
+            raise ValueError("缺少关键材料时，修订讲解必须为空并请求澄清。")
+        if not self.analysis.missing_information and self.lesson is None:
+            raise ValueError("材料完整时，修订结果必须包含可独立复核的讲解。")
+        return self
+
+
+class CompactLessonRevision(LessonRevision):
+    lesson: CompactLesson | None
 
 
 class Verification(Contract):

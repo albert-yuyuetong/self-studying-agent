@@ -57,6 +57,7 @@ function App() {
   const [practiceAnswers, setPracticeAnswers] = useState({})
   const requestRef = useRef(null)
   const feedbackRef = useRef(null)
+  const submittedFeedbackRef = useRef(new Map())
   const attemptRef = useRef(null)
   const checkAttemptRef = useRef(null)
   const retryModeRef = useRef(false)
@@ -97,6 +98,7 @@ function App() {
     checkAttemptRef.current = null
     retryModeRef.current = false
     feedbackRef.current = null
+    submittedFeedbackRef.current.clear()
     setSessionId(null)
     setTurns([])
     setFollowUp('')
@@ -232,7 +234,7 @@ function App() {
         const question = isFollowUp ? selectedCheck ? `回答「${selectedCheck}」：${followUp.trim()}` : followUp.trim() || strategy.trim() : answer ? '根据我的作答开始讲解' : '一起探索这道题'
         return [...previous, { question, result: data }]
       })
-      if (data.profile) { setProfile(data.profile); setDraft(profileDraft(data.profile)) }
+      if (data.profile && data.turn_id !== result?.turn_id) { setProfile(data.profile); setDraft(profileDraft(data.profile)) }
       if (data.status !== 'degraded') {
         setFollowUp('')
         setSelectedCheck(null)
@@ -240,9 +242,10 @@ function App() {
         checkAttemptRef.current = null
       }
       if (data.turn_id !== result?.turn_id) {
-        setFeedback({ useful: null, child_understood: '', comment: '' })
-        setFeedbackSent(false)
-        setFeedbackMessage('')
+        const savedFeedback = submittedFeedbackRef.current.get(data.turn_id)
+        setFeedback(savedFeedback || { useful: null, child_understood: '', comment: '' })
+        setFeedbackSent(Boolean(savedFeedback))
+        setFeedbackMessage(savedFeedback ? '反馈已记录，会用于调整后续讲解。' : '')
         feedbackRef.current = null
         setPracticeAnswers({})
       }
@@ -267,6 +270,7 @@ function App() {
       const data = await api('/api/v1/feedback', { method: 'POST', body: JSON.stringify({ ...payload, feedback_id: feedbackRef.current.id }) })
       if (studentRef.current !== selected || epochRef.current !== epoch) return
       if (data.profile) { setProfile(data.profile); if (!dirty) setDraft(profileDraft(data.profile)) }
+      submittedFeedbackRef.current.set(result.turn_id, { ...feedback })
       setFeedbackSent(true)
       setFeedbackMessage('反馈已记录，会用于调整后续讲解。')
     } catch (err) { setFeedbackMessage(`反馈未保存：${err.message}`) } finally { operationRef.current = false; setBusy('') }
@@ -279,9 +283,19 @@ function App() {
   }
 
   function answerCheck(question) {
+    if (locked) return
+    if (question.length > 4000) { setError('这个检查问题太长，请在下方追问中要求将问题拆小后再作答。'); return }
     requestRef.current = null
     checkAttemptRef.current = null
-    setSelectedCheck(question.slice(0, 4000))
+    setSelectedCheck(question)
+    setFollowUp('')
+    document.getElementById('follow-up')?.focus()
+  }
+
+  function cancelCheck() {
+    requestRef.current = null
+    checkAttemptRef.current = null
+    setSelectedCheck(null)
     setFollowUp('')
     document.getElementById('follow-up')?.focus()
   }
@@ -346,21 +360,30 @@ function App() {
             {turns.length > 1 && <details className="panel history-panel"><summary>查看前 {turns.length - 1} 轮讲解</summary><div className="history-list">{turns.slice(0, -1).map((turn, index) => <details key={turn.result.turn_id}><summary>第 {index + 1} 轮 · {turn.question}</summary><div className="details-body">{turn.result.lesson?.steps?.map((step, stepIndex) => <div key={stepIndex}><strong>{step.title}</strong><p className="prose">{step.explanation}</p>{step.question && <p className="question-callout">{step.question}</p>}</div>)}<TextList items={turn.result.clarifying_questions} /><p className="prose">{turn.result.lesson?.recap}</p></div></details>)}</div></details>}
             {result && <div className="result-stack">
               <div className="result-meta"><span className={`pill status-${result.status}`}>{statusLabels[result.status] || result.status}</span>{result.analysis?.subject && <span className="pill">{result.analysis.subject}</span>}{result.analysis?.task_type && <span className="pill">{result.analysis.task_type}</span>}</div>
-              {result.warnings?.length > 0 && <div className="notice"><TextList items={result.warnings} /></div>}
+              {uniqueWarnings.length > 0 && <div className="notice"><TextList items={uniqueWarnings} /></div>}
               {result.verification && !result.verification.reliable && <div className="notice"><strong>这份分析还有不确定之处</strong><TextList items={result.verification.issues} /></div>}
+              {result.status === 'degraded' && <button className="button button-secondary" type="button" disabled={locked} onClick={(event) => submitTutor(event, retryModeRef.current)}>保留本次内容，重新尝试</button>}
               {result.clarifying_questions?.length > 0 && <section className="panel clarification-panel"><p className="eyebrow">先把条件补充完整</p><h3>继续之前，请补充这些信息</h3><TextList items={result.clarifying_questions} /><p className="hint">在下方「继续聊这道题」中回复即可。</p></section>}
               {result.analysis && <section className="panel analysis-panel"><p className="eyebrow">我们正在解决</p><h3>{result.analysis.task_summary}</h3>{result.analysis.learning_objectives?.length > 0 && <div className="objective-tags">{result.analysis.learning_objectives.map((item, index) => <span key={index}>{item}</span>)}</div>}
                 {result.analysis.assessment && <div className="assessment"><span className="assessment-label">{verdictLabels[result.analysis.assessment.verdict] || '作答分析'}</span><p className="prose">{result.analysis.assessment.summary}</p><TextList items={result.analysis.assessment.evidence} />{result.analysis.assessment.verdict === 'uncertain' && <p className="hint">先澄清依据，再判断理解情况。</p>}</div>}
                 {result.analysis.missing_information?.length > 0 && <details><summary>仍缺少的信息</summary><TextList items={result.analysis.missing_information} /></details>}
                 {result.analysis.reference_solution?.length > 0 && <details className="reference-details"><summary>查看参考解答</summary><div className="details-body"><TextList items={result.analysis.reference_solution} className="prose" /></div></details>}
               </section>}
-              {result.strategy && <details className="panel strategy-panel" open><summary>为什么这样讲给你听</summary><div className="details-body"><h3>{result.strategy.approach}</h3><TextList items={result.strategy.rationale} />{result.strategy.profile_used?.length > 0 && <div className="profile-used"><span className="hint">使用了这些画像信息</span><TextList items={result.strategy.profile_used} /></div>}</div></details>}
-              {result.lesson && <section className="panel lesson-panel"><p className="eyebrow">一步一步来</p><h2>{result.lesson.title}</h2><p className="lesson-goal prose">{result.lesson.goal}</p><ol className="lesson-steps">{(result.lesson.steps || []).map((step, index) => <li key={index}><span className="step-number">{String(index + 1).padStart(2, '0')}</span><div><h3>{step.title}</h3><p className="prose">{step.explanation}</p>{step.question && <div className="question-callout"><span>停下来想一想</span><p className="prose">{step.question}</p><button type="button" className="text-button" disabled={locked} onClick={() => { requestRef.current = null; setFollowUp(`关于「${step.question}」，我的想法是：`); document.getElementById('follow-up')?.focus() }}>回答这个问题 ↗</button></div>}{step.checkpoint && <p className="checkpoint prose"><strong>检查理解：</strong>{step.checkpoint}</p>}</div></li>)}</ol>{result.lesson.recap && <div className="recap"><strong>带走这个思路</strong><p className="prose">{result.lesson.recap}</p></div>}</section>}
-              {result.lesson?.understanding_checks?.length > 0 && <section className="panel"><p className="eyebrow">试着自己说一遍</p><h3>理解检查</h3><TextList items={result.lesson.understanding_checks} /><p className="hint">把你的回答发到下方，继续一起检查思路。</p></section>}
+              {result.strategy && <details className="panel strategy-panel" open><summary>为什么这样讲给你听</summary><div className="details-body"><h3>{result.strategy.approach}</h3><TextList items={result.strategy.rationale} />{result.strategy.profile_used?.length > 0 && <div className="profile-used"><span className="hint">使用了这些画像信息</span><TextList items={result.strategy.profile_used.map((field) => profileLabels[field] || field)} /></div>}</div></details>}
+              {result.lesson && <section className="panel lesson-panel"><p className="eyebrow">一步一步来</p><h2>{result.lesson.title}</h2><p className="lesson-goal prose">{result.lesson.goal}</p><ol className="lesson-steps">{(result.lesson.steps || []).map((step, index) => <li key={index}><span className="step-number">{String(index + 1).padStart(2, '0')}</span><div><h3>{step.title}</h3><p className="prose">{step.explanation}</p>{step.question && <div className="question-callout"><span>停下来想一想</span><p className="prose">{step.question}</p><button type="button" className="text-button" disabled={locked} onClick={() => answerCheck(step.question)}>回答这个问题 ↗</button></div>}{step.checkpoint && <details className="checkpoint"><summary>家长检查要点（作答后查看）</summary><p className="prose">{step.checkpoint}</p></details>}</div></li>)}</ol>{result.lesson.recap && <div className="recap"><strong>带走这个思路</strong><p className="prose">{result.lesson.recap}</p></div>}</section>}
+              {result.lesson?.understanding_checks?.length > 0 && <section className="panel"><p className="eyebrow">试着自己说一遍</p><h3>理解检查</h3><ul className="text-list check-list">{result.lesson.understanding_checks.map((question, index) => <li key={index}><span className="prose">{question}</span><button className="text-button" type="button" disabled={locked} onClick={() => answerCheck(question)}>回答这道检查题 ↗</button></li>)}</ul><p className="hint">选择一个问题提交作答，家教会根据这份回答检查理解。</p></section>}
               {result.lesson?.parent_tips?.length > 0 && <details className="panel"><summary>给陪伴学习的家长</summary><div className="details-body"><TextList items={result.lesson.parent_tips} /></div></details>}
               {result.lesson?.practice?.length > 0 && <section className="panel practice-panel"><p className="eyebrow">从看懂，到会用</p><h3>独立试一题</h3><div className="practice-list">{result.lesson.practice.map((practice, index) => <article className="practice-card" key={practice.id || index}><p className="practice-purpose">练习 {index + 1} · {practice.purpose}</p><p className="prose">{practice.prompt}</p>{practice.hints?.length > 0 && <details><summary>需要一点提示</summary><TextList items={practice.hints} /></details>}{practice.success_criteria?.length > 0 && <details><summary>怎样检查自己做到了</summary><TextList items={practice.success_criteria} /></details>}<label className="field"><span>练习答案与过程</span><textarea rows={3} maxLength={24000} disabled={locked} value={practiceAnswers[practice.id] || ''} onChange={(e) => setPracticeAnswers((current) => ({ ...current, [practice.id]: e.target.value }))} placeholder="先独立尝试，再带着作答开始这道练习。" /></label><button className="button button-secondary" type="button" disabled={locked} onClick={() => usePractice(practice)}>将练习与作答带入新题 →</button><p className="hint">会更换上方题目并开启新会话，点击「开始一起学」获得反馈。</p></article>)}</div></section>}
               {result.profile_updates?.length > 0 && <div className="profile-update"><strong>本次学习记录</strong><TextList items={result.profile_updates} /></div>}
-              <section className="panel followup-panel"><p className="eyebrow">一起往下想</p><h3>继续聊这道题</h3><form onSubmit={(event) => submitTutor(event, true)}><fieldset disabled={locked}><label className="field"><span className="sr-only">追问、补充信息或理解检查的回答</span><textarea id="follow-up" rows={3} maxLength={4000} value={followUp} onChange={(e) => { requestRef.current = null; setFollowUp(e.target.value) }} placeholder="回复补充问题、说说你的想法，或者告诉我哪一步还不理解。" /></label><label className="field"><span>希望怎样调整讲法 <em>选填</em></span><input maxLength={300} value={strategy} onChange={(e) => { requestRef.current = null; setStrategy(e.target.value) }} placeholder="例如：用我熟悉的篮球举例；这一点再拆小一些" /></label><div className="submit-row"><p className="hint">会结合本题之前的对话继续讲解。</p><button className="button button-primary" type="submit" disabled={!followUp.trim() && !strategy.trim()}>继续讨论 →</button></div></fieldset></form></section>
+              <section className="panel followup-panel">
+                <p className="eyebrow">一起往下想</p><h3>{selectedCheck ? '提交理解检查' : '继续聊这道题'}</h3>
+                <form onSubmit={(event) => submitTutor(event, true)}><fieldset disabled={locked}>
+                  {selectedCheck && <div className="question-callout selected-check"><span>你正在回答这个问题</span><p className="prose">{selectedCheck}</p><button className="text-button" type="button" onClick={cancelCheck}>取消作答，改为追问</button></div>}
+                  <label className="field"><span>{selectedCheck ? '你的回答与依据' : '追问或补充信息'}</span><textarea id="follow-up" rows={3} maxLength={selectedCheck ? 24000 : 4000} value={followUp} onChange={(e) => { requestRef.current = null; setFollowUp(e.target.value) }} placeholder={selectedCheck ? '针对上面的问题，写下你的回答与思考过程。' : '补充题目条件，或告诉我哪一步还不理解。'} /></label>
+                  <label className="field"><span>希望怎样调整讲法 <em>选填</em></span><input maxLength={300} value={strategy} onChange={(e) => { requestRef.current = null; setStrategy(e.target.value) }} placeholder="例如：用我熟悉的篮球举例；这一点再拆小一些" /></label>
+                  <div className="submit-row"><p className="hint">{selectedCheck ? '这份回答会作为新的作答，评估依据充分时才记入学习观察。' : '追问用于继续讲解，不会直接作为新的作答证据。'}</p><button className="button button-primary" type="submit" disabled={selectedCheck ? !followUp.trim() : !followUp.trim() && !strategy.trim()}>{selectedCheck ? '提交这份作答 →' : '继续讨论 →'}</button></div>
+                </fieldset></form>
+              </section>
               {result.lesson && <section className="panel feedback-panel"><h3>这次的讲法适合你吗？</h3><p className="hint">你的反馈帮助调整后续讲解方式。</p><form onSubmit={submitFeedback}><fieldset disabled={locked || feedbackSent}><div className="feedback-options" role="group" aria-label="讲解是否有帮助"><button className={`button button-quiet ${feedback.useful === true ? 'selected' : ''}`} type="button" aria-pressed={feedback.useful === true} onClick={() => setFeedback((current) => ({ ...current, useful: true }))}>有帮助</button><button className={`button button-quiet ${feedback.useful === false ? 'selected' : ''}`} type="button" aria-pressed={feedback.useful === false} onClick={() => setFeedback((current) => ({ ...current, useful: false }))}>还需要调整</button></div><div className="field-pair"><label className="field"><span>现在理解了吗？</span><select value={feedback.child_understood} onChange={(e) => setFeedback((current) => ({ ...current, child_understood: e.target.value }))}><option value="">还不确定</option><option value="yes">能够理解了</option><option value="no">还有不明白的地方</option></select></label><label className="field"><span>具体反馈 <em>选填</em></span><input maxLength={4000} value={feedback.comment} onChange={(e) => setFeedback((current) => ({ ...current, comment: e.target.value }))} placeholder="哪一步有帮助，哪里还卡住？" /></label></div><button className="button button-secondary" type="submit" disabled={feedback.useful === null}>{feedbackSent ? '反馈已记录' : '记录反馈'}</button></fieldset></form>{feedbackMessage && <p className={feedbackSent ? 'success-text' : 'error-text'} role="status">{feedbackMessage}</p>}</section>}
             </div>}
           </section>

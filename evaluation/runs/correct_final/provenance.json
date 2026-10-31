@@ -1,0 +1,29 @@
+{
+  "started_utc": "2026-10-31T10:01:24.717661+00:00",
+  "model": "deepseek-v4-flash-vision-exp",
+  "review_model": "deepseek-v4-flash-vision-exp",
+  "timeout_seconds": 90.0,
+  "cases": [
+    "density_correct"
+  ],
+  "sources_sha256": {
+    "backend\\app\\main.py": "2e287a27ce3b18bc0048515a89d8e4540bcc342cba2a4c9a260a9d27a3c313d1",
+    "backend\\app\\__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "backend\\app\\api\\__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "backend\\app\\core\\config.py": "9addb9198c905f7ebfe1d1d9693d8978d0ebb3ffb7b821ce4c1f6816fdd55be5",
+    "backend\\app\\core\\__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "backend\\app\\orchestration\\tutor_orchestrator.py": "3e73b0b08b086ac3a07daca18436bc6464b5eebf129c4b77fb89d038a90d8b3b",
+    "backend\\app\\orchestration\\__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "backend\\app\\profile\\__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "backend\\app\\repositories\\profile_repository.py": "2710af58620110fb1c27945da7711f36b80f0e050d38fdb8f3afbf2552b4218c",
+    "backend\\app\\repositories\\__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "backend\\app\\schemas\\diagnosis.py": "295c5a00860500068d469c8d944cd1beb84202e4e6e9b9ae7d1be4969460551c",
+    "backend\\app\\schemas\\profile.py": "86c627615b32c868f3a23e14410a223eaa3088e723628e4160c05bd924d6c158",
+    "backend\\app\\schemas\\__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "backend\\app\\services\\llm_client.py": "9ae0781c2f11c54d2374f7ea20e863e05a2697390fa8d1f04d6530fb5f5389f5",
+    "backend\\app\\services\\tutor_engine.py": "0e0fe133f3c578b510c552b3323e6326a9d7281aab6ff3811cbb5d6ff2c14bbd",
+    "backend\\app\\services\\__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "backend\\app\\api\\v1\\routes.py": "151df45e073c8329d5c331b7053b5ab2b33918aff70b3db720bd1cd1e6f37640",
+    "backend\\app\\api\\v1\\__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

@@ -144,8 +144,9 @@ summary::marker { color: #8ba491; }
 .question-callout { background: #f4f7f0; border-left: 3px solid #c5d7b7; padding: 13px 16px; border-radius: 0 8px 8px 0; margin: 17px 0; }
 .question-callout > span { display: block; color: #7c916d; font-size: .68rem; font-weight: 500; margin-bottom: 4px; }
 .question-callout p { margin: 0; }
-.checkpoint { color: #85917d; font-size: .74rem !important; }
-.checkpoint strong { font-weight: 500; color: #72876a; }
+.checkpoint { margin-top: 12px; color: #72876a; font-size: .74rem; }
+.checkpoint summary { font-size: .74rem; }
+.checkpoint p { margin-top: 10px; padding: 10px 12px; border-left: 2px solid #c4d6c3; background: #f7faf5; }
 .recap { border-top: 1px solid var(--border); padding-top: 20px; }
 .recap strong { font-size: .82rem; font-weight: 500; color: var(--green); }
 .recap p { margin-top: 8px; font-size: .85rem; }

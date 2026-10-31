@@ -1,0 +1,14 @@
+[
+  {
+    "case": "density_novice",
+    "status": "completed",
+    "seconds": 62.86,
+    "calls": 3
+  },
+  {
+    "case": "density_advanced",
+    "status": "completed",
+    "seconds": 75.98,
+    "calls": 3
+  }
+]

@@ -1,0 +1,751 @@
+{
+  "case": "chemistry_limiting",
+  "rubric": [
+    "H2为限量试剂",
+    "水3mol，消耗O2 1.5mol，剩O2 0.5mol"
+  ],
+  "request": {
+    "subject": "化学",
+    "problem_text": "反应2H₂+O₂→2H₂O。现有3 mol H₂和2 mol O₂，反应完全且无副反应。计算水的物质的量及剩余反应物。",
+    "student_answer": "按氧气算，2 mol O₂能生成4 mol H₂O，所以生成4 mol水，氢气全部用完，氧气也没剩。"
+  },
+  "profile": {
+    "grade": "高中一年级",
+    "preferred_explanation_modes": [
+      "配比表"
+    ],
+    "pace": "step-by-step"
+  },
+  "http_status": 200,
+  "response": {
+    "request_id": "chemistry_limiting",
+    "turn_id": "turn-6689c3e804944fcd8efcb312bf702813",
+    "session_id": "session-334d2782e5334be180540dd77a65b10e",
+    "student_id": "live-test",
+    "status": "completed",
+    "guidance_mode": "post-answer",
+    "analysis": {
+      "subject": "化学",
+      "task_summary": "题目给出反应2H₂+O₂→2H₂O及初始3 mol H₂、2 mol O₂，要求判断完全反应时的限量试剂，计算生成水的物质的量和剩余反应物。",
+      "task_type": "化学方程式的限量试剂判断与物质的量计算",
+      "missing_information": [],
+      "learning_objectives": [
+        "根据配平方程式确定H₂、O₂、H₂O的物质的量比。",
+        "通过比较反应所需量来判断限量试剂，不能随意选择一种反应物。",
+        "由限量试剂计算生成水的物质的量，并计算另一种反应物的剩余量。",
+        "用原子守恒或投料比检查结果是否合理。"
+      ],
+      "skills": [
+        {
+          "name": "限量试剂判断",
+          "subject": "化学"
+        },
+        {
+          "name": "依据化学方程式的物质的量配比计算",
+          "subject": "化学"
+        }
+      ],
+      "reference_solution": [
+        "配平方程式给出物质的量比：2 mol H₂ 与 1 mol O₂ 生成 2 mol H₂O。",
+        "若2 mol O₂都反应，需要H₂ 4 mol，但只有3 mol，因此H₂不足，H₂是限量试剂，O₂过量。",
+        "由H₂计算：3 mol H₂生成3 mol H₂O（H₂与H₂O系数比为2:2=1:1），消耗O₂ 3/2=1.5 mol。",
+        "剩余O₂为2−1.5=0.5 mol；H₂完全消耗。答案：生成3 mol H₂O，剩余0.5 mol O₂。"
+      ],
+      "assessment": {
+        "verdict": "needs-revision",
+        "summary": "学生按O₂计算得4 mol H₂O，但没有检验H₂是否足够；3 mol H₂只能生成3 mol H₂O，H₂才是限量试剂，反应后应剩余0.5 mol O₂。“H₂全部用完，O₂也没剩”的说法与计量关系不符。",
+        "evidence": [
+          "学生写“按氧气算，2 mol O₂能生成4 mol H₂O”，只使用了O₂与H₂O的1:2系数关系，没有检查生成4 mol H₂O需要4 mol H₂。",
+          "实际只有3 mol H₂；若H₂完全反应，生成3 mol H₂O并消耗1.5 mol O₂，因此H₂是限量试剂。",
+          "学生称“氧气也没剩”，但按反应计量O₂应剩余2−1.5=0.5 mol。"
+        ],
+        "confidence": 0.98
+      },
+      "skill_evidence": [
+        {
+          "name": "限量试剂判断",
+          "subject": "化学",
+          "outcome": "needs-support",
+          "evidence": "学生直接“按氧气算”，并称氢气全部用完、氧气也没剩；没有比较2 mol O₂完全反应需要4 mol H₂而现有H₂仅3 mol，因而未识别H₂为限量试剂。",
+          "confidence": 0.97
+        },
+        {
+          "name": "依据化学方程式的物质的量配比计算",
+          "subject": "化学",
+          "outcome": "needs-support",
+          "evidence": "学生使用了O₂与H₂O的1:2系数关系得到“2 mol O₂生成4 mol H₂O”，但没有把H₂的可用量与产物、剩余量统一计算，最终产物水量及两种反应物均无剩余的判断不正确。",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.98
+    },
+    "strategy": {
+      "approach": "配比表",
+      "rationale": [
+        "从已设置的讲解偏好中选择有帮助反馈较多的方式，同分时保留偏好顺序。",
+        "按慢节奏拆小步骤，每次只引入必要的新内容。",
+        "依据年级调整术语和必要的前置说明，不据此断言学生已经掌握。",
+        "围绕本轮家长或学生设定的辅导目标组织内容。"
+      ],
+      "profile_used": [
+        "preferred_explanation_modes",
+        "pace",
+        "grade",
+        "language"
+      ],
+      "pace": "step-by-step"
+    },
+    "lesson": {
+      "title": "限量试剂：先看谁先用完，再算产物",
+      "goal": "用配比表比较3 mol H₂和2 mol O₂，判断哪种反应物先用完，并由它计算生成水的物质的量和剩余反应物。",
+      "steps": [
+        {
+          "title": "肯定正确的系数换算，找出还要检查的一步",
+          "explanation": "你写“2 mol O₂能生成4 mol H₂O”，这一步用对了O₂与H₂O的系数比1:2，但它只说明“如果2 mol O₂能全部反应”会生成4 mol H₂O。还要检查：要让2 mol O₂全部反应，H₂是否足够。先不要改答案，只做这个检查。",
+          "question": "在2H₂+O₂→2H₂O中，O₂与H₂的物质的量比是多少？若2 mol O₂全部反应，需要H₂多少mol？",
+          "checkpoint": "能说出O₂:H₂=1:2，并算出需要4 mol H₂。"
+        },
+        {
+          "title": "用配比表比较“需要量”和“现有量”",
+          "explanation": "配比表可以这样列：若O₂全部反应，H₂需要4 mol；但题目只给出3 mol H₂。把“需要4 mol”和“只有3 mol”并排比较，判断哪种反应物先不够用。先不够用的叫限量试剂，另一种叫过量试剂。",
+          "question": "现有H₂只有3 mol。比较“需要4 mol H₂”和“只有3 mol H₂”，哪种反应物会先耗尽？另一种反应物是过量还是不足？",
+          "checkpoint": "能明确指出H₂不足、会先耗尽，因此H₂是限量试剂，O₂过量。"
+        },
+        {
+          "title": "产物必须用限量试剂计算",
+          "explanation": "一旦判断H₂先用完，就不能再用过量的O₂来算生成多少水，而要用H₂算。看方程式：2 mol H₂生成2 mol H₂O，所以H₂与H₂O的物质的量比是2:2，也就是1:1。",
+          "question": "应该用3 mol H₂还是2 mol O₂来计算H₂O的物质的量？按H₂:H₂O=1:1，能生成多少mol H₂O？",
+          "checkpoint": "能选择H₂作为计算依据，并算出生成3 mol H₂O。"
+        },
+        {
+          "title": "计算另一种反应物消耗了多少、剩多少",
+          "explanation": "H₂完全反应时也会消耗O₂。方程式中H₂:O₂=2:1，因此3 mol H₂消耗的O₂是3÷2=1.5 mol。原来有2 mol O₂，用原来的量减去消耗的量，就是剩余量。",
+          "question": "3 mol H₂完全反应会消耗多少mol O₂？原来有2 mol O₂，反应后还剩多少mol O₂？",
+          "checkpoint": "能算出消耗1.5 mol O₂，剩余0.5 mol O₂。"
+        },
+        {
+          "title": "用配比表和原子守恒核对答案",
+          "explanation": "把结果放回配比表检查：H₂由3 mol变为0；O₂由2 mol变为0.5 mol；H₂O由0变为3 mol。再从氧原子核对：3 mol H₂O含3 mol O原子，剩余0.5 mol O₂含1 mol O原子，合计4 mol O原子，正好等于最初2 mol O₂提供的4 mol O原子。",
+          "question": "请用一句话写出本题最终结果：生成多少mol H₂O？哪种反应物剩余？剩余多少mol？",
+          "checkpoint": "能完整说出：生成3 mol H₂O，H₂完全消耗，剩余0.5 mol O₂。"
+        }
+      ],
+      "parent_tips": [
+        "先保留孩子的原答案，只在旁边加一列“若O₂全部反应，需要H₂多少mol”，不要立刻替他改算。",
+        "如果孩子仍坚持按O₂算，可以追问：“生成4 mol H₂O需要多少mol H原子？现有3 mol H₂能提供多少mol H原子？”让他自己发现H₂不够。",
+        "孩子卡住时，只提示“先比较需要量和现有量”，或提示H₂与O₂的系数比是2:1，不要直接报最终答案。",
+        "反馈时先肯定孩子用对了O₂与H₂O的1:2系数关系，再指出缺少“检验H₂是否足够”这一步。"
+      ],
+      "understanding_checks": [
+        "为什么“2 mol O₂能生成4 mol H₂O”不能直接作为最终结果？计算前还必须检查什么？",
+        "如果改为有4 mol H₂和2 mol O₂，哪种反应物会先用完？请说出你的比较依据。",
+        "请按顺序口头说出配比表的三步：先比较什么，再用哪种反应物算产物，最后怎样检查。"
+      ],
+      "practice": [
+        {
+          "id": "p1",
+          "prompt": "反应N₂+3H₂→2NH₃，反应完全且无副反应。现有2 mol N₂和5 mol H₂。请判断哪种反应物是限量试剂，计算生成NH₃的物质的量，以及反应后各反应物剩余多少。",
+          "purpose": "练习用配比表比较需要量与现有量，并由限量试剂计算产物和剩余物。",
+          "hints": [
+            "先看N₂:H₂=1:3。若2 mol N₂全部反应，需要多少mol H₂？",
+            "将需要的H₂与现有的5 mol H₂比较，判断谁先用完。",
+            "用限量试剂计算NH₃；剩余的反应物用“原有量−消耗量”计算。"
+          ],
+          "success_criteria": [
+            "正确判断H₂为限量试剂：2 mol N₂完全反应需要6 mol H₂，而现有H₂只有5 mol。",
+            "由H₂算出NH₃为10/3 mol（约3.33 mol）。",
+            "算出N₂消耗5/3 mol，剩余1/3 mol（约0.33 mol）；H₂完全消耗。"
+          ]
+        },
+        {
+          "id": "p2",
+          "prompt": "反应4NH₃+5O₂→4NO+6H₂O，反应完全且无副反应。现有2 mol NH₃和3 mol O₂。请判断限量试剂，计算生成NO和H₂O的物质的量，并求反应后剩余的反应物。",
+          "purpose": "在系数比更复杂的方程式中迁移限量试剂判断和配比计算。",
+          "hints": [
+            "先算若2 mol NH₃全部反应，需要多少mol O₂：用NH₃:O₂=4:5。",
+            "把所需O₂与现有的3 mol O₂比较，确定哪种反应物先用完。",
+            "分别用NH₃:NO=4:4和NH₃:H₂O=4:6计算产物。"
+          ],
+          "success_criteria": [
+            "正确判断NH₃为限量试剂：2 mol NH₃完全反应需要2.5 mol O₂，现有O₂为3 mol。",
+            "算出生成NO 2 mol、H₂O 3 mol。",
+            "算出O₂消耗2.5 mol，剩余0.5 mol；NH₃完全消耗。"
+          ]
+        }
+      ],
+      "recap": "先按方程式系数算出“若一种反应物全部反应，需要另一种多少”；需要量超过现有量的那种反应物就是限量试剂。产物和消耗量都要用限量试剂计算，最后可用原子守恒核对。"
+    },
+    "verification": {
+      "reliable": true,
+      "issues": [],
+      "approved_evidence": [
+        {
+          "name": "限量试剂判断",
+          "subject": "化学",
+          "outcome": "needs-support",
+          "evidence": "学生直接“按氧气算”，并称氢气全部用完、氧气也没剩；没有比较2 mol O₂完全反应需要4 mol H₂而现有H₂仅3 mol，因而未识别H₂为限量试剂。",
+          "confidence": 0.97
+        },
+        {
+          "name": "依据化学方程式的物质的量配比计算",
+          "subject": "化学",
+          "outcome": "needs-support",
+          "evidence": "学生使用了O₂与H₂O的1:2系数关系得到“2 mol O₂生成4 mol H₂O”，但没有把H₂的可用量与产物、剩余量统一计算，最终产物水量及两种反应物均无剩余的判断不正确。",
+          "confidence": 0.95
+        }
+      ]
+    },
+    "clarifying_questions": [],
+    "warnings": [
+      "讲解与复核由模型完成；复核通过不等于外部权威认证。"
+    ],
+    "profile": {
+      "display_name": "",
+      "grade": "高中一年级",
+      "textbook": "",
+      "learning_goal": "",
+      "language": "中文",
+      "preferred_explanation_modes": [
+        "配比表"
+      ],
+      "interests": [],
+      "pace": "step-by-step",
+      "notes": "",
+      "student_id": "live-test",
+      "skills": {
+        "[\"化学\",\"限量试剂判断\"]": {
+          "subject": "化学",
+          "name": "限量试剂判断",
+          "demonstrated_count": 0,
+          "needs_support_count": 1,
+          "last_evidence": "学生直接“按氧气算”，并称氢气全部用完、氧气也没剩；没有比较2 mol O₂完全反应需要4 mol H₂而现有H₂仅3 mol，因而未识别H₂为限量试剂。",
+          "last_seen": "2026-10-31T09:54:29.677045+00:00"
+        },
+        "[\"化学\",\"依据化学方程式的物质的量配比计算\"]": {
+          "subject": "化学",
+          "name": "依据化学方程式的物质的量配比计算",
+          "demonstrated_count": 0,
+          "needs_support_count": 1,
+          "last_evidence": "学生使用了O₂与H₂O的1:2系数关系得到“2 mol O₂生成4 mol H₂O”，但没有把H₂的可用量与产物、剩余量统一计算，最终产物水量及两种反应物均无剩余的判断不正确。",
+          "last_seen": "2026-10-31T09:54:29.677045+00:00"
+        }
+      },
+      "format_feedback": {}
+    },
+    "profile_updates": [
+      "化学 · 限量试剂判断：新增一条需要支持的作答证据。",
+      "化学 · 依据化学方程式的物质的量配比计算：新增一条需要支持的作答证据。"
+    ]
+  },
+  "stages": [
+    {
+      "stage": "analyze",
+      "context": {
+        "request": {
+          "request_id": "chemistry_limiting",
+          "session_id": "session-334d2782e5334be180540dd77a65b10e",
+          "student_id": "live-test",
+          "subject": "化学",
+          "problem_text": "反应2H₂+O₂→2H₂O。现有3 mol H₂和2 mol O₂，反应完全且无副反应。计算水的物质的量及剩余反应物。",
+          "student_answer": "按氧气算，2 mol O₂能生成4 mol H₂O，所以生成4 mol水，氢气全部用完，氧气也没剩。",
+          "answer_to": null,
+          "parent_goal": "准确解释当前作答的问题，帮助学习者理解并独立完成。",
+          "parent_note": null,
+          "follow_up": null,
+          "requested_strategy": null,
+          "attempt_id": null,
+          "grade": null,
+          "textbook_version": null,
+          "input_mode": "text",
+          "image_count": 0
+        },
+        "profile": {
+          "display_name": "",
+          "grade": "高中一年级",
+          "textbook": "",
+          "learning_goal": "",
+          "language": "中文",
+          "preferred_explanation_modes": [
+            "配比表"
+          ],
+          "interests": [],
+          "pace": "step-by-step",
+          "notes": "",
+          "student_id": "live-test",
+          "skills": {},
+          "format_feedback": {}
+        },
+        "history": [],
+        "history_notice": "历史仅为服务提供的最近轮次，并非完整会话。本次收到 0 轮，按 24000 字符预算完整保留最近 0 轮；其中超出预算的 0 轮已省略；更早轮次未计入本次窗口。未截断任何保留的题干或作答。历史画像副本、技能证据回执和其他重复派生字段已省略，当前完整画像单独提供。若追问依赖不可见的历史材料，请明确请求用户重传具体材料，不得推测补全。"
+      },
+      "output": {
+        "subject": "化学",
+        "task_summary": "题目给出反应2H₂+O₂→2H₂O及初始3 mol H₂、2 mol O₂，要求判断完全反应时的限量试剂，计算生成水的物质的量和剩余反应物。",
+        "task_type": "化学方程式的限量试剂判断与物质的量计算",
+        "missing_information": [],
+        "learning_objectives": [
+          "根据配平方程式确定H₂、O₂、H₂O的物质的量比。",
+          "通过比较反应所需量来判断限量试剂，不能随意选择一种反应物。",
+          "由限量试剂计算生成水的物质的量，并计算另一种反应物的剩余量。",
+          "用原子守恒或投料比检查结果是否合理。"
+        ],
+        "skills": [
+          {
+            "name": "限量试剂判断",
+            "subject": "化学"
+          },
+          {
+            "name": "依据化学方程式的物质的量配比计算",
+            "subject": "化学"
+          }
+        ],
+        "reference_solution": [
+          "配平方程式给出物质的量比：2 mol H₂ 与 1 mol O₂ 生成 2 mol H₂O。",
+          "若2 mol O₂都反应，需要H₂ 4 mol，但只有3 mol，因此H₂不足，H₂是限量试剂，O₂过量。",
+          "由H₂计算：3 mol H₂生成3 mol H₂O（H₂与H₂O系数比为2:2=1:1），消耗O₂ 3/2=1.5 mol。",
+          "剩余O₂为2−1.5=0.5 mol；H₂完全消耗。答案：生成3 mol H₂O，剩余0.5 mol O₂。"
+        ],
+        "assessment": {
+          "verdict": "needs-revision",
+          "summary": "学生按O₂计算得4 mol H₂O，但没有检验H₂是否足够；3 mol H₂只能生成3 mol H₂O，H₂才是限量试剂，反应后应剩余0.5 mol O₂。“H₂全部用完，O₂也没剩”的说法与计量关系不符。",
+          "evidence": [
+            "学生写“按氧气算，2 mol O₂能生成4 mol H₂O”，只使用了O₂与H₂O的1:2系数关系，没有检查生成4 mol H₂O需要4 mol H₂。",
+            "实际只有3 mol H₂；若H₂完全反应，生成3 mol H₂O并消耗1.5 mol O₂，因此H₂是限量试剂。",
+            "学生称“氧气也没剩”，但按反应计量O₂应剩余2−1.5=0.5 mol。"
+          ],
+          "confidence": 0.98
+        },
+        "skill_evidence": [
+          {
+            "name": "限量试剂判断",
+            "subject": "化学",
+            "outcome": "needs-support",
+            "evidence": "学生直接“按氧气算”，并称氢气全部用完、氧气也没剩；没有比较2 mol O₂完全反应需要4 mol H₂而现有H₂仅3 mol，因而未识别H₂为限量试剂。",
+            "confidence": 0.97
+          },
+          {
+            "name": "依据化学方程式的物质的量配比计算",
+            "subject": "化学",
+            "outcome": "needs-support",
+            "evidence": "学生使用了O₂与H₂O的1:2系数关系得到“2 mol O₂生成4 mol H₂O”，但没有把H₂的可用量与产物、剩余量统一计算，最终产物水量及两种反应物均无剩余的判断不正确。",
+            "confidence": 0.95
+          }
+        ],
+        "confidence": 0.98
+      },
+      "seconds": 15.44,
+      "completions": [
+        {
+          "model": "deepseek-v4-flash-vision-exp",
+          "seconds": 15.44,
+          "content": "{\n  \"subject\": \"化学\",\n  \"task_summary\": \"题目给出反应2H₂+O₂→2H₂O及初始3 mol H₂、2 mol O₂，要求判断完全反应时的限量试剂，计算生成水的物质的量和剩余反应物。\",\n  \"task_type\": \"化学方程式的限量试剂判断与物质的量计算\",\n  \"missing_information\": [],\n  \"learning_objectives\": [\n    \"根据配平方程式确定H₂、O₂、H₂O的物质的量比。\",\n    \"通过比较反应所需量来判断限量试剂，不能随意选择一种反应物。\",\n    \"由限量试剂计算生成水的物质的量，并计算另一种反应物的剩余量。\",\n    \"用原子守恒或投料比检查结果是否合理。\"\n  ],\n  \"skills\": [\n    {\n      \"subject\": \"化学\",\n      \"name\": \"限量试剂判断\"\n    },\n    {\n      \"subject\": \"化学\",\n      \"name\": \"依据化学方程式的物质的量配比计算\"\n    }\n  ],\n  \"reference_solution\": [\n    \"配平方程式给出物质的量比：2 mol H₂ 与 1 mol O₂ 生成 2 mol H₂O。\",\n    \"若2 mol O₂都反应，需要H₂ 4 mol，但只有3 mol，因此H₂不足，H₂是限量试剂，O₂过量。\",\n    \"由H₂计算：3 mol H₂生成3 mol H₂O（H₂与H₂O系数比为2:2=1:1），消耗O₂ 3/2=1.5 mol。\",\n    \"剩余O₂为2−1.5=0.5 mol；H₂完全消耗。答案：生成3 mol H₂O，剩余0.5 mol O₂。\"\n  ],\n  \"assessment\": {\n    \"verdict\": \"needs-revision\",\n    \"summary\": \"学生按O₂计算得4 mol H₂O，但没有检验H₂是否足够；3 mol H₂只能生成3 mol H₂O，H₂才是限量试剂，反应后应剩余0.5 mol O₂。“H₂全部用完，O₂也没剩”的说法与计量关系不符。\",\n    \"evidence\": [\n      \"学生写“按氧气算，2 mol O₂能生成4 mol H₂O”，只使用了O₂与H₂O的1:2系数关系，没有检查生成4 mol H₂O需要4 mol H₂。\",\n      \"实际只有3 mol H₂；若H₂完全反应，生成3 mol H₂O并消耗1.5 mol O₂，因此H₂是限量试剂。\",\n      \"学生称“氧气也没剩”，但按反应计量O₂应剩余2−1.5=0.5 mol。\"\n    ],\n    \"confidence\": 0.98\n  },\n  \"skill_evidence\": [\n    {\n      \"subject\": \"化学\",\n      \"name\": \"限量试剂判断\",\n      \"outcome\": \"needs-support\",\n      \"evidence\": \"学生直接“按氧气算”，并称氢气全部用完、氧气也没剩；没有比较2 mol O₂完全反应需要4 mol H₂而现有H₂仅3 mol，因而未识别H₂为限量试剂。\",\n      \"confidence\": 0.97\n    },\n    {\n      \"subject\": \"化学\",\n      \"name\": \"依据化学方程式的物质的量配比计算\",\n      \"outcome\": \"needs-support\",\n      \"evidence\": \"学生使用了O₂与H₂O的1:2系数关系得到“2 mol O₂生成4 mol H₂O”，但没有把H₂的可用量与产物、剩余量统一计算，最终产物水量及两种反应物均无剩余的判断不正确。\",\n      \"confidence\": 0.95\n    }\n  ],\n  \"confidence\": 0.98\n}"
+        }
+      ]
+    },
+    {
+      "stage": "teach",
+      "context": {
+        "request": {
+          "request_id": "chemistry_limiting",
+          "session_id": "session-334d2782e5334be180540dd77a65b10e",
+          "student_id": "live-test",
+          "subject": "化学",
+          "problem_text": "反应2H₂+O₂→2H₂O。现有3 mol H₂和2 mol O₂，反应完全且无副反应。计算水的物质的量及剩余反应物。",
+          "student_answer": "按氧气算，2 mol O₂能生成4 mol H₂O，所以生成4 mol水，氢气全部用完，氧气也没剩。",
+          "answer_to": null,
+          "parent_goal": "准确解释当前作答的问题，帮助学习者理解并独立完成。",
+          "parent_note": null,
+          "follow_up": null,
+          "requested_strategy": null,
+          "attempt_id": null,
+          "grade": null,
+          "textbook_version": null,
+          "input_mode": "text",
+          "image_count": 0
+        },
+        "profile": {
+          "display_name": "",
+          "grade": "高中一年级",
+          "textbook": "",
+          "learning_goal": "",
+          "language": "中文",
+          "preferred_explanation_modes": [
+            "配比表"
+          ],
+          "interests": [],
+          "pace": "step-by-step",
+          "notes": "",
+          "student_id": "live-test",
+          "skills": {},
+          "format_feedback": {}
+        },
+        "history": [],
+        "history_notice": "历史仅为服务提供的最近轮次，并非完整会话。本次收到 0 轮，按 24000 字符预算完整保留最近 0 轮；其中超出预算的 0 轮已省略；更早轮次未计入本次窗口。未截断任何保留的题干或作答。历史画像副本、技能证据回执和其他重复派生字段已省略，当前完整画像单独提供。若追问依赖不可见的历史材料，请明确请求用户重传具体材料，不得推测补全。",
+        "analysis": {
+          "subject": "化学",
+          "task_summary": "题目给出反应2H₂+O₂→2H₂O及初始3 mol H₂、2 mol O₂，要求判断完全反应时的限量试剂，计算生成水的物质的量和剩余反应物。",
+          "task_type": "化学方程式的限量试剂判断与物质的量计算",
+          "missing_information": [],
+          "learning_objectives": [
+            "根据配平方程式确定H₂、O₂、H₂O的物质的量比。",
+            "通过比较反应所需量来判断限量试剂，不能随意选择一种反应物。",
+            "由限量试剂计算生成水的物质的量，并计算另一种反应物的剩余量。",
+            "用原子守恒或投料比检查结果是否合理。"
+          ],
+          "skills": [
+            {
+              "name": "限量试剂判断",
+              "subject": "化学"
+            },
+            {
+              "name": "依据化学方程式的物质的量配比计算",
+              "subject": "化学"
+            }
+          ],
+          "reference_solution": [
+            "配平方程式给出物质的量比：2 mol H₂ 与 1 mol O₂ 生成 2 mol H₂O。",
+            "若2 mol O₂都反应，需要H₂ 4 mol，但只有3 mol，因此H₂不足，H₂是限量试剂，O₂过量。",
+            "由H₂计算：3 mol H₂生成3 mol H₂O（H₂与H₂O系数比为2:2=1:1），消耗O₂ 3/2=1.5 mol。",
+            "剩余O₂为2−1.5=0.5 mol；H₂完全消耗。答案：生成3 mol H₂O，剩余0.5 mol O₂。"
+          ],
+          "assessment": {
+            "verdict": "needs-revision",
+            "summary": "学生按O₂计算得4 mol H₂O，但没有检验H₂是否足够；3 mol H₂只能生成3 mol H₂O，H₂才是限量试剂，反应后应剩余0.5 mol O₂。“H₂全部用完，O₂也没剩”的说法与计量关系不符。",
+            "evidence": [
+              "学生写“按氧气算，2 mol O₂能生成4 mol H₂O”，只使用了O₂与H₂O的1:2系数关系，没有检查生成4 mol H₂O需要4 mol H₂。",
+              "实际只有3 mol H₂；若H₂完全反应，生成3 mol H₂O并消耗1.5 mol O₂，因此H₂是限量试剂。",
+              "学生称“氧气也没剩”，但按反应计量O₂应剩余2−1.5=0.5 mol。"
+            ],
+            "confidence": 0.98
+          },
+          "skill_evidence": [
+            {
+              "name": "限量试剂判断",
+              "subject": "化学",
+              "outcome": "needs-support",
+              "evidence": "学生直接“按氧气算”，并称氢气全部用完、氧气也没剩；没有比较2 mol O₂完全反应需要4 mol H₂而现有H₂仅3 mol，因而未识别H₂为限量试剂。",
+              "confidence": 0.97
+            },
+            {
+              "name": "依据化学方程式的物质的量配比计算",
+              "subject": "化学",
+              "outcome": "needs-support",
+              "evidence": "学生使用了O₂与H₂O的1:2系数关系得到“2 mol O₂生成4 mol H₂O”，但没有把H₂的可用量与产物、剩余量统一计算，最终产物水量及两种反应物均无剩余的判断不正确。",
+              "confidence": 0.95
+            }
+          ],
+          "confidence": 0.98
+        },
+        "strategy": {
+          "approach": "配比表",
+          "rationale": [
+            "从已设置的讲解偏好中选择有帮助反馈较多的方式，同分时保留偏好顺序。",
+            "按慢节奏拆小步骤，每次只引入必要的新内容。",
+            "依据年级调整术语和必要的前置说明，不据此断言学生已经掌握。",
+            "围绕本轮家长或学生设定的辅导目标组织内容。"
+          ],
+          "profile_used": [
+            "preferred_explanation_modes",
+            "pace",
+            "grade",
+            "language"
+          ],
+          "pace": "step-by-step"
+        }
+      },
+      "output": {
+        "title": "限量试剂：先看谁先用完，再算产物",
+        "goal": "用配比表比较3 mol H₂和2 mol O₂，判断哪种反应物先用完，并由它计算生成水的物质的量和剩余反应物。",
+        "steps": [
+          {
+            "title": "肯定正确的系数换算，找出还要检查的一步",
+            "explanation": "你写“2 mol O₂能生成4 mol H₂O”，这一步用对了O₂与H₂O的系数比1:2，但它只说明“如果2 mol O₂能全部反应”会生成4 mol H₂O。还要检查：要让2 mol O₂全部反应，H₂是否足够。先不要改答案，只做这个检查。",
+            "question": "在2H₂+O₂→2H₂O中，O₂与H₂的物质的量比是多少？若2 mol O₂全部反应，需要H₂多少mol？",
+            "checkpoint": "能说出O₂:H₂=1:2，并算出需要4 mol H₂。"
+          },
+          {
+            "title": "用配比表比较“需要量”和“现有量”",
+            "explanation": "配比表可以这样列：若O₂全部反应，H₂需要4 mol；但题目只给出3 mol H₂。把“需要4 mol”和“只有3 mol”并排比较，判断哪种反应物先不够用。先不够用的叫限量试剂，另一种叫过量试剂。",
+            "question": "现有H₂只有3 mol。比较“需要4 mol H₂”和“只有3 mol H₂”，哪种反应物会先耗尽？另一种反应物是过量还是不足？",
+            "checkpoint": "能明确指出H₂不足、会先耗尽，因此H₂是限量试剂，O₂过量。"
+          },
+          {
+            "title": "产物必须用限量试剂计算",
+            "explanation": "一旦判断H₂先用完，就不能再用过量的O₂来算生成多少水，而要用H₂算。看方程式：2 mol H₂生成2 mol H₂O，所以H₂与H₂O的物质的量比是2:2，也就是1:1。",
+            "question": "应该用3 mol H₂还是2 mol O₂来计算H₂O的物质的量？按H₂:H₂O=1:1，能生成多少mol H₂O？",
+            "checkpoint": "能选择H₂作为计算依据，并算出生成3 mol H₂O。"
+          },
+          {
+            "title": "计算另一种反应物消耗了多少、剩多少",
+            "explanation": "H₂完全反应时也会消耗O₂。方程式中H₂:O₂=2:1，因此3 mol H₂消耗的O₂是3÷2=1.5 mol。原来有2 mol O₂，用原来的量减去消耗的量，就是剩余量。",
+            "question": "3 mol H₂完全反应会消耗多少mol O₂？原来有2 mol O₂，反应后还剩多少mol O₂？",
+            "checkpoint": "能算出消耗1.5 mol O₂，剩余0.5 mol O₂。"
+          },
+          {
+            "title": "用配比表和原子守恒核对答案",
+            "explanation": "把结果放回配比表检查：H₂由3 mol变为0；O₂由2 mol变为0.5 mol；H₂O由0变为3 mol。再从氧原子核对：3 mol H₂O含3 mol O原子，剩余0.5 mol O₂含1 mol O原子，合计4 mol O原子，正好等于最初2 mol O₂提供的4 mol O原子。",
+            "question": "请用一句话写出本题最终结果：生成多少mol H₂O？哪种反应物剩余？剩余多少mol？",
+            "checkpoint": "能完整说出：生成3 mol H₂O，H₂完全消耗，剩余0.5 mol O₂。"
+          }
+        ],
+        "parent_tips": [
+          "先保留孩子的原答案，只在旁边加一列“若O₂全部反应，需要H₂多少mol”，不要立刻替他改算。",
+          "如果孩子仍坚持按O₂算，可以追问：“生成4 mol H₂O需要多少mol H原子？现有3 mol H₂能提供多少mol H原子？”让他自己发现H₂不够。",
+          "孩子卡住时，只提示“先比较需要量和现有量”，或提示H₂与O₂的系数比是2:1，不要直接报最终答案。",
+          "反馈时先肯定孩子用对了O₂与H₂O的1:2系数关系，再指出缺少“检验H₂是否足够”这一步。"
+        ],
+        "understanding_checks": [
+          "为什么“2 mol O₂能生成4 mol H₂O”不能直接作为最终结果？计算前还必须检查什么？",
+          "如果改为有4 mol H₂和2 mol O₂，哪种反应物会先用完？请说出你的比较依据。",
+          "请按顺序口头说出配比表的三步：先比较什么，再用哪种反应物算产物，最后怎样检查。"
+        ],
+        "practice": [
+          {
+            "id": "p1",
+            "prompt": "反应N₂+3H₂→2NH₃，反应完全且无副反应。现有2 mol N₂和5 mol H₂。请判断哪种反应物是限量试剂，计算生成NH₃的物质的量，以及反应后各反应物剩余多少。",
+            "purpose": "练习用配比表比较需要量与现有量，并由限量试剂计算产物和剩余物。",
+            "hints": [
+              "先看N₂:H₂=1:3。若2 mol N₂全部反应，需要多少mol H₂？",
+              "将需要的H₂与现有的5 mol H₂比较，判断谁先用完。",
+              "用限量试剂计算NH₃；剩余的反应物用“原有量−消耗量”计算。"
+            ],
+            "success_criteria": [
+              "正确判断H₂为限量试剂：2 mol N₂完全反应需要6 mol H₂，而现有H₂只有5 mol。",
+              "由H₂算出NH₃为10/3 mol（约3.33 mol）。",
+              "算出N₂消耗5/3 mol，剩余1/3 mol（约0.33 mol）；H₂完全消耗。"
+            ]
+          },
+          {
+            "id": "p2",
+            "prompt": "反应4NH₃+5O₂→4NO+6H₂O，反应完全且无副反应。现有2 mol NH₃和3 mol O₂。请判断限量试剂，计算生成NO和H₂O的物质的量，并求反应后剩余的反应物。",
+            "purpose": "在系数比更复杂的方程式中迁移限量试剂判断和配比计算。",
+            "hints": [
+              "先算若2 mol NH₃全部反应，需要多少mol O₂：用NH₃:O₂=4:5。",
+              "把所需O₂与现有的3 mol O₂比较，确定哪种反应物先用完。",
+              "分别用NH₃:NO=4:4和NH₃:H₂O=4:6计算产物。"
+            ],
+            "success_criteria": [
+              "正确判断NH₃为限量试剂：2 mol NH₃完全反应需要2.5 mol O₂，现有O₂为3 mol。",
+              "算出生成NO 2 mol、H₂O 3 mol。",
+              "算出O₂消耗2.5 mol，剩余0.5 mol；NH₃完全消耗。"
+            ]
+          }
+        ],
+        "recap": "先按方程式系数算出“若一种反应物全部反应，需要另一种多少”；需要量超过现有量的那种反应物就是限量试剂。产物和消耗量都要用限量试剂计算，最后可用原子守恒核对。"
+      },
+      "seconds": 26.58,
+      "completions": [
+        {
+          "model": "deepseek-v4-flash-vision-exp",
+          "seconds": 26.58,
+          "content": "{\"title\":\"限量试剂：先看谁先用完，再算产物\",\"goal\":\"用配比表比较3 mol H₂和2 mol O₂，判断哪种反应物先用完，并由它计算生成水的物质的量和剩余反应物。\",\"steps\":[{\"title\":\"肯定正确的系数换算，找出还要检查的一步\",\"explanation\":\"你写“2 mol O₂能生成4 mol H₂O”，这一步用对了O₂与H₂O的系数比1:2，但它只说明“如果2 mol O₂能全部反应”会生成4 mol H₂O。还要检查：要让2 mol O₂全部反应，H₂是否足够。先不要改答案，只做这个检查。\",\"question\":\"在2H₂+O₂→2H₂O中，O₂与H₂的物质的量比是多少？若2 mol O₂全部反应，需要H₂多少mol？\",\"checkpoint\":\"能说出O₂:H₂=1:2，并算出需要4 mol H₂。\"},{\"title\":\"用配比表比较“需要量”和“现有量”\",\"explanation\":\"配比表可以这样列：若O₂全部反应，H₂需要4 mol；但题目只给出3 mol H₂。把“需要4 mol”和“只有3 mol”并排比较，判断哪种反应物先不够用。先不够用的叫限量试剂，另一种叫过量试剂。\",\"question\":\"现有H₂只有3 mol。比较“需要4 mol H₂”和“只有3 mol H₂”，哪种反应物会先耗尽？另一种反应物是过量还是不足？\",\"checkpoint\":\"能明确指出H₂不足、会先耗尽，因此H₂是限量试剂，O₂过量。\"},{\"title\":\"产物必须用限量试剂计算\",\"explanation\":\"一旦判断H₂先用完，就不能再用过量的O₂来算生成多少水，而要用H₂算。看方程式：2 mol H₂生成2 mol H₂O，所以H₂与H₂O的物质的量比是2:2，也就是1:1。\",\"question\":\"应该用3 mol H₂还是2 mol O₂来计算H₂O的物质的量？按H₂:H₂O=1:1，能生成多少mol H₂O？\",\"checkpoint\":\"能选择H₂作为计算依据，并算出生成3 mol H₂O。\"},{\"title\":\"计算另一种反应物消耗了多少、剩多少\",\"explanation\":\"H₂完全反应时也会消耗O₂。方程式中H₂:O₂=2:1，因此3 mol H₂消耗的O₂是3÷2=1.5 mol。原来有2 mol O₂，用原来的量减去消耗的量，就是剩余量。\",\"question\":\"3 mol H₂完全反应会消耗多少mol O₂？原来有2 mol O₂，反应后还剩多少mol O₂？\",\"checkpoint\":\"能算出消耗1.5 mol O₂，剩余0.5 mol O₂。\"},{\"title\":\"用配比表和原子守恒核对答案\",\"explanation\":\"把结果放回配比表检查：H₂由3 mol变为0；O₂由2 mol变为0.5 mol；H₂O由0变为3 mol。再从氧原子核对：3 mol H₂O含3 mol O原子，剩余0.5 mol O₂含1 mol O原子，合计4 mol O原子，正好等于最初2 mol O₂提供的4 mol O原子。\",\"question\":\"请用一句话写出本题最终结果：生成多少mol H₂O？哪种反应物剩余？剩余多少mol？\",\"checkpoint\":\"能完整说出：生成3 mol H₂O，H₂完全消耗，剩余0.5 mol O₂。\"}],\"parent_tips\":[\"先保留孩子的原答案，只在旁边加一列“若O₂全部反应，需要H₂多少mol”，不要立刻替他改算。\",\"如果孩子仍坚持按O₂算，可以追问：“生成4 mol H₂O需要多少mol H原子？现有3 mol H₂能提供多少mol H原子？”让他自己发现H₂不够。\",\"孩子卡住时，只提示“先比较需要量和现有量”，或提示H₂与O₂的系数比是2:1，不要直接报最终答案。\",\"反馈时先肯定孩子用对了O₂与H₂O的1:2系数关系，再指出缺少“检验H₂是否足够”这一步。\"],\"understanding_checks\":[\"为什么“2 mol O₂能生成4 mol H₂O”不能直接作为最终结果？计算前还必须检查什么？\",\"如果改为有4 mol H₂和2 mol O₂，哪种反应物会先用完？请说出你的比较依据。\",\"请按顺序口头说出配比表的三步：先比较什么，再用哪种反应物算产物，最后怎样检查。\"],\"recap\":\"先按方程式系数算出“若一种反应物全部反应，需要另一种多少”；需要量超过现有量的那种反应物就是限量试剂。产物和消耗量都要用限量试剂计算，最后可用原子守恒核对。\",\"practice\":[{\"id\":\"p1\",\"prompt\":\"反应N₂+3H₂→2NH₃，反应完全且无副反应。现有2 mol N₂和5 mol H₂。请判断哪种反应物是限量试剂，计算生成NH₃的物质的量，以及反应后各反应物剩余多少。\",\"purpose\":\"练习用配比表比较需要量与现有量，并由限量试剂计算产物和剩余物。\",\"hints\":[\"先看N₂:H₂=1:3。若2 mol N₂全部反应，需要多少mol H₂？\",\"将需要的H₂与现有的5 mol H₂比较，判断谁先用完。\",\"用限量试剂计算NH₃；剩余的反应物用“原有量−消耗量”计算。\"],\"success_criteria\":[\"正确判断H₂为限量试剂：2 mol N₂完全反应需要6 mol H₂，而现有H₂只有5 mol。\",\"由H₂算出NH₃为10/3 mol（约3.33 mol）。\",\"算出N₂消耗5/3 mol，剩余1/3 mol（约0.33 mol）；H₂完全消耗。\"]},{\"id\":\"p2\",\"prompt\":\"反应4NH₃+5O₂→4NO+6H₂O，反应完全且无副反应。现有2 mol NH₃和3 mol O₂。请判断限量试剂，计算生成NO和H₂O的物质的量，并求反应后剩余的反应物。\",\"purpose\":\"在系数比更复杂的方程式中迁移限量试剂判断和配比计算。\",\"hints\":[\"先算若2 mol NH₃全部反应，需要多少mol O₂：用NH₃:O₂=4:5。\",\"把所需O₂与现有的3 mol O₂比较，确定哪种反应物先用完。\",\"分别用NH₃:NO=4:4和NH₃:H₂O=4:6计算产物。\"],\"success_criteria\":[\"正确判断NH₃为限量试剂：2 mol NH₃完全反应需要2.5 mol O₂，现有O₂为3 mol。\",\"算出生成NO 2 mol、H₂O 3 mol。\",\"算出O₂消耗2.5 mol，剩余0.5 mol；NH₃完全消耗。\"]}]}"
+        }
+      ]
+    },
+    {
+      "stage": "verify",
+      "context": {
+        "request": {
+          "request_id": "chemistry_limiting",
+          "session_id": "session-334d2782e5334be180540dd77a65b10e",
+          "student_id": "live-test",
+          "subject": "化学",
+          "problem_text": "反应2H₂+O₂→2H₂O。现有3 mol H₂和2 mol O₂，反应完全且无副反应。计算水的物质的量及剩余反应物。",
+          "student_answer": "按氧气算，2 mol O₂能生成4 mol H₂O，所以生成4 mol水，氢气全部用完，氧气也没剩。",
+          "answer_to": null,
+          "parent_goal": "准确解释当前作答的问题，帮助学习者理解并独立完成。",
+          "parent_note": null,
+          "follow_up": null,
+          "requested_strategy": null,
+          "attempt_id": null,
+          "grade": null,
+          "textbook_version": null,
+          "input_mode": "text",
+          "image_count": 0
+        },
+        "profile": {
+          "display_name": "",
+          "grade": "高中一年级",
+          "textbook": "",
+          "learning_goal": "",
+          "language": "中文",
+          "preferred_explanation_modes": [
+            "配比表"
+          ],
+          "interests": [],
+          "pace": "step-by-step",
+          "notes": "",
+          "student_id": "live-test",
+          "skills": {},
+          "format_feedback": {}
+        },
+        "history": [],
+        "history_notice": "历史仅为服务提供的最近轮次，并非完整会话。本次收到 0 轮，按 24000 字符预算完整保留最近 0 轮；其中超出预算的 0 轮已省略；更早轮次未计入本次窗口。未截断任何保留的题干或作答。历史画像副本、技能证据回执和其他重复派生字段已省略，当前完整画像单独提供。若追问依赖不可见的历史材料，请明确请求用户重传具体材料，不得推测补全。",
+        "analysis": {
+          "subject": "化学",
+          "task_summary": "题目给出反应2H₂+O₂→2H₂O及初始3 mol H₂、2 mol O₂，要求判断完全反应时的限量试剂，计算生成水的物质的量和剩余反应物。",
+          "task_type": "化学方程式的限量试剂判断与物质的量计算",
+          "missing_information": [],
+          "learning_objectives": [
+            "根据配平方程式确定H₂、O₂、H₂O的物质的量比。",
+            "通过比较反应所需量来判断限量试剂，不能随意选择一种反应物。",
+            "由限量试剂计算生成水的物质的量，并计算另一种反应物的剩余量。",
+            "用原子守恒或投料比检查结果是否合理。"
+          ],
+          "skills": [
+            {
+              "name": "限量试剂判断",
+              "subject": "化学"
+            },
+            {
+              "name": "依据化学方程式的物质的量配比计算",
+              "subject": "化学"
+            }
+          ],
+          "reference_solution": [
+            "配平方程式给出物质的量比：2 mol H₂ 与 1 mol O₂ 生成 2 mol H₂O。",
+            "若2 mol O₂都反应，需要H₂ 4 mol，但只有3 mol，因此H₂不足，H₂是限量试剂，O₂过量。",
+            "由H₂计算：3 mol H₂生成3 mol H₂O（H₂与H₂O系数比为2:2=1:1），消耗O₂ 3/2=1.5 mol。",
+            "剩余O₂为2−1.5=0.5 mol；H₂完全消耗。答案：生成3 mol H₂O，剩余0.5 mol O₂。"
+          ],
+          "assessment": {
+            "verdict": "needs-revision",
+            "summary": "学生按O₂计算得4 mol H₂O，但没有检验H₂是否足够；3 mol H₂只能生成3 mol H₂O，H₂才是限量试剂，反应后应剩余0.5 mol O₂。“H₂全部用完，O₂也没剩”的说法与计量关系不符。",
+            "evidence": [
+              "学生写“按氧气算，2 mol O₂能生成4 mol H₂O”，只使用了O₂与H₂O的1:2系数关系，没有检查生成4 mol H₂O需要4 mol H₂。",
+              "实际只有3 mol H₂；若H₂完全反应，生成3 mol H₂O并消耗1.5 mol O₂，因此H₂是限量试剂。",
+              "学生称“氧气也没剩”，但按反应计量O₂应剩余2−1.5=0.5 mol。"
+            ],
+            "confidence": 0.98
+          },
+          "skill_evidence": [
+            {
+              "name": "限量试剂判断",
+              "subject": "化学",
+              "outcome": "needs-support",
+              "evidence": "学生直接“按氧气算”，并称氢气全部用完、氧气也没剩；没有比较2 mol O₂完全反应需要4 mol H₂而现有H₂仅3 mol，因而未识别H₂为限量试剂。",
+              "confidence": 0.97
+            },
+            {
+              "name": "依据化学方程式的物质的量配比计算",
+              "subject": "化学",
+              "outcome": "needs-support",
+              "evidence": "学生使用了O₂与H₂O的1:2系数关系得到“2 mol O₂生成4 mol H₂O”，但没有把H₂的可用量与产物、剩余量统一计算，最终产物水量及两种反应物均无剩余的判断不正确。",
+              "confidence": 0.95
+            }
+          ],
+          "confidence": 0.98
+        },
+        "lesson": {
+          "title": "限量试剂：先看谁先用完，再算产物",
+          "goal": "用配比表比较3 mol H₂和2 mol O₂，判断哪种反应物先用完，并由它计算生成水的物质的量和剩余反应物。",
+          "steps": [
+            {
+              "title": "肯定正确的系数换算，找出还要检查的一步",
+              "explanation": "你写“2 mol O₂能生成4 mol H₂O”，这一步用对了O₂与H₂O的系数比1:2，但它只说明“如果2 mol O₂能全部反应”会生成4 mol H₂O。还要检查：要让2 mol O₂全部反应，H₂是否足够。先不要改答案，只做这个检查。",
+              "question": "在2H₂+O₂→2H₂O中，O₂与H₂的物质的量比是多少？若2 mol O₂全部反应，需要H₂多少mol？",
+              "checkpoint": "能说出O₂:H₂=1:2，并算出需要4 mol H₂。"
+            },
+            {
+              "title": "用配比表比较“需要量”和“现有量”",
+              "explanation": "配比表可以这样列：若O₂全部反应，H₂需要4 mol；但题目只给出3 mol H₂。把“需要4 mol”和“只有3 mol”并排比较，判断哪种反应物先不够用。先不够用的叫限量试剂，另一种叫过量试剂。",
+              "question": "现有H₂只有3 mol。比较“需要4 mol H₂”和“只有3 mol H₂”，哪种反应物会先耗尽？另一种反应物是过量还是不足？",
+              "checkpoint": "能明确指出H₂不足、会先耗尽，因此H₂是限量试剂，O₂过量。"
+            },
+            {
+              "title": "产物必须用限量试剂计算",
+              "explanation": "一旦判断H₂先用完，就不能再用过量的O₂来算生成多少水，而要用H₂算。看方程式：2 mol H₂生成2 mol H₂O，所以H₂与H₂O的物质的量比是2:2，也就是1:1。",
+              "question": "应该用3 mol H₂还是2 mol O₂来计算H₂O的物质的量？按H₂:H₂O=1:1，能生成多少mol H₂O？",
+              "checkpoint": "能选择H₂作为计算依据，并算出生成3 mol H₂O。"
+            },
+            {
+              "title": "计算另一种反应物消耗了多少、剩多少",
+              "explanation": "H₂完全反应时也会消耗O₂。方程式中H₂:O₂=2:1，因此3 mol H₂消耗的O₂是3÷2=1.5 mol。原来有2 mol O₂，用原来的量减去消耗的量，就是剩余量。",
+              "question": "3 mol H₂完全反应会消耗多少mol O₂？原来有2 mol O₂，反应后还剩多少mol O₂？",
+              "checkpoint": "能算出消耗1.5 mol O₂，剩余0.5 mol O₂。"
+            },
+            {
+              "title": "用配比表和原子守恒核对答案",
+              "explanation": "把结果放回配比表检查：H₂由3 mol变为0；O₂由2 mol变为0.5 mol；H₂O由0变为3 mol。再从氧原子核对：3 mol H₂O含3 mol O原子，剩余0.5 mol O₂含1 mol O原子，合计4 mol O原子，正好等于最初2 mol O₂提供的4 mol O原子。",
+              "question": "请用一句话写出本题最终结果：生成多少mol H₂O？哪种反应物剩余？剩余多少mol？",
+              "checkpoint": "能完整说出：生成3 mol H₂O，H₂完全消耗，剩余0.5 mol O₂。"
+            }
+          ],
+          "parent_tips": [
+            "先保留孩子的原答案，只在旁边加一列“若O₂全部反应，需要H₂多少mol”，不要立刻替他改算。",
+            "如果孩子仍坚持按O₂算，可以追问：“生成4 mol H₂O需要多少mol H原子？现有3 mol H₂能提供多少mol H原子？”让他自己发现H₂不够。",
+            "孩子卡住时，只提示“先比较需要量和现有量”，或提示H₂与O₂的系数比是2:1，不要直接报最终答案。",
+            "反馈时先肯定孩子用对了O₂与H₂O的1:2系数关系，再指出缺少“检验H₂是否足够”这一步。"
+          ],
+          "understanding_checks": [
+            "为什么“2 mol O₂能生成4 mol H₂O”不能直接作为最终结果？计算前还必须检查什么？",
+            "如果改为有4 mol H₂和2 mol O₂，哪种反应物会先用完？请说出你的比较依据。",
+            "请按顺序口头说出配比表的三步：先比较什么，再用哪种反应物算产物，最后怎样检查。"
+          ],
+          "practice": [
+            {
+              "id": "p1",
+              "prompt": "反应N₂+3H₂→2NH₃，反应完全且无副反应。现有2 mol N₂和5 mol H₂。请判断哪种反应物是限量试剂，计算生成NH₃的物质的量，以及反应后各反应物剩余多少。",
+              "purpose": "练习用配比表比较需要量与现有量，并由限量试剂计算产物和剩余物。",
+              "hints": [
+                "先看N₂:H₂=1:3。若2 mol N₂全部反应，需要多少mol H₂？",
+                "将需要的H₂与现有的5 mol H₂比较，判断谁先用完。",
+                "用限量试剂计算NH₃；剩余的反应物用“原有量−消耗量”计算。"
+              ],
+              "success_criteria": [
+                "正确判断H₂为限量试剂：2 mol N₂完全反应需要6 mol H₂，而现有H₂只有5 mol。",
+                "由H₂算出NH₃为10/3 mol（约3.33 mol）。",
+                "算出N₂消耗5/3 mol，剩余1/3 mol（约0.33 mol）；H₂完全消耗。"
+              ]
+            },
+            {
+              "id": "p2",
+              "prompt": "反应4NH₃+5O₂→4NO+6H₂O，反应完全且无副反应。现有2 mol NH₃和3 mol O₂。请判断限量试剂，计算生成NO和H₂O的物质的量，并求反应后剩余的反应物。",
+              "purpose": "在系数比更复杂的方程式中迁移限量试剂判断和配比计算。",
+              "hints": [
+                "先算若2 mol NH₃全部反应，需要多少mol O₂：用NH₃:O₂=4:5。",
+                "把所需O₂与现有的3 mol O₂比较，确定哪种反应物先用完。",
+                "分别用NH₃:NO=4:4和NH₃:H₂O=4:6计算产物。"
+              ],
+              "success_criteria": [
+                "正确判断NH₃为限量试剂：2 mol NH₃完全反应需要2.5 mol O₂，现有O₂为3 mol。",
+                "算出生成NO 2 mol、H₂O 3 mol。",
+                "算出O₂消耗2.5 mol，剩余0.5 mol；NH₃完全消耗。"
+              ]
+            }
+          ],
+          "recap": "先按方程式系数算出“若一种反应物全部反应，需要另一种多少”；需要量超过现有量的那种反应物就是限量试剂。产物和消耗量都要用限量试剂计算，最后可用原子守恒核对。"
+        }
+      },
+      "output": {
+        "reliable": true,
+        "issues": [],
+        "approved_evidence": [
+          {
+            "name": "限量试剂判断",
+            "subject": "化学",
+            "outcome": "needs-support",
+            "evidence": "学生直接“按氧气算”，并称氢气全部用完、氧气也没剩；没有比较2 mol O₂完全反应需要4 mol H₂而现有H₂仅3 mol，因而未识别H₂为限量试剂。",
+            "confidence": 0.97
+          },
+          {
+            "name": "依据化学方程式的物质的量配比计算",
+            "subject": "化学",
+            "outcome": "needs-support",
+            "evidence": "学生使用了O₂与H₂O的1:2系数关系得到“2 mol O₂生成4 mol H₂O”，但没有把H₂的可用量与产物、剩余量统一计算，最终产物水量及两种反应物均无剩余的判断不正确。",
+            "confidence": 0.95
+          }
+        ]
+      },
+      "seconds": 8.33,
+      "completions": [
+        {
+          "model": "deepseek-v4-flash-vision-exp",
+          "seconds": 8.33,
+          "content": "{\"reliable\":true,\"issues\":[],\"approved_evidence\":[{\"name\":\"限量试剂判断\",\"subject\":\"化学\",\"outcome\":\"needs-support\",\"evidence\":\"学生直接“按氧气算”，并称氢气全部用完、氧气也没剩；没有比较2 mol O₂完全反应需要4 mol H₂而现有H₂仅3 mol，因而未识别H₂为限量试剂。\",\"confidence\":0.97},{\"name\":\"依据化学方程式的物质的量配比计算\",\"subject\":\"化学\",\"outcome\":\"needs-support\",\"evidence\":\"学生使用了O₂与H₂O的1:2系数关系得到“2 mol O₂生成4 mol H₂O”，但没有把H₂的可用量与产物、剩余量统一计算，最终产物水量及两种反应物均无剩余的判断不正确。\",\"confidence\":0.95}]}"
+        }
+      ]
+    }
+  ],
+  "elapsed_seconds": 50.38
+}

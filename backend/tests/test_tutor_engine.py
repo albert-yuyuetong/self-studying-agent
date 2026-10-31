@@ -5,11 +5,15 @@ from types import SimpleNamespace
 
 import httpx
 import pytest
+from pydantic import ValidationError
 
 from app.core.config import Settings
 from app.schemas.diagnosis import (
+    CompactLesson,
+    CompactLessonRevision,
     Assessment,
     Lesson,
+    LessonRevision,
     LessonStep,
     SkillDescriptor,
     SkillEvidence,
@@ -224,3 +228,164 @@ def test_invalid_url_transport_exception_becomes_public_safe_unavailable():
     with pytest.raises(ModelUnavailable) as captured:
         client.generate(schema=Verification, system_prompt="Return JSON", context={}, stage="verify")
     assert "private" not in str(captured.value)
+
+
+def test_check_question_scope_is_preserved_across_all_stages_and_history():
+    task = analysis()
+    teaching = lesson()
+    client = RecordingClient([task, teaching, Verification(reliable=True, approved_evidence=task.skill_evidence)])
+    engine = TutorEngine(client)
+    req = TutorRequest(student_id="learner", problem_text="分析整个函数。",
+                       answer_to="数组为空时经过哪些语句？", student_answer="直接返回，不进入循环。")
+    profile = StudentProfile(student_id="learner")
+    history = [{"request": {"problem_text": req.problem_text, "answer_to": "循环何时停止？",
+                            "student_answer": "下标达到长度时。"}}]
+    result = engine.analyze(req, profile, history)
+    strategy = engine.plan(req, profile, result, history)
+    generated = engine.teach(req, profile, result, strategy, history)
+    engine.verify(req, profile, result, generated, history)
+    for call in client.calls:
+        assert call["context"]["request"]["answer_to"] == req.answer_to
+        assert call["context"]["history"][0]["request"]["answer_to"] == "循环何时停止？"
+        assert "answer_to" in call["system_prompt"]
+
+
+@pytest.mark.parametrize("field", ["step_question", "understanding_check", "practice_prompt", "practice_purpose"])
+def test_generated_questions_fit_the_followup_request_contract(field):
+    data = lesson().model_dump()
+    if field == "step_question":
+        data["steps"][0]["question"] = "问" * 4001
+    elif field == "understanding_check":
+        data["understanding_checks"] = ["问" * 4001]
+    else:
+        data["practice"] = [{"id": "p1", "prompt": "完整题干", "purpose": "检查迁移",
+                             "success_criteria": ["说明依据"]}]
+        key, size = ("prompt", 24001) if field == "practice_prompt" else ("purpose", 2001)
+        data["practice"][0][key] = "长" * size
+    with pytest.raises(ValidationError):
+        Lesson.model_validate(data)
+
+
+def test_fast_profile_constrains_real_client_output_and_repairs_overlong_lesson():
+    """Reproduce the live finding: a fast learner received the same seven steps."""
+    overlong = lesson().model_dump()
+    overlong["steps"] = overlong["steps"] * 7
+    repaired = {**overlong, "steps": overlong["steps"][:3]}
+    bodies = []
+
+    def handler(request):
+        bodies.append(json.loads(request.content))
+        content = overlong if len(bodies) == 1 else repaired
+        return httpx.Response(200, json={"choices": [{"message": {"content": json.dumps(content)}}]})
+
+    client = LLMClient(Settings(llm_enabled=True, llm_model="test", llm_api_key="test"),
+                       httpx.MockTransport(handler))
+    engine = TutorEngine(client)
+    req = TutorRequest(student_id="learner", problem_text="分析函数", student_answer="完整作答")
+    profile = StudentProfile(student_id="learner", pace="fast")
+    strategy = engine.plan(req, profile, analysis(), [])
+    result = engine.teach(req, profile, analysis(), strategy, [])
+    assert isinstance(result, CompactLesson)
+    assert len(result.steps) == 3
+    assert len(bodies) == 2
+    assert "steps" in bodies[1]["messages"][-1]["content"]
+
+
+def test_balanced_profile_allows_a_detailed_seven_step_lesson():
+    detailed = lesson().model_copy(update={"steps": lesson().steps * 7})
+    engine = TutorEngine(RecordingClient([detailed]))
+    req = TutorRequest(student_id="learner", problem_text="分析函数")
+    profile = StudentProfile(student_id="learner", pace="balanced")
+    result = engine.teach(req, profile, analysis(), engine.plan(req, profile, analysis(), []), [])
+    assert len(result.steps) == 7
+
+
+def test_revision_preserves_original_material_profile_and_concrete_review_issues():
+    task, teaching = analysis(), lesson()
+    revised = LessonRevision(analysis=task.model_copy(deep=True), lesson=teaching.model_copy(deep=True))
+    client = RecordingClient([revised])
+    engine = TutorEngine(client)
+    req = TutorRequest(student_id="learner", problem_text="原函数和完整材料", student_answer="空输入直接返回。",
+                       answer_to="空输入走哪条路径？", follow_up="只解释这个边界", attachments=["https://example.org/code.png"])
+    profile = StudentProfile(student_id="learner", notes="希望核对具体语句", interests=["棋类"])
+    history = [{"request": {"problem_text": "前轮原题"}, "feedback": {"comment": "这一步没理解"}}]
+    review = Verification(reliable=False, issues=["检查题在空输入时也允许另一个答案。"])
+    strategy = engine.plan(req, profile, task, history)
+    result = engine.revise(req, profile, task, teaching, strategy, review, history)
+    assert result == revised
+    call = client.calls[0]
+    assert call["stage"] == "revise"
+    assert call["images"] == req.attachments
+    assert call["context"]["request"]["student_answer"] == req.student_answer
+    assert call["context"]["request"]["answer_to"] == req.answer_to
+    assert call["context"]["profile"] == profile.model_dump(mode="json")
+    assert call["context"]["history"][0]["feedback"]["comment"] == "这一步没理解"
+    assert call["context"]["analysis"] == task.model_dump(mode="json")
+    assert call["context"]["lesson"] == teaching.model_dump(mode="json")
+    assert call["context"]["review"] == review.model_dump(mode="json")
+
+
+@pytest.mark.parametrize("change", ["confidence", "new_skill", "no_descriptor"])
+def test_revision_cannot_invent_or_rewrite_observation_evidence(change):
+    original = analysis()
+    candidate = original.model_copy(deep=True)
+    if change == "confidence":
+        candidate.skill_evidence[0].confidence = 1
+    elif change == "new_skill":
+        candidate.skill_evidence[0].name = "新编出的能力"
+        candidate.skills[0].name = "新编出的能力"
+    else:
+        candidate.skills = []
+    client = RecordingClient([LessonRevision(analysis=candidate, lesson=lesson())])
+    engine = TutorEngine(client)
+    req = TutorRequest(student_id="learner", problem_text="检查函数", student_answer="空输入直接返回")
+    profile = StudentProfile(student_id="learner")
+    with pytest.raises(ModelOutputError):
+        engine.revise(req, profile, original, lesson(), engine.plan(req, profile, original, []),
+                      Verification(reliable=False, issues=["解释有歧义"]), [])
+
+
+def test_revision_reuses_no_answer_evidence_gate():
+    candidate = LessonRevision(analysis=analysis(), lesson=lesson())
+    engine = TutorEngine(RecordingClient([candidate]))
+    req = TutorRequest(student_id="learner", problem_text="检查函数", follow_up="还没理解")
+    profile = StudentProfile(student_id="learner")
+    original = analysis(answered=False)
+    with pytest.raises(ModelOutputError, match="尚未收到学生作答"):
+        engine.revise(req, profile, original, lesson(), engine.plan(req, profile, original, []),
+                      Verification(reliable=False, issues=["解释有歧义"]), [])
+
+
+def test_fast_revision_repairs_overlong_candidate_before_independent_review():
+    original = analysis()
+    overlong = LessonRevision(analysis=original, lesson=lesson()).model_dump()
+    overlong["lesson"]["steps"] *= 5
+    repaired = json.loads(json.dumps(overlong))
+    repaired["lesson"]["steps"] = repaired["lesson"]["steps"][:3]
+    bodies = []
+
+    def handler(request):
+        bodies.append(json.loads(request.content))
+        content = overlong if len(bodies) == 1 else repaired
+        return httpx.Response(200, json={"choices": [{"message": {"content": json.dumps(content)}}]})
+
+    client = LLMClient(Settings(llm_enabled=True, llm_model="test", llm_api_key="test"), httpx.MockTransport(handler))
+    engine = TutorEngine(client)
+    req = TutorRequest(student_id="learner", problem_text="检查函数", student_answer="空输入直接返回")
+    profile = StudentProfile(student_id="learner", pace="fast")
+    result = engine.revise(req, profile, original, lesson(), engine.plan(req, profile, original, []),
+                           Verification(reliable=False, issues=["检查题有歧义"]), [])
+    assert isinstance(result, CompactLessonRevision)
+    assert len(result.lesson.steps) == 3
+    assert len(bodies) == 2
+    assert '"lesson", "steps"' in bodies[1]["messages"][-1]["content"]
+
+
+def test_reliable_review_with_issues_still_withholds_approved_evidence():
+    task = analysis()
+    engine = TutorEngine(RecordingClient([Verification(reliable=True, issues=["评分遗漏另一种答案"],
+                                                       approved_evidence=task.skill_evidence)]))
+    result = engine.verify(TutorRequest(student_id="learner", problem_text="解释函数", student_answer="完整作答"),
+                           StudentProfile(student_id="learner"), task, lesson(), [])
+    assert result.issues
+    assert result.approved_evidence == []

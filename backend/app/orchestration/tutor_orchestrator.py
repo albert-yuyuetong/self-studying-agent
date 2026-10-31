@@ -72,36 +72,51 @@ class TutorOrchestrator:
             response.clarifying_questions = ["请提供完整题目、材料或图片；续问图片题时请保留原图。"]
             return self.repo.commit_turn(resolved, response, fingerprint, None, [])
 
+        review_issues: list[str] = []
         try:
             analysis = self.engine.analyze(resolved, profile, history)
-            # Empty answers are never negative evidence, even if the provider misbehaves.
-            if not resolved.student_answer:
-                analysis.assessment = Assessment(
-                    verdict="not-submitted", summary="本轮尚未提交作答，先提供理解与思路引导。",
-                    evidence=[], confidence=1,
-                )
-                analysis.skill_evidence = []
+            self._normalize_analysis(resolved, analysis)
             response.analysis = analysis
             if analysis.missing_information:
-                analysis.skill_evidence = []
-                analysis.reference_solution = []
-                analysis.assessment = Assessment(
-                    verdict="uncertain" if resolved.student_answer else "not-submitted",
-                    summary="题目材料不足，补充后再评估当前作答。",
-                    evidence=[], confidence=0,
-                )
                 response.clarifying_questions = analysis.missing_information
                 return self.repo.commit_turn(resolved, response, fingerprint, None, [])
 
             response.strategy = self.engine.plan(resolved, profile, analysis, history)
             lesson = self.engine.teach(resolved, profile, analysis, response.strategy, history)
             review = self.engine.verify(resolved, profile, analysis, lesson, history)
+            review_issues = review.issues
+            if not review.reliable or review.issues:
+                review = review.model_copy(update={"approved_evidence": []})
             response.verification = review
+
+            # One bounded semantic repair, only when the review gives an actionable issue.
+            # Low confidence alone is not a reason to spend more calls or invent a fix.
+            if any(issue.strip() for issue in review.issues):
+                revision = self.engine.revise(
+                    resolved, profile, analysis, lesson, response.strategy, review, history,
+                )
+                analysis = revision.analysis
+                self._normalize_analysis(resolved, analysis)
+                response.analysis = analysis
+                if analysis.missing_information:
+                    response.clarifying_questions = analysis.missing_information
+                    response.verification = None
+                    # No revised teaching or evidence is stored before independent approval.
+                    return response
+                lesson = revision.lesson
+                if lesson is None:
+                    raise ModelOutputError("修订未提供可复核的讲解，本次结果已拦截。")
+                review = self.engine.verify(resolved, profile, analysis, lesson, history)
+                review_issues = review.issues
+                if not review.reliable or review.issues:
+                    review = review.model_copy(update={"approved_evidence": []})
+                response.verification = review
 
             # Fail closed: do not display a lesson the second pass could not verify.
             if not review.reliable or review.issues or analysis.confidence < 0.6:
                 response.status = "degraded"
-                response.warnings = review.issues or ["当前内容尚未通过可靠性检查，请补充题目条件或重新尝试。"]
+                response.warnings = review.issues or review_issues or ["当前内容尚未通过可靠性检查，请补充题目条件或重新尝试。"]
+                response.verification = review.model_copy(update={"approved_evidence": []})
                 analysis.skill_evidence = []
                 analysis.assessment = Assessment(
                     verdict="uncertain" if resolved.student_answer else "not-submitted",
@@ -126,10 +141,29 @@ class TutorOrchestrator:
             response.status = "degraded"
             response.lesson = None
             response.analysis = None
-            response.verification = Verification(reliable=False, issues=[str(exc)])
-            response.warnings = [str(exc), "本次未生成可验证讲解，也未更新学习观察。"]
+            issues = list(dict.fromkeys([*review_issues, str(exc)]))
+            response.verification = Verification(reliable=False, issues=issues)
+            response.warnings = [*issues, "本次未生成可验证讲解，也未更新学习观察。"]
             # Transient failures are not cached, so retrying the same request can recover.
             return response
+
+    @staticmethod
+    def _normalize_analysis(req: TutorRequest, analysis: TaskAnalysis) -> None:
+        """Keep the admission boundary even for substituted engines or test doubles."""
+        if not req.student_answer:
+            analysis.assessment = Assessment(
+                verdict="not-submitted", summary="本轮尚未提交作答，先提供理解与思路引导。",
+                evidence=[], confidence=1,
+            )
+            analysis.skill_evidence = []
+        if analysis.missing_information:
+            analysis.skill_evidence = []
+            analysis.reference_solution = []
+            analysis.assessment = Assessment(
+                verdict="uncertain" if req.student_answer else "not-submitted",
+                summary="题目材料不足，补充后再评估当前作答。",
+                evidence=[], confidence=0,
+            )
 
     @staticmethod
     def _attempt_key(req: TutorRequest) -> str:

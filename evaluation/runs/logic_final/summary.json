@@ -1,0 +1,14 @@
+[
+  {
+    "case": "english_meaning",
+    "status": "degraded",
+    "seconds": 133.62,
+    "calls": 3
+  },
+  {
+    "case": "history_sources",
+    "status": "degraded",
+    "seconds": 142.23,
+    "calls": 3
+  }
+]

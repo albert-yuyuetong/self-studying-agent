@@ -1,0 +1,108 @@
+{
+  "case": "math_domain",
+  "rubric": [
+    "唯一解3；-2不满足原式或x>=0",
+    "承认平方后求根步骤正确，但未检验增根"
+  ],
+  "request": {
+    "subject": "数学",
+    "problem_text": "在实数范围解方程 sqrt(x+6)=x，并检查变形是否引入额外解。",
+    "student_answer": "两边平方得到x+6=x²，因式分解得(x-3)(x+2)=0，所以x=3和x=-2都是原方程的解。"
+  },
+  "profile": {
+    "grade": "初三",
+    "pace": "balanced"
+  },
+  "http_status": 200,
+  "response": {
+    "request_id": "math_domain",
+    "turn_id": "turn-254fa8aee56f4130919528b872558e8d",
+    "session_id": "session-7f643abb54ab4ad89f2287d0d3fb579f",
+    "student_id": "live-test",
+    "status": "degraded",
+    "guidance_mode": "post-answer",
+    "analysis": null,
+    "strategy": null,
+    "lesson": null,
+    "verification": {
+      "reliable": false,
+      "issues": [
+        "无法连接模型服务，请检查后端模型地址和网络后重试。"
+      ],
+      "approved_evidence": []
+    },
+    "clarifying_questions": [],
+    "warnings": [
+      "无法连接模型服务，请检查后端模型地址和网络后重试。",
+      "本次未生成可验证讲解，也未更新学习观察。"
+    ],
+    "profile": {
+      "display_name": "",
+      "grade": "初三",
+      "textbook": "",
+      "learning_goal": "",
+      "language": "中文",
+      "preferred_explanation_modes": [],
+      "interests": [],
+      "pace": "balanced",
+      "notes": "",
+      "student_id": "live-test",
+      "skills": {},
+      "format_feedback": {}
+    },
+    "profile_updates": []
+  },
+  "stages": [
+    {
+      "stage": "analyze",
+      "context": {
+        "request": {
+          "request_id": "math_domain",
+          "session_id": "session-7f643abb54ab4ad89f2287d0d3fb579f",
+          "student_id": "live-test",
+          "subject": "数学",
+          "problem_text": "在实数范围解方程 sqrt(x+6)=x，并检查变形是否引入额外解。",
+          "student_answer": "两边平方得到x+6=x²，因式分解得(x-3)(x+2)=0，所以x=3和x=-2都是原方程的解。",
+          "answer_to": null,
+          "parent_goal": "准确解释当前作答的问题，帮助学习者理解并独立完成。",
+          "parent_note": null,
+          "follow_up": null,
+          "requested_strategy": null,
+          "attempt_id": null,
+          "grade": null,
+          "textbook_version": null,
+          "input_mode": "text",
+          "image_count": 0
+        },
+        "profile": {
+          "display_name": "",
+          "grade": "初三",
+          "textbook": "",
+          "learning_goal": "",
+          "language": "中文",
+          "preferred_explanation_modes": [],
+          "interests": [],
+          "pace": "balanced",
+          "notes": "",
+          "student_id": "live-test",
+          "skills": {},
+          "format_feedback": {}
+        },
+        "history": [],
+        "history_notice": "历史仅为服务提供的最近轮次，并非完整会话。本次收到 0 轮，按 24000 字符预算完整保留最近 0 轮；其中超出预算的 0 轮已省略；更早轮次未计入本次窗口。未截断任何保留的题干或作答。历史画像副本、技能证据回执和其他重复派生字段已省略，当前完整画像单独提供。若追问依赖不可见的历史材料，请明确请求用户重传具体材料，不得推测补全。"
+      },
+      "error_type": "ModelUnavailable",
+      "error": "无法连接模型服务，请检查后端模型地址和网络后重试。",
+      "seconds": 0.14,
+      "completions": [
+        {
+          "model": "deepseek-v4-flash-vision-exp",
+          "seconds": 0.14,
+          "error_type": "ModelUnavailable",
+          "error": "无法连接模型服务，请检查后端模型地址和网络后重试。"
+        }
+      ]
+    }
+  ],
+  "elapsed_seconds": 0.17
+}

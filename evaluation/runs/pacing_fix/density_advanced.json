@@ -1,0 +1,747 @@
+{
+  "case": "density_advanced",
+  "rubric": [
+    "相同事实：2.7g/cm³=2700kg/m³",
+    "紧凑量纲推导，避免初学者类比",
+    "比较实际lesson而不是profile_used自述"
+  ],
+  "request": {
+    "subject": "物理",
+    "problem_text": "测得某实心金属块质量54 g，体积20 cm³。求密度，用g/cm³和kg/m³分别表示，解释两个数值为什么不同。",
+    "student_answer": "54÷20=2.7，所以密度是2.7 kg/m³。"
+  },
+  "profile": {
+    "grade": "高中三年级",
+    "learning_goal": "快速定位量纲和换算错误",
+    "pace": "fast",
+    "preferred_explanation_modes": [
+      "紧凑的量纲推导"
+    ],
+    "notes": "已熟悉科学计数法；不要用生活类比，重点说明单位因子。"
+  },
+  "http_status": 200,
+  "response": {
+    "request_id": "density_advanced",
+    "turn_id": "turn-8765ef8c1c0043f09482a56cdd7992e1",
+    "session_id": "session-f79de8c60a8b4ef98372dbd5a78e09fe",
+    "student_id": "live-test",
+    "status": "completed",
+    "guidance_mode": "post-answer",
+    "analysis": {
+      "subject": "物理",
+      "task_summary": "已知实心金属块质量54 g、体积20 cm³，要求用密度公式求出密度，分别用g/cm³和kg/m³表示，并解释两个数值为何不同。学生作答为“54÷20=2.7，所以密度是2.7 kg/m³”，只完成了数值除法，未正确标注或换算单位，也未解释两个单位下数值不同的原因。",
+      "task_type": "物理计算与单位换算说明（密度）",
+      "missing_information": [],
+      "learning_objectives": [
+        "正确使用密度公式ρ=m/V，将质量54 g和体积20 cm³代入并得到2.7 g/cm³。",
+        "使用1 g/cm³=10³ kg/m³进行单位换算，得到2.7×10³ kg/m³，并检查单位一致性。",
+        "说明同一密度用不同单位表示时数值不同，是因为单位大小不同，而不是密度本身改变。",
+        "避免把以g和cm³计算出的数值直接标为kg/m³。"
+      ],
+      "skills": [
+        {
+          "name": "密度公式 ρ=m/V 的计算",
+          "subject": "物理"
+        },
+        {
+          "name": "g/cm³ 与 kg/m³ 的单位换算",
+          "subject": "物理"
+        },
+        {
+          "name": "用单位因子解释同一物理量数值差异",
+          "subject": "物理"
+        }
+      ],
+      "reference_solution": [
+        "根据密度公式：ρ=m/V。",
+        "代入数据：ρ=54 g÷20 cm³=2.7 g/cm³。",
+        "换算单位：1 g/cm³=10³ kg/m³，所以2.7 g/cm³=2.7×10³ kg/m³=2700 kg/m³。",
+        "也可以用国际单位制计算：54 g=0.054 kg，20 cm³=20×10⁻⁶ m³=2.0×10⁻⁵ m³，因此ρ=0.054÷(2.0×10⁻⁵)=2700 kg/m³。",
+        "两个数值不同是因为单位大小不同：1 g/cm³等于1000 kg/m³，所以同一个密度用kg/m³表示时数值是g/cm³表示的1000倍；2700 kg/m³和2.7 g/cm³表示的是同一个密度。"
+      ],
+      "assessment": {
+        "verdict": "needs-revision",
+        "summary": "学生完成了54÷20=2.7的数值计算，但把由g和cm³算出的结果直接写成kg/m³，单位错误；正确应先得2.7 g/cm³，再换算为2700 kg/m³。题目要求的两种单位表示和数值差异解释均未完成，因此需要修改。",
+        "evidence": [
+          "学生写出“54÷20=2.7”，质量与体积的数值代入和除法正确。",
+          "学生把结果标为“2.7 kg/m³”，但54 g÷20 cm³得到的单位应为g/cm³，因此单位标注错误。",
+          "学生没有给出2.7 g/cm³对应的kg/m³数值；正确换算为2700 kg/m³。",
+          "学生没有解释g/cm³和kg/m³两个数值不同的原因，即单位大小不同，而表示的密度相同。"
+        ],
+        "confidence": 0.99
+      },
+      "skill_evidence": [
+        {
+          "name": "密度公式 ρ=m/V 的计算",
+          "subject": "物理",
+          "outcome": "demonstrated",
+          "evidence": "学生写出“54÷20=2.7”，说明其按质量除以体积进行了密度数值计算；该证据只支持公式的数值代入与除法，不支持单位处理。",
+          "confidence": 0.9
+        },
+        {
+          "name": "g/cm³ 与 kg/m³ 的单位换算",
+          "subject": "物理",
+          "outcome": "needs-support",
+          "evidence": "学生把由54 g和20 cm³得到的2.7直接标为kg/m³，未先写成2.7 g/cm³，也未换算为2700 kg/m³，显示单位换算尚未正确完成。",
+          "confidence": 0.99
+        },
+        {
+          "name": "用单位因子解释同一物理量数值差异",
+          "subject": "物理",
+          "outcome": "needs-support",
+          "evidence": "作答只写“所以密度是2.7 kg/m³”，没有解释g/cm³与kg/m³两个数值为何不同，也没有说明同一密度因单位大小不同而数值不同。",
+          "confidence": 0.99
+        }
+      ],
+      "confidence": 0.99
+    },
+    "strategy": {
+      "approach": "紧凑的量纲推导",
+      "rationale": [
+        "从已设置的讲解偏好中选择有帮助反馈较多的方式，同分时保留偏好顺序。",
+        "先给紧凑的结构和关键检查点，发现卡点后再展开。",
+        "依据年级调整术语和必要的前置说明，不据此断言学生已经掌握。",
+        "将本轮讲解与画像中记录的学习目标关联。",
+        "将家长填写的补充说明作为待参考的教学背景。",
+        "围绕本轮家长或学生设定的辅导目标组织内容。"
+      ],
+      "profile_used": [
+        "preferred_explanation_modes",
+        "pace",
+        "grade",
+        "learning_goal",
+        "notes",
+        "language"
+      ],
+      "pace": "fast"
+    },
+    "lesson": {
+      "title": "先看单位，再换数值：密度两种单位表示",
+      "goal": "修正把 2.7 直接标成 kg/m³ 的单位错误，完成 g/cm³ 到 kg/m³ 的换算，并解释两个数值不同来自单位大小不同。",
+      "steps": [
+        {
+          "title": "先定位结果单位",
+          "explanation": "你写的 54÷20=2.7，数值除法本次做对了；但 54 的单位是 g，20 的单位是 cm³，所以结果单位必须由 g 和 cm³ 组成，不能直接标成 kg/m³。先不改数字，只检查单位标签。",
+          "question": "54 g ÷ 20 cm³ 的结果后面应跟什么单位？为什么不能直接写成 kg/m³？",
+          "checkpoint": "能答出 g/cm³，并指出分子用 g、分母用 cm³，所以不能标成 kg/m³；若只重复“单位错了”但说不出分子分母单位，需回到本步。"
+        },
+        {
+          "title": "用单位因子换算",
+          "explanation": "单位换算靠因子：1 g=10^-3 kg，1 cm³=(10^-2 m)^3=10^-6 m³，因此 1 g/cm³=(10^-3)/(10^-6) kg/m³=10^3 kg/m³。现在把这个因子用到 2.7 g/cm³ 上。",
+          "question": "2.7 g/cm³ 换算成 kg/m³ 应乘哪个因子？结果是多少？",
+          "checkpoint": "应写 2.7×10^3 kg/m³（即 2700 kg/m³），并说明乘的是 10^3；只写 2700 而不写单位不算完整。"
+        },
+        {
+          "title": "解释数值为什么不同",
+          "explanation": "比较 2.7 g/cm³ 和 2700 kg/m³ 时，要看单位因子的方向：1 g/cm³=10^3 kg/m³，所以同一个密度换成 kg/m³ 表示，数值要乘 10^3。数值变化来自单位大小不同，不是密度本身变了。",
+          "question": "同一金属块的密度写成 2.7 g/cm³ 和 2700 kg/m³，数值相差 1000 倍，是密度变了还是单位变了？请用 1 g/cm³=10^3 kg/m³ 说明。",
+          "checkpoint": "能明确说密度没变、单位变了；并能用 1 g/cm³=10^3 kg/m³ 解释数值相差 1000 倍。"
+        }
+      ],
+      "parent_tips": [
+        "先让孩子圈出质量和体积的单位，再检查结果单位；不要只说“单位错了”，让他说出分子用 g、分母用 cm³。",
+        "换算时要求写出 1 g=10^-3 kg 和 1 cm³=10^-6 m³，再推出因子，避免只背结论。",
+        "如果孩子把 2.7 和 2700 当成两个不同密度，追问：它们是不是都由同一个 54 g 和 20 cm³ 算出来的？"
+      ],
+      "understanding_checks": [
+        "54 g ÷ 20 cm³ 的结果为什么不能直接标成 kg/m³？请分别说出分子和分母的单位。",
+        "请用 1 g=10^-3 kg、1 cm³=10^-6 m³ 推出 1 g/cm³ 等于多少 kg/m³，并解释：为什么同一个密度换成 kg/m³ 后数值会变大？"
+      ],
+      "practice": [
+        {
+          "id": "density-unit-convert",
+          "prompt": "某金属的密度为 8.9 g/cm³。请把它换算成 kg/m³，并用一句话说明换算后数值为什么变大。",
+          "purpose": "检查是否能正确使用 1 g/cm³=10^3 kg/m³，并把单位因子和数值变化联系起来。",
+          "hints": [
+            "先写出 1 g/cm³=10^3 kg/m³。",
+            "把 8.9 乘这个因子，并保留 kg/m³ 单位。",
+            "说明是单位大小变了，不是密度本身变了。"
+          ],
+          "success_criteria": [
+            "得到 8.9×10^3 kg/m³，即 8900 kg/m³。",
+            "说明同一密度用 kg/m³ 表示时数值变大，是因为 1 g/cm³=10^3 kg/m³，单位换算产生了 1000 倍因子。"
+          ]
+        }
+      ],
+      "recap": "密度计算先带单位算；54 g÷20 cm³ 得到 2.7 g/cm³。换算成 kg/m³ 时乘 10^3，得 2700 kg/m³。两个数值不同是单位大小不同，表示的密度本身相同。"
+    },
+    "verification": {
+      "reliable": true,
+      "issues": [],
+      "approved_evidence": [
+        {
+          "name": "密度公式 ρ=m/V 的计算",
+          "subject": "物理",
+          "outcome": "demonstrated",
+          "evidence": "学生写出“54÷20=2.7”，说明其按质量除以体积进行了密度数值计算；该证据只支持公式的数值代入与除法，不支持单位处理。",
+          "confidence": 0.9
+        },
+        {
+          "name": "g/cm³ 与 kg/m³ 的单位换算",
+          "subject": "物理",
+          "outcome": "needs-support",
+          "evidence": "学生把由54 g和20 cm³得到的2.7直接标为kg/m³，未先写成2.7 g/cm³，也未换算为2700 kg/m³，显示单位换算尚未正确完成。",
+          "confidence": 0.99
+        },
+        {
+          "name": "用单位因子解释同一物理量数值差异",
+          "subject": "物理",
+          "outcome": "needs-support",
+          "evidence": "作答只写“所以密度是2.7 kg/m³”，没有解释g/cm³与kg/m³两个数值为何不同，也没有说明同一密度因单位大小不同而数值不同。",
+          "confidence": 0.99
+        }
+      ]
+    },
+    "clarifying_questions": [],
+    "warnings": [
+      "讲解与复核由模型完成；复核通过不等于外部权威认证。"
+    ],
+    "profile": {
+      "display_name": "",
+      "grade": "高中三年级",
+      "textbook": "",
+      "learning_goal": "快速定位量纲和换算错误",
+      "language": "中文",
+      "preferred_explanation_modes": [
+        "紧凑的量纲推导"
+      ],
+      "interests": [],
+      "pace": "fast",
+      "notes": "已熟悉科学计数法；不要用生活类比，重点说明单位因子。",
+      "student_id": "live-test",
+      "skills": {
+        "[\"物理\",\"密度公式 ρ=m/v 的计算\"]": {
+          "subject": "物理",
+          "name": "密度公式 ρ=m/V 的计算",
+          "demonstrated_count": 1,
+          "needs_support_count": 0,
+          "last_evidence": "学生写出“54÷20=2.7”，说明其按质量除以体积进行了密度数值计算；该证据只支持公式的数值代入与除法，不支持单位处理。",
+          "last_seen": "2026-10-31T10:00:10.610721+00:00"
+        },
+        "[\"物理\",\"g/cm3 与 kg/m3 的单位换算\"]": {
+          "subject": "物理",
+          "name": "g/cm³ 与 kg/m³ 的单位换算",
+          "demonstrated_count": 0,
+          "needs_support_count": 1,
+          "last_evidence": "学生把由54 g和20 cm³得到的2.7直接标为kg/m³，未先写成2.7 g/cm³，也未换算为2700 kg/m³，显示单位换算尚未正确完成。",
+          "last_seen": "2026-10-31T10:00:10.610721+00:00"
+        },
+        "[\"物理\",\"用单位因子解释同一物理量数值差异\"]": {
+          "subject": "物理",
+          "name": "用单位因子解释同一物理量数值差异",
+          "demonstrated_count": 0,
+          "needs_support_count": 1,
+          "last_evidence": "作答只写“所以密度是2.7 kg/m³”，没有解释g/cm³与kg/m³两个数值为何不同，也没有说明同一密度因单位大小不同而数值不同。",
+          "last_seen": "2026-10-31T10:00:10.610721+00:00"
+        }
+      },
+      "format_feedback": {}
+    },
+    "profile_updates": [
+      "物理 · 密度公式 ρ=m/V 的计算：新增一条展示理解的作答证据。",
+      "物理 · g/cm³ 与 kg/m³ 的单位换算：新增一条需要支持的作答证据。",
+      "物理 · 用单位因子解释同一物理量数值差异：新增一条需要支持的作答证据。"
+    ]
+  },
+  "stages": [
+    {
+      "stage": "analyze",
+      "context": {
+        "request": {
+          "request_id": "density_advanced",
+          "session_id": "session-f79de8c60a8b4ef98372dbd5a78e09fe",
+          "student_id": "live-test",
+          "subject": "物理",
+          "problem_text": "测得某实心金属块质量54 g，体积20 cm³。求密度，用g/cm³和kg/m³分别表示，解释两个数值为什么不同。",
+          "student_answer": "54÷20=2.7，所以密度是2.7 kg/m³。",
+          "answer_to": null,
+          "parent_goal": "准确解释当前作答的问题，帮助学习者理解并独立完成。",
+          "parent_note": null,
+          "follow_up": null,
+          "requested_strategy": null,
+          "attempt_id": null,
+          "grade": null,
+          "textbook_version": null,
+          "input_mode": "text",
+          "image_count": 0
+        },
+        "profile": {
+          "display_name": "",
+          "grade": "高中三年级",
+          "textbook": "",
+          "learning_goal": "快速定位量纲和换算错误",
+          "language": "中文",
+          "preferred_explanation_modes": [
+            "紧凑的量纲推导"
+          ],
+          "interests": [],
+          "pace": "fast",
+          "notes": "已熟悉科学计数法；不要用生活类比，重点说明单位因子。",
+          "student_id": "live-test",
+          "skills": {},
+          "format_feedback": {}
+        },
+        "history": [],
+        "history_notice": "历史仅为服务提供的最近轮次，并非完整会话。本次收到 0 轮，按 24000 字符预算完整保留最近 0 轮；其中超出预算的 0 轮已省略；更早轮次未计入本次窗口。未截断任何保留的题干或作答。历史画像副本、技能证据回执和其他重复派生字段已省略，当前完整画像单独提供。若追问依赖不可见的历史材料，请明确请求用户重传具体材料，不得推测补全。"
+      },
+      "output": {
+        "subject": "物理",
+        "task_summary": "已知实心金属块质量54 g、体积20 cm³，要求用密度公式求出密度，分别用g/cm³和kg/m³表示，并解释两个数值为何不同。学生作答为“54÷20=2.7，所以密度是2.7 kg/m³”，只完成了数值除法，未正确标注或换算单位，也未解释两个单位下数值不同的原因。",
+        "task_type": "物理计算与单位换算说明（密度）",
+        "missing_information": [],
+        "learning_objectives": [
+          "正确使用密度公式ρ=m/V，将质量54 g和体积20 cm³代入并得到2.7 g/cm³。",
+          "使用1 g/cm³=10³ kg/m³进行单位换算，得到2.7×10³ kg/m³，并检查单位一致性。",
+          "说明同一密度用不同单位表示时数值不同，是因为单位大小不同，而不是密度本身改变。",
+          "避免把以g和cm³计算出的数值直接标为kg/m³。"
+        ],
+        "skills": [
+          {
+            "name": "密度公式 ρ=m/V 的计算",
+            "subject": "物理"
+          },
+          {
+            "name": "g/cm³ 与 kg/m³ 的单位换算",
+            "subject": "物理"
+          },
+          {
+            "name": "用单位因子解释同一物理量数值差异",
+            "subject": "物理"
+          }
+        ],
+        "reference_solution": [
+          "根据密度公式：ρ=m/V。",
+          "代入数据：ρ=54 g÷20 cm³=2.7 g/cm³。",
+          "换算单位：1 g/cm³=10³ kg/m³，所以2.7 g/cm³=2.7×10³ kg/m³=2700 kg/m³。",
+          "也可以用国际单位制计算：54 g=0.054 kg，20 cm³=20×10⁻⁶ m³=2.0×10⁻⁵ m³，因此ρ=0.054÷(2.0×10⁻⁵)=2700 kg/m³。",
+          "两个数值不同是因为单位大小不同：1 g/cm³等于1000 kg/m³，所以同一个密度用kg/m³表示时数值是g/cm³表示的1000倍；2700 kg/m³和2.7 g/cm³表示的是同一个密度。"
+        ],
+        "assessment": {
+          "verdict": "needs-revision",
+          "summary": "学生完成了54÷20=2.7的数值计算，但把由g和cm³算出的结果直接写成kg/m³，单位错误；正确应先得2.7 g/cm³，再换算为2700 kg/m³。题目要求的两种单位表示和数值差异解释均未完成，因此需要修改。",
+          "evidence": [
+            "学生写出“54÷20=2.7”，质量与体积的数值代入和除法正确。",
+            "学生把结果标为“2.7 kg/m³”，但54 g÷20 cm³得到的单位应为g/cm³，因此单位标注错误。",
+            "学生没有给出2.7 g/cm³对应的kg/m³数值；正确换算为2700 kg/m³。",
+            "学生没有解释g/cm³和kg/m³两个数值不同的原因，即单位大小不同，而表示的密度相同。"
+          ],
+          "confidence": 0.99
+        },
+        "skill_evidence": [
+          {
+            "name": "密度公式 ρ=m/V 的计算",
+            "subject": "物理",
+            "outcome": "demonstrated",
+            "evidence": "学生写出“54÷20=2.7”，说明其按质量除以体积进行了密度数值计算；该证据只支持公式的数值代入与除法，不支持单位处理。",
+            "confidence": 0.9
+          },
+          {
+            "name": "g/cm³ 与 kg/m³ 的单位换算",
+            "subject": "物理",
+            "outcome": "needs-support",
+            "evidence": "学生把由54 g和20 cm³得到的2.7直接标为kg/m³，未先写成2.7 g/cm³，也未换算为2700 kg/m³，显示单位换算尚未正确完成。",
+            "confidence": 0.99
+          },
+          {
+            "name": "用单位因子解释同一物理量数值差异",
+            "subject": "物理",
+            "outcome": "needs-support",
+            "evidence": "作答只写“所以密度是2.7 kg/m³”，没有解释g/cm³与kg/m³两个数值为何不同，也没有说明同一密度因单位大小不同而数值不同。",
+            "confidence": 0.99
+          }
+        ],
+        "confidence": 0.99
+      },
+      "seconds": 17.33,
+      "completions": [
+        {
+          "model": "deepseek-v4-flash-vision-exp",
+          "seconds": 17.33,
+          "content": "{\n  \"subject\": \"物理\",\n  \"task_summary\": \"已知实心金属块质量54 g、体积20 cm³，要求用密度公式求出密度，分别用g/cm³和kg/m³表示，并解释两个数值为何不同。学生作答为“54÷20=2.7，所以密度是2.7 kg/m³”，只完成了数值除法，未正确标注或换算单位，也未解释两个单位下数值不同的原因。\",\n  \"task_type\": \"物理计算与单位换算说明（密度）\",\n  \"assessment\": {\n    \"verdict\": \"needs-revision\",\n    \"summary\": \"学生完成了54÷20=2.7的数值计算，但把由g和cm³算出的结果直接写成kg/m³，单位错误；正确应先得2.7 g/cm³，再换算为2700 kg/m³。题目要求的两种单位表示和数值差异解释均未完成，因此需要修改。\",\n    \"evidence\": [\n      \"学生写出“54÷20=2.7”，质量与体积的数值代入和除法正确。\",\n      \"学生把结果标为“2.7 kg/m³”，但54 g÷20 cm³得到的单位应为g/cm³，因此单位标注错误。\",\n      \"学生没有给出2.7 g/cm³对应的kg/m³数值；正确换算为2700 kg/m³。\",\n      \"学生没有解释g/cm³和kg/m³两个数值不同的原因，即单位大小不同，而表示的密度相同。\"\n    ],\n    \"confidence\": 0.99\n  },\n  \"confidence\": 0.99,\n  \"learning_objectives\": [\n    \"正确使用密度公式ρ=m/V，将质量54 g和体积20 cm³代入并得到2.7 g/cm³。\",\n    \"使用1 g/cm³=10³ kg/m³进行单位换算，得到2.7×10³ kg/m³，并检查单位一致性。\",\n    \"说明同一密度用不同单位表示时数值不同，是因为单位大小不同，而不是密度本身改变。\",\n    \"避免把以g和cm³计算出的数值直接标为kg/m³。\"\n  ],\n  \"skills\": [\n    {\n      \"subject\": \"物理\",\n      \"name\": \"密度公式 ρ=m/V 的计算\"\n    },\n    {\n      \"subject\": \"物理\",\n      \"name\": \"g/cm³ 与 kg/m³ 的单位换算\"\n    },\n    {\n      \"subject\": \"物理\",\n      \"name\": \"用单位因子解释同一物理量数值差异\"\n    }\n  ],\n  \"reference_solution\": [\n    \"根据密度公式：ρ=m/V。\",\n    \"代入数据：ρ=54 g÷20 cm³=2.7 g/cm³。\",\n    \"换算单位：1 g/cm³=10³ kg/m³，所以2.7 g/cm³=2.7×10³ kg/m³=2700 kg/m³。\",\n    \"也可以用国际单位制计算：54 g=0.054 kg，20 cm³=20×10⁻⁶ m³=2.0×10⁻⁵ m³，因此ρ=0.054÷(2.0×10⁻⁵)=2700 kg/m³。\",\n    \"两个数值不同是因为单位大小不同：1 g/cm³等于1000 kg/m³，所以同一个密度用kg/m³表示时数值是g/cm³表示的1000倍；2700 kg/m³和2.7 g/cm³表示的是同一个密度。\"\n  ],\n  \"skill_evidence\": [\n    {\n      \"subject\": \"物理\",\n      \"name\": \"密度公式 ρ=m/V 的计算\",\n      \"outcome\": \"demonstrated\",\n      \"evidence\": \"学生写出“54÷20=2.7”，说明其按质量除以体积进行了密度数值计算；该证据只支持公式的数值代入与除法，不支持单位处理。\",\n      \"confidence\": 0.9\n    },\n    {\n      \"subject\": \"物理\",\n      \"name\": \"g/cm³ 与 kg/m³ 的单位换算\",\n      \"outcome\": \"needs-support\",\n      \"evidence\": \"学生把由54 g和20 cm³得到的2.7直接标为kg/m³，未先写成2.7 g/cm³，也未换算为2700 kg/m³，显示单位换算尚未正确完成。\",\n      \"confidence\": 0.99\n    },\n    {\n      \"subject\": \"物理\",\n      \"name\": \"用单位因子解释同一物理量数值差异\",\n      \"outcome\": \"needs-support\",\n      \"evidence\": \"作答只写“所以密度是2.7 kg/m³”，没有解释g/cm³与kg/m³两个数值为何不同，也没有说明同一密度因单位大小不同而数值不同。\",\n      \"confidence\": 0.99\n    }\n  ],\n  \"missing_information\": []\n}"
+        }
+      ]
+    },
+    {
+      "stage": "teach",
+      "context": {
+        "request": {
+          "request_id": "density_advanced",
+          "session_id": "session-f79de8c60a8b4ef98372dbd5a78e09fe",
+          "student_id": "live-test",
+          "subject": "物理",
+          "problem_text": "测得某实心金属块质量54 g，体积20 cm³。求密度，用g/cm³和kg/m³分别表示，解释两个数值为什么不同。",
+          "student_answer": "54÷20=2.7，所以密度是2.7 kg/m³。",
+          "answer_to": null,
+          "parent_goal": "准确解释当前作答的问题，帮助学习者理解并独立完成。",
+          "parent_note": null,
+          "follow_up": null,
+          "requested_strategy": null,
+          "attempt_id": null,
+          "grade": null,
+          "textbook_version": null,
+          "input_mode": "text",
+          "image_count": 0
+        },
+        "profile": {
+          "display_name": "",
+          "grade": "高中三年级",
+          "textbook": "",
+          "learning_goal": "快速定位量纲和换算错误",
+          "language": "中文",
+          "preferred_explanation_modes": [
+            "紧凑的量纲推导"
+          ],
+          "interests": [],
+          "pace": "fast",
+          "notes": "已熟悉科学计数法；不要用生活类比，重点说明单位因子。",
+          "student_id": "live-test",
+          "skills": {},
+          "format_feedback": {}
+        },
+        "history": [],
+        "history_notice": "历史仅为服务提供的最近轮次，并非完整会话。本次收到 0 轮，按 24000 字符预算完整保留最近 0 轮；其中超出预算的 0 轮已省略；更早轮次未计入本次窗口。未截断任何保留的题干或作答。历史画像副本、技能证据回执和其他重复派生字段已省略，当前完整画像单独提供。若追问依赖不可见的历史材料，请明确请求用户重传具体材料，不得推测补全。",
+        "analysis": {
+          "subject": "物理",
+          "task_summary": "已知实心金属块质量54 g、体积20 cm³，要求用密度公式求出密度，分别用g/cm³和kg/m³表示，并解释两个数值为何不同。学生作答为“54÷20=2.7，所以密度是2.7 kg/m³”，只完成了数值除法，未正确标注或换算单位，也未解释两个单位下数值不同的原因。",
+          "task_type": "物理计算与单位换算说明（密度）",
+          "missing_information": [],
+          "learning_objectives": [
+            "正确使用密度公式ρ=m/V，将质量54 g和体积20 cm³代入并得到2.7 g/cm³。",
+            "使用1 g/cm³=10³ kg/m³进行单位换算，得到2.7×10³ kg/m³，并检查单位一致性。",
+            "说明同一密度用不同单位表示时数值不同，是因为单位大小不同，而不是密度本身改变。",
+            "避免把以g和cm³计算出的数值直接标为kg/m³。"
+          ],
+          "skills": [
+            {
+              "name": "密度公式 ρ=m/V 的计算",
+              "subject": "物理"
+            },
+            {
+              "name": "g/cm³ 与 kg/m³ 的单位换算",
+              "subject": "物理"
+            },
+            {
+              "name": "用单位因子解释同一物理量数值差异",
+              "subject": "物理"
+            }
+          ],
+          "reference_solution": [
+            "根据密度公式：ρ=m/V。",
+            "代入数据：ρ=54 g÷20 cm³=2.7 g/cm³。",
+            "换算单位：1 g/cm³=10³ kg/m³，所以2.7 g/cm³=2.7×10³ kg/m³=2700 kg/m³。",
+            "也可以用国际单位制计算：54 g=0.054 kg，20 cm³=20×10⁻⁶ m³=2.0×10⁻⁵ m³，因此ρ=0.054÷(2.0×10⁻⁵)=2700 kg/m³。",
+            "两个数值不同是因为单位大小不同：1 g/cm³等于1000 kg/m³，所以同一个密度用kg/m³表示时数值是g/cm³表示的1000倍；2700 kg/m³和2.7 g/cm³表示的是同一个密度。"
+          ],
+          "assessment": {
+            "verdict": "needs-revision",
+            "summary": "学生完成了54÷20=2.7的数值计算，但把由g和cm³算出的结果直接写成kg/m³，单位错误；正确应先得2.7 g/cm³，再换算为2700 kg/m³。题目要求的两种单位表示和数值差异解释均未完成，因此需要修改。",
+            "evidence": [
+              "学生写出“54÷20=2.7”，质量与体积的数值代入和除法正确。",
+              "学生把结果标为“2.7 kg/m³”，但54 g÷20 cm³得到的单位应为g/cm³，因此单位标注错误。",
+              "学生没有给出2.7 g/cm³对应的kg/m³数值；正确换算为2700 kg/m³。",
+              "学生没有解释g/cm³和kg/m³两个数值不同的原因，即单位大小不同，而表示的密度相同。"
+            ],
+            "confidence": 0.99
+          },
+          "skill_evidence": [
+            {
+              "name": "密度公式 ρ=m/V 的计算",
+              "subject": "物理",
+              "outcome": "demonstrated",
+              "evidence": "学生写出“54÷20=2.7”，说明其按质量除以体积进行了密度数值计算；该证据只支持公式的数值代入与除法，不支持单位处理。",
+              "confidence": 0.9
+            },
+            {
+              "name": "g/cm³ 与 kg/m³ 的单位换算",
+              "subject": "物理",
+              "outcome": "needs-support",
+              "evidence": "学生把由54 g和20 cm³得到的2.7直接标为kg/m³，未先写成2.7 g/cm³，也未换算为2700 kg/m³，显示单位换算尚未正确完成。",
+              "confidence": 0.99
+            },
+            {
+              "name": "用单位因子解释同一物理量数值差异",
+              "subject": "物理",
+              "outcome": "needs-support",
+              "evidence": "作答只写“所以密度是2.7 kg/m³”，没有解释g/cm³与kg/m³两个数值为何不同，也没有说明同一密度因单位大小不同而数值不同。",
+              "confidence": 0.99
+            }
+          ],
+          "confidence": 0.99
+        },
+        "strategy": {
+          "approach": "紧凑的量纲推导",
+          "rationale": [
+            "从已设置的讲解偏好中选择有帮助反馈较多的方式，同分时保留偏好顺序。",
+            "先给紧凑的结构和关键检查点，发现卡点后再展开。",
+            "依据年级调整术语和必要的前置说明，不据此断言学生已经掌握。",
+            "将本轮讲解与画像中记录的学习目标关联。",
+            "将家长填写的补充说明作为待参考的教学背景。",
+            "围绕本轮家长或学生设定的辅导目标组织内容。"
+          ],
+          "profile_used": [
+            "preferred_explanation_modes",
+            "pace",
+            "grade",
+            "learning_goal",
+            "notes",
+            "language"
+          ],
+          "pace": "fast"
+        }
+      },
+      "output": {
+        "title": "先看单位，再换数值：密度两种单位表示",
+        "goal": "修正把 2.7 直接标成 kg/m³ 的单位错误，完成 g/cm³ 到 kg/m³ 的换算，并解释两个数值不同来自单位大小不同。",
+        "steps": [
+          {
+            "title": "先定位结果单位",
+            "explanation": "你写的 54÷20=2.7，数值除法本次做对了；但 54 的单位是 g，20 的单位是 cm³，所以结果单位必须由 g 和 cm³ 组成，不能直接标成 kg/m³。先不改数字，只检查单位标签。",
+            "question": "54 g ÷ 20 cm³ 的结果后面应跟什么单位？为什么不能直接写成 kg/m³？",
+            "checkpoint": "能答出 g/cm³，并指出分子用 g、分母用 cm³，所以不能标成 kg/m³；若只重复“单位错了”但说不出分子分母单位，需回到本步。"
+          },
+          {
+            "title": "用单位因子换算",
+            "explanation": "单位换算靠因子：1 g=10^-3 kg，1 cm³=(10^-2 m)^3=10^-6 m³，因此 1 g/cm³=(10^-3)/(10^-6) kg/m³=10^3 kg/m³。现在把这个因子用到 2.7 g/cm³ 上。",
+            "question": "2.7 g/cm³ 换算成 kg/m³ 应乘哪个因子？结果是多少？",
+            "checkpoint": "应写 2.7×10^3 kg/m³（即 2700 kg/m³），并说明乘的是 10^3；只写 2700 而不写单位不算完整。"
+          },
+          {
+            "title": "解释数值为什么不同",
+            "explanation": "比较 2.7 g/cm³ 和 2700 kg/m³ 时，要看单位因子的方向：1 g/cm³=10^3 kg/m³，所以同一个密度换成 kg/m³ 表示，数值要乘 10^3。数值变化来自单位大小不同，不是密度本身变了。",
+            "question": "同一金属块的密度写成 2.7 g/cm³ 和 2700 kg/m³，数值相差 1000 倍，是密度变了还是单位变了？请用 1 g/cm³=10^3 kg/m³ 说明。",
+            "checkpoint": "能明确说密度没变、单位变了；并能用 1 g/cm³=10^3 kg/m³ 解释数值相差 1000 倍。"
+          }
+        ],
+        "parent_tips": [
+          "先让孩子圈出质量和体积的单位，再检查结果单位；不要只说“单位错了”，让他说出分子用 g、分母用 cm³。",
+          "换算时要求写出 1 g=10^-3 kg 和 1 cm³=10^-6 m³，再推出因子，避免只背结论。",
+          "如果孩子把 2.7 和 2700 当成两个不同密度，追问：它们是不是都由同一个 54 g 和 20 cm³ 算出来的？"
+        ],
+        "understanding_checks": [
+          "54 g ÷ 20 cm³ 的结果为什么不能直接标成 kg/m³？请分别说出分子和分母的单位。",
+          "请用 1 g=10^-3 kg、1 cm³=10^-6 m³ 推出 1 g/cm³ 等于多少 kg/m³，并解释：为什么同一个密度换成 kg/m³ 后数值会变大？"
+        ],
+        "practice": [
+          {
+            "id": "density-unit-convert",
+            "prompt": "某金属的密度为 8.9 g/cm³。请把它换算成 kg/m³，并用一句话说明换算后数值为什么变大。",
+            "purpose": "检查是否能正确使用 1 g/cm³=10^3 kg/m³，并把单位因子和数值变化联系起来。",
+            "hints": [
+              "先写出 1 g/cm³=10^3 kg/m³。",
+              "把 8.9 乘这个因子，并保留 kg/m³ 单位。",
+              "说明是单位大小变了，不是密度本身变了。"
+            ],
+            "success_criteria": [
+              "得到 8.9×10^3 kg/m³，即 8900 kg/m³。",
+              "说明同一密度用 kg/m³ 表示时数值变大，是因为 1 g/cm³=10^3 kg/m³，单位换算产生了 1000 倍因子。"
+            ]
+          }
+        ],
+        "recap": "密度计算先带单位算；54 g÷20 cm³ 得到 2.7 g/cm³。换算成 kg/m³ 时乘 10^3，得 2700 kg/m³。两个数值不同是单位大小不同，表示的密度本身相同。"
+      },
+      "seconds": 24.84,
+      "completions": [
+        {
+          "model": "deepseek-v4-flash-vision-exp",
+          "seconds": 24.84,
+          "content": "{\n  \"title\": \"先看单位，再换数值：密度两种单位表示\",\n  \"goal\": \"修正把 2.7 直接标成 kg/m³ 的单位错误，完成 g/cm³ 到 kg/m³ 的换算，并解释两个数值不同来自单位大小不同。\",\n  \"steps\": [\n    {\n      \"title\": \"先定位结果单位\",\n      \"explanation\": \"你写的 54÷20=2.7，数值除法本次做对了；但 54 的单位是 g，20 的单位是 cm³，所以结果单位必须由 g 和 cm³ 组成，不能直接标成 kg/m³。先不改数字，只检查单位标签。\",\n      \"question\": \"54 g ÷ 20 cm³ 的结果后面应跟什么单位？为什么不能直接写成 kg/m³？\",\n      \"checkpoint\": \"能答出 g/cm³，并指出分子用 g、分母用 cm³，所以不能标成 kg/m³；若只重复“单位错了”但说不出分子分母单位，需回到本步。\"\n    },\n    {\n      \"title\": \"用单位因子换算\",\n      \"explanation\": \"单位换算靠因子：1 g=10^-3 kg，1 cm³=(10^-2 m)^3=10^-6 m³，因此 1 g/cm³=(10^-3)/(10^-6) kg/m³=10^3 kg/m³。现在把这个因子用到 2.7 g/cm³ 上。\",\n      \"question\": \"2.7 g/cm³ 换算成 kg/m³ 应乘哪个因子？结果是多少？\",\n      \"checkpoint\": \"应写 2.7×10^3 kg/m³（即 2700 kg/m³），并说明乘的是 10^3；只写 2700 而不写单位不算完整。\"\n    },\n    {\n      \"title\": \"解释数值为什么不同\",\n      \"explanation\": \"比较 2.7 g/cm³ 和 2700 kg/m³ 时，要看单位因子的方向：1 g/cm³=10^3 kg/m³，所以同一个密度换成 kg/m³ 表示，数值要乘 10^3。数值变化来自单位大小不同，不是密度本身变了。\",\n      \"question\": \"同一金属块的密度写成 2.7 g/cm³ 和 2700 kg/m³，数值相差 1000 倍，是密度变了还是单位变了？请用 1 g/cm³=10^3 kg/m³ 说明。\",\n      \"checkpoint\": \"能明确说密度没变、单位变了；并能用 1 g/cm³=10^3 kg/m³ 解释数值相差 1000 倍。\"\n    }\n  ],\n  \"parent_tips\": [\n    \"先让孩子圈出质量和体积的单位，再检查结果单位；不要只说“单位错了”，让他说出分子用 g、分母用 cm³。\",\n    \"换算时要求写出 1 g=10^-3 kg 和 1 cm³=10^-6 m³，再推出因子，避免只背结论。\",\n    \"如果孩子把 2.7 和 2700 当成两个不同密度，追问：它们是不是都由同一个 54 g 和 20 cm³ 算出来的？\"\n  ],\n  \"understanding_checks\": [\n    \"54 g ÷ 20 cm³ 的结果为什么不能直接标成 kg/m³？请分别说出分子和分母的单位。\",\n    \"请用 1 g=10^-3 kg、1 cm³=10^-6 m³ 推出 1 g/cm³ 等于多少 kg/m³，并解释：为什么同一个密度换成 kg/m³ 后数值会变大？\"\n  ],\n  \"practice\": [\n    {\n      \"id\": \"density-unit-convert\",\n      \"prompt\": \"某金属的密度为 8.9 g/cm³。请把它换算成 kg/m³，并用一句话说明换算后数值为什么变大。\",\n      \"purpose\": \"检查是否能正确使用 1 g/cm³=10^3 kg/m³，并把单位因子和数值变化联系起来。\",\n      \"hints\": [\n        \"先写出 1 g/cm³=10^3 kg/m³。\",\n        \"把 8.9 乘这个因子，并保留 kg/m³ 单位。\",\n        \"说明是单位大小变了，不是密度本身变了。\"\n      ],\n      \"success_criteria\": [\n        \"得到 8.9×10^3 kg/m³，即 8900 kg/m³。\",\n        \"说明同一密度用 kg/m³ 表示时数值变大，是因为 1 g/cm³=10^3 kg/m³，单位换算产生了 1000 倍因子。\"\n      ]\n    }\n  ],\n  \"recap\": \"密度计算先带单位算；54 g÷20 cm³ 得到 2.7 g/cm³。换算成 kg/m³ 时乘 10^3，得 2700 kg/m³。两个数值不同是单位大小不同，表示的密度本身相同。\"\n}"
+        }
+      ]
+    },
+    {
+      "stage": "verify",
+      "context": {
+        "request": {
+          "request_id": "density_advanced",
+          "session_id": "session-f79de8c60a8b4ef98372dbd5a78e09fe",
+          "student_id": "live-test",
+          "subject": "物理",
+          "problem_text": "测得某实心金属块质量54 g，体积20 cm³。求密度，用g/cm³和kg/m³分别表示，解释两个数值为什么不同。",
+          "student_answer": "54÷20=2.7，所以密度是2.7 kg/m³。",
+          "answer_to": null,
+          "parent_goal": "准确解释当前作答的问题，帮助学习者理解并独立完成。",
+          "parent_note": null,
+          "follow_up": null,
+          "requested_strategy": null,
+          "attempt_id": null,
+          "grade": null,
+          "textbook_version": null,
+          "input_mode": "text",
+          "image_count": 0
+        },
+        "profile": {
+          "display_name": "",
+          "grade": "高中三年级",
+          "textbook": "",
+          "learning_goal": "快速定位量纲和换算错误",
+          "language": "中文",
+          "preferred_explanation_modes": [
+            "紧凑的量纲推导"
+          ],
+          "interests": [],
+          "pace": "fast",
+          "notes": "已熟悉科学计数法；不要用生活类比，重点说明单位因子。",
+          "student_id": "live-test",
+          "skills": {},
+          "format_feedback": {}
+        },
+        "history": [],
+        "history_notice": "历史仅为服务提供的最近轮次，并非完整会话。本次收到 0 轮，按 24000 字符预算完整保留最近 0 轮；其中超出预算的 0 轮已省略；更早轮次未计入本次窗口。未截断任何保留的题干或作答。历史画像副本、技能证据回执和其他重复派生字段已省略，当前完整画像单独提供。若追问依赖不可见的历史材料，请明确请求用户重传具体材料，不得推测补全。",
+        "analysis": {
+          "subject": "物理",
+          "task_summary": "已知实心金属块质量54 g、体积20 cm³，要求用密度公式求出密度，分别用g/cm³和kg/m³表示，并解释两个数值为何不同。学生作答为“54÷20=2.7，所以密度是2.7 kg/m³”，只完成了数值除法，未正确标注或换算单位，也未解释两个单位下数值不同的原因。",
+          "task_type": "物理计算与单位换算说明（密度）",
+          "missing_information": [],
+          "learning_objectives": [
+            "正确使用密度公式ρ=m/V，将质量54 g和体积20 cm³代入并得到2.7 g/cm³。",
+            "使用1 g/cm³=10³ kg/m³进行单位换算，得到2.7×10³ kg/m³，并检查单位一致性。",
+            "说明同一密度用不同单位表示时数值不同，是因为单位大小不同，而不是密度本身改变。",
+            "避免把以g和cm³计算出的数值直接标为kg/m³。"
+          ],
+          "skills": [
+            {
+              "name": "密度公式 ρ=m/V 的计算",
+              "subject": "物理"
+            },
+            {
+              "name": "g/cm³ 与 kg/m³ 的单位换算",
+              "subject": "物理"
+            },
+            {
+              "name": "用单位因子解释同一物理量数值差异",
+              "subject": "物理"
+            }
+          ],
+          "reference_solution": [
+            "根据密度公式：ρ=m/V。",
+            "代入数据：ρ=54 g÷20 cm³=2.7 g/cm³。",
+            "换算单位：1 g/cm³=10³ kg/m³，所以2.7 g/cm³=2.7×10³ kg/m³=2700 kg/m³。",
+            "也可以用国际单位制计算：54 g=0.054 kg，20 cm³=20×10⁻⁶ m³=2.0×10⁻⁵ m³，因此ρ=0.054÷(2.0×10⁻⁵)=2700 kg/m³。",
+            "两个数值不同是因为单位大小不同：1 g/cm³等于1000 kg/m³，所以同一个密度用kg/m³表示时数值是g/cm³表示的1000倍；2700 kg/m³和2.7 g/cm³表示的是同一个密度。"
+          ],
+          "assessment": {
+            "verdict": "needs-revision",
+            "summary": "学生完成了54÷20=2.7的数值计算，但把由g和cm³算出的结果直接写成kg/m³，单位错误；正确应先得2.7 g/cm³，再换算为2700 kg/m³。题目要求的两种单位表示和数值差异解释均未完成，因此需要修改。",
+            "evidence": [
+              "学生写出“54÷20=2.7”，质量与体积的数值代入和除法正确。",
+              "学生把结果标为“2.7 kg/m³”，但54 g÷20 cm³得到的单位应为g/cm³，因此单位标注错误。",
+              "学生没有给出2.7 g/cm³对应的kg/m³数值；正确换算为2700 kg/m³。",
+              "学生没有解释g/cm³和kg/m³两个数值不同的原因，即单位大小不同，而表示的密度相同。"
+            ],
+            "confidence": 0.99
+          },
+          "skill_evidence": [
+            {
+              "name": "密度公式 ρ=m/V 的计算",
+              "subject": "物理",
+              "outcome": "demonstrated",
+              "evidence": "学生写出“54÷20=2.7”，说明其按质量除以体积进行了密度数值计算；该证据只支持公式的数值代入与除法，不支持单位处理。",
+              "confidence": 0.9
+            },
+            {
+              "name": "g/cm³ 与 kg/m³ 的单位换算",
+              "subject": "物理",
+              "outcome": "needs-support",
+              "evidence": "学生把由54 g和20 cm³得到的2.7直接标为kg/m³，未先写成2.7 g/cm³，也未换算为2700 kg/m³，显示单位换算尚未正确完成。",
+              "confidence": 0.99
+            },
+            {
+              "name": "用单位因子解释同一物理量数值差异",
+              "subject": "物理",
+              "outcome": "needs-support",
+              "evidence": "作答只写“所以密度是2.7 kg/m³”，没有解释g/cm³与kg/m³两个数值为何不同，也没有说明同一密度因单位大小不同而数值不同。",
+              "confidence": 0.99
+            }
+          ],
+          "confidence": 0.99
+        },
+        "lesson": {
+          "title": "先看单位，再换数值：密度两种单位表示",
+          "goal": "修正把 2.7 直接标成 kg/m³ 的单位错误，完成 g/cm³ 到 kg/m³ 的换算，并解释两个数值不同来自单位大小不同。",
+          "steps": [
+            {
+              "title": "先定位结果单位",
+              "explanation": "你写的 54÷20=2.7，数值除法本次做对了；但 54 的单位是 g，20 的单位是 cm³，所以结果单位必须由 g 和 cm³ 组成，不能直接标成 kg/m³。先不改数字，只检查单位标签。",
+              "question": "54 g ÷ 20 cm³ 的结果后面应跟什么单位？为什么不能直接写成 kg/m³？",
+              "checkpoint": "能答出 g/cm³，并指出分子用 g、分母用 cm³，所以不能标成 kg/m³；若只重复“单位错了”但说不出分子分母单位，需回到本步。"
+            },
+            {
+              "title": "用单位因子换算",
+              "explanation": "单位换算靠因子：1 g=10^-3 kg，1 cm³=(10^-2 m)^3=10^-6 m³，因此 1 g/cm³=(10^-3)/(10^-6) kg/m³=10^3 kg/m³。现在把这个因子用到 2.7 g/cm³ 上。",
+              "question": "2.7 g/cm³ 换算成 kg/m³ 应乘哪个因子？结果是多少？",
+              "checkpoint": "应写 2.7×10^3 kg/m³（即 2700 kg/m³），并说明乘的是 10^3；只写 2700 而不写单位不算完整。"
+            },
+            {
+              "title": "解释数值为什么不同",
+              "explanation": "比较 2.7 g/cm³ 和 2700 kg/m³ 时，要看单位因子的方向：1 g/cm³=10^3 kg/m³，所以同一个密度换成 kg/m³ 表示，数值要乘 10^3。数值变化来自单位大小不同，不是密度本身变了。",
+              "question": "同一金属块的密度写成 2.7 g/cm³ 和 2700 kg/m³，数值相差 1000 倍，是密度变了还是单位变了？请用 1 g/cm³=10^3 kg/m³ 说明。",
+              "checkpoint": "能明确说密度没变、单位变了；并能用 1 g/cm³=10^3 kg/m³ 解释数值相差 1000 倍。"
+            }
+          ],
+          "parent_tips": [
+            "先让孩子圈出质量和体积的单位，再检查结果单位；不要只说“单位错了”，让他说出分子用 g、分母用 cm³。",
+            "换算时要求写出 1 g=10^-3 kg 和 1 cm³=10^-6 m³，再推出因子，避免只背结论。",
+            "如果孩子把 2.7 和 2700 当成两个不同密度，追问：它们是不是都由同一个 54 g 和 20 cm³ 算出来的？"
+          ],
+          "understanding_checks": [
+            "54 g ÷ 20 cm³ 的结果为什么不能直接标成 kg/m³？请分别说出分子和分母的单位。",
+            "请用 1 g=10^-3 kg、1 cm³=10^-6 m³ 推出 1 g/cm³ 等于多少 kg/m³，并解释：为什么同一个密度换成 kg/m³ 后数值会变大？"
+          ],
+          "practice": [
+            {
+              "id": "density-unit-convert",
+              "prompt": "某金属的密度为 8.9 g/cm³。请把它换算成 kg/m³，并用一句话说明换算后数值为什么变大。",
+              "purpose": "检查是否能正确使用 1 g/cm³=10^3 kg/m³，并把单位因子和数值变化联系起来。",
+              "hints": [
+                "先写出 1 g/cm³=10^3 kg/m³。",
+                "把 8.9 乘这个因子，并保留 kg/m³ 单位。",
+                "说明是单位大小变了，不是密度本身变了。"
+              ],
+              "success_criteria": [
+                "得到 8.9×10^3 kg/m³，即 8900 kg/m³。",
+                "说明同一密度用 kg/m³ 表示时数值变大，是因为 1 g/cm³=10^3 kg/m³，单位换算产生了 1000 倍因子。"
+              ]
+            }
+          ],
+          "recap": "密度计算先带单位算；54 g÷20 cm³ 得到 2.7 g/cm³。换算成 kg/m³ 时乘 10^3，得 2700 kg/m³。两个数值不同是单位大小不同，表示的密度本身相同。"
+        }
+      },
+      "output": {
+        "reliable": true,
+        "issues": [],
+        "approved_evidence": [
+          {
+            "name": "密度公式 ρ=m/V 的计算",
+            "subject": "物理",
+            "outcome": "demonstrated",
+            "evidence": "学生写出“54÷20=2.7”，说明其按质量除以体积进行了密度数值计算；该证据只支持公式的数值代入与除法，不支持单位处理。",
+            "confidence": 0.9
+          },
+          {
+            "name": "g/cm³ 与 kg/m³ 的单位换算",
+            "subject": "物理",
+            "outcome": "needs-support",
+            "evidence": "学生把由54 g和20 cm³得到的2.7直接标为kg/m³，未先写成2.7 g/cm³，也未换算为2700 kg/m³，显示单位换算尚未正确完成。",
+            "confidence": 0.99
+          },
+          {
+            "name": "用单位因子解释同一物理量数值差异",
+            "subject": "物理",
+            "outcome": "needs-support",
+            "evidence": "作答只写“所以密度是2.7 kg/m³”，没有解释g/cm³与kg/m³两个数值为何不同，也没有说明同一密度因单位大小不同而数值不同。",
+            "confidence": 0.99
+          }
+        ]
+      },
+      "seconds": 33.75,
+      "completions": [
+        {
+          "model": "deepseek-v4-flash-vision-exp",
+          "seconds": 33.75,
+          "content": "{\"reliable\":true,\"issues\":[],\"approved_evidence\":[{\"name\":\"密度公式 ρ=m/V 的计算\",\"subject\":\"物理\",\"outcome\":\"demonstrated\",\"evidence\":\"学生写出“54÷20=2.7”，说明其按质量除以体积进行了密度数值计算；该证据只支持公式的数值代入与除法，不支持单位处理。\",\"confidence\":0.9},{\"name\":\"g/cm³ 与 kg/m³ 的单位换算\",\"subject\":\"物理\",\"outcome\":\"needs-support\",\"evidence\":\"学生把由54 g和20 cm³得到的2.7直接标为kg/m³，未先写成2.7 g/cm³，也未换算为2700 kg/m³，显示单位换算尚未正确完成。\",\"confidence\":0.99},{\"name\":\"用单位因子解释同一物理量数值差异\",\"subject\":\"物理\",\"outcome\":\"needs-support\",\"evidence\":\"作答只写“所以密度是2.7 kg/m³”，没有解释g/cm³与kg/m³两个数值为何不同，也没有说明同一密度因单位大小不同而数值不同。\",\"confidence\":0.99}]}"
+        }
+      ]
+    }
+  ],
+  "elapsed_seconds": 75.98
+}

@@ -1,0 +1,56 @@
+[
+  {
+    "case": "math_domain",
+    "status": "completed",
+    "seconds": 85.56,
+    "calls": 3
+  },
+  {
+    "case": "python_mutation",
+    "status": "completed",
+    "seconds": 95.28,
+    "calls": 3
+  },
+  {
+    "case": "chemistry_limiting",
+    "status": "completed",
+    "seconds": 50.38,
+    "calls": 3
+  },
+  {
+    "case": "history_sources",
+    "status": "completed",
+    "seconds": 73.66,
+    "calls": 3
+  },
+  {
+    "case": "english_meaning",
+    "status": "completed",
+    "seconds": 90.91,
+    "calls": 3
+  },
+  {
+    "case": "design_constraints",
+    "status": "completed",
+    "seconds": 59.41,
+    "calls": 3
+  },
+  {
+    "case": "density_advanced",
+    "status": "completed",
+    "seconds": 55.11,
+    "calls": 3
+  },
+  {
+    "case": "missing_material",
+    "status": "need_clarification",
+    "seconds": 13.88,
+    "calls": 1
+  },
+  {
+    "case": "density_novice",
+    "status": "completed",
+    "seconds": 74.78,
+    "calls": 3
+  }
+]
